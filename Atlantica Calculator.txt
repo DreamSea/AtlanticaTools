@@ -1,0 +1,65 @@
+Test: Panel within Panel?
+
+~~~
+
+Problems:
+How to deal with updating prices
+
+~~~
+
+Menu: Import/Export Prices, Craft Books Dialog
+	Update all price, then update 
+
+
+Combobox: Recipe Type -> Recipe
+
+Use Tree?
+	Add Materials -> Add Craft/Recipes
+
+
+Buttons: Click = Change to Item Crafted From
+Labels: Displays Info (Workload, Number Required, Sell Value, Ratio, Last Price Update)
+FormattedTextField: Pricing Changes
+	When Changing Price: Update all ratios of CraftsInto (textfield only)
+
+
+
+Tables: Name and Ratios of what it crafts into
+	Move Recipe Combobox here?
+	Name/Type/**Ratio**/LastUpdate
+
+~~~
+
+Item:
+int SellValue
+long LastPriceUpdate
+List CraftsInto
+
+
+
+2 Types of Items:
+	long worth
+	long cost
+	String name
+	byte type
+	
+Material: Disable all Buttons	
+
+Craftable: Enable # of Buttons
+	int NumberMade
+	int Workload
+	List CraftedFrom
+	int CostToMake = Sum CraftedFrom SellValue
+	double Ratio = NumberMade(Sell - Cost) / Workload
+
+~~~
+
+Pork 100
+Wheat 100
+Dumpling 1000
+
+1 - Dumpling
+Size 10
+Workload 500
+--- 4 Pork
+--- 6 Wheat

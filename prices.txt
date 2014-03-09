@@ -1,0 +1,4 @@
+Pork 100
+Salt 100
+Wheat 100
+Dumpling 1000
