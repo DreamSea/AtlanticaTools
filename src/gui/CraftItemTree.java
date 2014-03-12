@@ -79,7 +79,8 @@ public class CraftItemTree extends JPanel implements TreeSelectionListener
 			book = new DefaultMutableTreeNode(m);
 			category.add(book);
 		}
-		
+
+		craftableNodes("Crystal", Main.dm.crystal, top);
 		craftableNodes("Food", Main.dm.food, top);
 		
 	}

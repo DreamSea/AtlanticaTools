@@ -1,9 +1,33 @@
+Todo: 
+
+DONE 2014/03/11 *Sum of Craft costs
+DONE 2014/03/11 Ratio of Profit/WL: currently as total size, redo to individual prices
+
+Split item panel into craft/material panel and item detail panel
+
+public/private messups probably due to pass by value/reference shenanigans
+to patch later
+
+craftsinto panel
+return list of best profit ratios
+return list of best profit ratio by maxworkload
+
+~~~
+
+Pork 100
+Salt 100
+Wheat 100
+Dumpling 1000
+
+~~~
+
 Test: Panel within Panel?
 
 ~~~
 
-Problems:
+Possible problems:
 How to deal with updating prices
+How to deal with initial craft load (possible null returns from itemMap)
 
 ~~~
 

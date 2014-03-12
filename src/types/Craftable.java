@@ -1,5 +1,6 @@
 package types;
 
+import manager.DataManager;
 import manager.Main;
 
 public class Craftable extends Item
@@ -12,6 +13,9 @@ public class Craftable extends Item
 	
 	public int numCrafted;
 	public int workload;
+	
+	public double worthPerWorkload;
+	public double profitRatio;
 	
 	/**
 	 * @param name : Craftable Name
@@ -29,6 +33,10 @@ public class Craftable extends Item
 		
 		slotNumber = 0;
 		lastCraftable = this;
+		
+		
+		worthPerWorkload = (worth*0.99 - cost)/(workload/numCrafted);
+		profitRatio = worthPerWorkload - DataManager.costPerWorkload;
 	}
 	
 	/**
@@ -73,6 +81,19 @@ public class Craftable extends Item
 		for (int i = 0; i < craftedFromItems.length; i++)
 		{
 			cost += craftedFromItems[i].worth * craftedFromNumbers[i];
+		}
+		cost /= numCrafted;
+		
+		worthPerWorkload = (worth*0.99 - cost)/(workload/numCrafted);
+		profitRatio = worthPerWorkload - DataManager.costPerWorkload;
+		
+		/*
+		 * TODO may lead to repeated updates on same item
+		 * Use boolean hasChecked set before each update?
+		 */
+		for (Craftable c : craftsInto)
+		{
+			c.updateCost();
 		}
 	}
 

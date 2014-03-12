@@ -1,4 +1,14 @@
+Sesame_Oil 500
+Barley 100
+Dragon_Crystal 41000
+Redemption_Crystal 350000
+Giant_Crystal 41000
 Pork 100
-Salt 100
-Wheat 100
 Dumpling 1000
+Salt 100
+Grilled_Pork 200
+Ashen_Crystal 8000
+Multi-Hued_Crystal_Shard 90000
+Barley_Bibimbap 2000
+Phoenix_Crystal 41000
+Wheat 100

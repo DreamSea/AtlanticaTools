@@ -14,6 +14,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import manager.DataManager;
 import manager.Main;
 import types.Craftable;
 import types.Item;
@@ -25,73 +26,88 @@ import types.Material;
  * 			between crafted items and their components
  */
 public class ItemPanel extends JPanel implements ActionListener, PropertyChangeListener {
-	
+
 	final int BUTTONWIDTH = 100;
 	final int WORTHWIDTH = 100;
 	final int SPACE = 35; //for each row
 	final int TOPSPACE = 80; //for top
-	
+
 	final int ITEMROWS = 10;
 	final int ROWHEIGHT = 30;
-	
+
 	final String BLANKSTRING = "---";
-	
+
 	private JLabel nameLabel;				//Item Name
 	private JLabel workloadLabel;			//Item Workload
 	private JLabel numCraftedLabel;			//Item Size
-	private JLabel worthLabel;				//Item Worth
+	private JLabel costLabel;				//Cost to obtain item
+	private JLabel costWithWorkloadLabel;
+	private JLabel worthLabel;				//Worth on marketplace
+	private JLabel profitWorkloadLabel;		//worth - cost per workload
 	private JFormattedTextField worthField;	//Field to change Item worth
-	
+
 	//for loop javax.swing items
 	private JButton[] ingredientButton;
 	private JLabel[] ingredientNumber;
 	private JFormattedTextField[] ingredientWorth;
 	private JLabel[] ingredientWorthTotal;
-	
+
 	private Craftable loaded;
-	
+
 	private NumberFormat nf;
-	
-	
+
+
 	public ItemPanel()
 	{
 		nf = NumberFormat.getNumberInstance();
 		nf.setGroupingUsed(true);
-		
+
 		nameLabel = new JLabel("Item: "+BLANKSTRING);
 		workloadLabel = new JLabel("Workload:"+BLANKSTRING);
 		numCraftedLabel = new JLabel("Size: "+BLANKSTRING);
+		costLabel = new JLabel("Cost: "+BLANKSTRING);
+		costWithWorkloadLabel = new JLabel("Cost w/ WL: "+BLANKSTRING);
+		profitWorkloadLabel = new JLabel("Profit Ratio: "+BLANKSTRING);
 		worthLabel = new JLabel("Worth:");
 		worthField = new JFormattedTextField(nf);
 		worthField.setText(BLANKSTRING);
 		worthField.addPropertyChangeListener("value", this);
-	
+
 		//for loop javax.swing array
 		ingredientButton = new JButton[ITEMROWS];
 		ingredientNumber = new JLabel[ITEMROWS];
 		ingredientWorth = new JFormattedTextField[ITEMROWS];
 		ingredientWorthTotal = new JLabel[ITEMROWS];
-		
+
 		setLayout(null);
 		setPreferredSize(new Dimension(
 				5*SPACE+BUTTONWIDTH+WORTHWIDTH+WORTHWIDTH, 100+SPACE*ITEMROWS));
 		setBackground(Color.lightGray);
-		
+
 		add(nameLabel);
 		add(workloadLabel);
 		add(numCraftedLabel);
+		add(costLabel);
+		add(costWithWorkloadLabel);
+		add(profitWorkloadLabel);
 		add(worthLabel);
 		add(worthField);
-		
+
+		/*
+		 * TODO specific bounds set for now, to variables later
+		 */
 		nameLabel.setBounds(10, 5, BUTTONWIDTH, SPACE);
 		workloadLabel.setBounds(10, 20, BUTTONWIDTH, SPACE);
 		numCraftedLabel.setBounds(10, 35, BUTTONWIDTH, SPACE);
-		
+		costLabel.setBounds(10 + BUTTONWIDTH + SPACE, 35, BUTTONWIDTH, SPACE);
+		costWithWorkloadLabel.setBounds(10+BUTTONWIDTH+SPACE, 50, BUTTONWIDTH*2, SPACE);
+		profitWorkloadLabel.setBounds(10 + 2*BUTTONWIDTH + 3*SPACE, 5, BUTTONWIDTH*2, SPACE);
+
 		worthLabel.setBounds(10 + BUTTONWIDTH + SPACE, 5, 50, SPACE);
 		worthField.setBounds(
 				worthLabel.getLocation().x+worthLabel.getWidth(), 5, WORTHWIDTH, SPACE);
 		worthField.setEnabled(false);
-		
+
 		/*
 		 * 	Create the rows on panel with loop
 		 */
@@ -99,20 +115,20 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 		{
 			ingredientButton[i] = new JButton(BLANKSTRING);
 			ingredientButton[i].addActionListener(this);
-			
+
 			ingredientNumber[i] = new JLabel(BLANKSTRING);
 
 			ingredientWorth[i] = new JFormattedTextField(nf);
 			ingredientWorth[i].setText(BLANKSTRING);
 			ingredientWorth[i].addPropertyChangeListener("value", this);
-			
+
 			ingredientWorthTotal[i] = new JLabel(BLANKSTRING);
-			
+
 			add(ingredientButton[i]);
 			add(ingredientNumber[i]);
 			add(ingredientWorth[i]);
 			add(ingredientWorthTotal[i]);
-			
+
 			ingredientButton[i].setBounds(
 					SPACE, TOPSPACE+SPACE*i, BUTTONWIDTH, ROWHEIGHT);
 			ingredientNumber[i].setBounds(
@@ -121,12 +137,12 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 					3*SPACE+BUTTONWIDTH, TOPSPACE+SPACE*i, WORTHWIDTH, ROWHEIGHT);
 			ingredientWorthTotal[i].setBounds(
 					4*SPACE+BUTTONWIDTH+WORTHWIDTH, TOPSPACE+SPACE*i, WORTHWIDTH, ROWHEIGHT);
-			
+
 			disableRow(i);
 		}
 	}
-	
-	
+
+
 	/*
 	 * 	Sets panel to show information for item
 	 */
@@ -135,9 +151,10 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 		nameLabel.setText("Item: " + i.name);
 		worthField.setEnabled(true);
 		worthField.setName(BLANKSTRING);
-		worthField.setText(String.valueOf(i.worth));
+		worthField.setText(nf.format(i.worth));
 		worthField.setName(i.name);
-		
+		costLabel.setText("Cost: "+nf.format(i.cost));
+
 		if (i.type == 0) //Material
 		{
 			workloadLabel.setText("Workload: "+BLANKSTRING);
@@ -152,6 +169,8 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 			loaded = (Craftable) i;
 			workloadLabel.setText("Workload: "+loaded.workload);
 			numCraftedLabel.setText("Size: "+loaded.numCrafted);
+			costWithWorkloadLabel.setText("Cost w/ WL: "+(loaded.cost+loaded.workload/DataManager.costPerWorkload/loaded.numCrafted));
+			profitWorkloadLabel.setText("Profit Ratio: "+nf.format(loaded.profitRatio));
 			for (int j = 0; j < loaded.craftedFromItems.length; j++)
 			{
 				setRow(j, loaded.craftedFromItems[j], loaded.craftedFromNumbers[j], loaded.craftedFromItems[j].worth);
@@ -166,19 +185,24 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 	public void actionPerformed(ActionEvent e) {
 		loadItem(Main.dm.itemMap.get(e.getActionCommand()));
 	}
-	
+
 
 	public void propertyChange(PropertyChangeEvent e) {
 		String tempName = ((JFormattedTextField) e.getSource()).getName();
 		if (tempName.compareTo(BLANKSTRING) != 0) //only fires when user changes value
 		{
 			//System.out.print(e.getNewValue()+" "+tempName);
-			Main.dm.itemMap.get(tempName).worth = (long) e.getNewValue();
-			refreshItem();
+			Item tempItem = Main.dm.itemMap.get(tempName);
+			tempItem.worth = (long) e.getNewValue();
+
+			refreshItem(tempItem);
+			//System.out.println(tempItem.cost);
+
+			refreshPanel();
 		}
 	}
-	
-	
+
+
 	/*
 	 * 	Helps with disabling unused rows for current loaded item
 	 */
@@ -193,8 +217,8 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 		ingredientWorthTotal[row].setText(BLANKSTRING);
 		ingredientWorthTotal[row].setEnabled(false);
 	}
-	
-	
+
+
 	/*
 	 * 	Helps with setting row information for current loaded item
 	 */
@@ -205,24 +229,44 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 		ingredientButton[row].setActionCommand(i.name);
 		ingredientNumber[row].setEnabled(true);
 		ingredientNumber[row].setText(String.valueOf(number));
-		
+
 		ingredientWorth[row].setEnabled(true);
 		ingredientWorth[row].setName(BLANKSTRING);
 		ingredientWorth[row].setValue(worth);
 		ingredientWorth[row].setName(i.name);
-		
+
 		ingredientWorthTotal[row].setEnabled(true);
 		ingredientWorthTotal[row].setText(nf.format(number*worth));
 	}
-	
+
+	/*
+	 * 	Update object item fields
+	 */
+	private void refreshItem(Item i)
+	{
+		i.updateCost();
+	}
+
 	/*
 	 * 	Update shown item fields after a change has occurred
 	 */
-	private void refreshItem()
+	private void refreshPanel()	//TODO clean this up vs original loadItem(Item i)
 	{
-		for (int j = 0; j < loaded.craftedFromItems.length; j++)
+		if (loaded != null)
 		{
-			setRow(j, loaded.craftedFromItems[j], loaded.craftedFromNumbers[j], loaded.craftedFromItems[j].worth);
+			loaded.updateCost();
+			for (int j = 0; j < loaded.craftedFromItems.length; j++)
+			{
+				setRow(j, loaded.craftedFromItems[j], loaded.craftedFromNumbers[j], loaded.craftedFromItems[j].worth);
+			}
+			costLabel.setText("Cost: "+nf.format(loaded.cost));
+			if (loaded.type == 1) //TODO lazy
+			{
+				costWithWorkloadLabel.setText("Cost w/ WL: "+(loaded.cost+loaded.workload*DataManager.costPerWorkload/loaded.numCrafted));
+				profitWorkloadLabel.setText("Profit Ratio: "+nf.format(loaded.profitRatio));
+				//System.out.println(loaded.worthPerWorkload);
+				//System.out.println(DataManager.costPerWorkload);
+			}
 		}
 	}
 }

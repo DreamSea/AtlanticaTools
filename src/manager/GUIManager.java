@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 
 import gui.CraftItemTree;
 import gui.ItemPanel;
+import gui.MenuBar;
+
 import javax.swing.JFrame;
 
 public class GUIManager {
@@ -11,6 +13,7 @@ public class GUIManager {
 	final static int WIDTH = 300;
 	final static int HEIGHT = 600;
 	
+	public MenuBar mb = new MenuBar();
 	public CraftItemTree cit = new CraftItemTree();
 	public ItemPanel ip = new ItemPanel();
 	
@@ -26,6 +29,8 @@ public class GUIManager {
 		frame.setResizable(false);
 		frame.setLocation(100, 50);
 		//frame.setSize(WIDTH, HEIGHT);
+		
+		frame.setJMenuBar(mb);
 		
 		//frame.add(new TreeDemo(), BorderLayout.EAST);
 		frame.add(cit, BorderLayout.WEST);

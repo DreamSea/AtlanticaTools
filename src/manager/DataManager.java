@@ -2,9 +2,15 @@ package manager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Set;
 
 import types.Craftable;
 import types.Item;
@@ -17,11 +23,12 @@ public class DataManager {
 	public ArrayList<Material> materials;
 	
 	public ArrayList<ArrayList<Craftable>> skillTree;
+	public ArrayList<Craftable> crystal;
 	public ArrayList<Craftable> food;
 	
 	private static ArrayList<Craftable> currentList;
 	
-	private double costPerWorkload;	//temporary, replace with craft book item later
+	public static double costPerWorkload = 1.0;	//TODO temporary, replace with craft book item later
 	
 	public DataManager()
 	{
@@ -35,16 +42,38 @@ public class DataManager {
 	private void init()
 	{
 		initMaterial();
+		initCrystal();
 		initFood();
-		costPerWorkload = 1.0;
 	}
 	
 	private void initMaterial()
 	{
 		materials = new ArrayList<Material>();
+		addMaterial("Phoenix Crystal");
+		addMaterial("Giant Crystal");
+		addMaterial("Redemption Crystal");
+		addMaterial("Dragon Crystal");
+		addMaterial("Ashen Crystal");
 		addMaterial("Salt");
 		addMaterial("Pork");
 		addMaterial("Wheat");
+		addMaterial("Barley");
+		addMaterial("Salt");
+		addMaterial("Sesame Oil");
+	}
+	
+	private void initCrystal()
+	{
+		crystal = new ArrayList<Craftable>();
+		skillTree.add(crystal);
+		currentList = crystal;
+		
+		addCraftable("Multi-Hued Crystal Shard", 46000, 5, 5);
+			addRecipe("Phoenix Crystal", 1);
+			addRecipe("Giant Crystal", 1);
+			addRecipe("Redemption Crystal", 1);
+			addRecipe("Dragon Crystal", 1);
+			addRecipe("Ashen Crystal", 1);
 	}
 	
 	private void initFood()
@@ -60,6 +89,11 @@ public class DataManager {
 		addCraftable("Grilled Pork", 600, 10, 2);
 			addRecipe("Pork", 8);
 			addRecipe("Salt", 4);
+		
+		addCraftable("Barley Bibimbap", 7000, 10, 3);
+			addRecipe("Barley", 60);
+			addRecipe("Salt", 20);
+			addRecipe("Sesame Oil", 5);
 	}
 	
 	// Lazy Material Adding
@@ -81,6 +115,8 @@ public class DataManager {
 		Item temp = itemMap.get(name);
 		temp.craftsInto.add(Craftable.lastCraftable);
 		Craftable.lastCraftable.addRecipe(itemMap.get(name), number);
+		
+		temp.craftsInto.add(Craftable.lastCraftable);
 		
 	}
 	
@@ -121,6 +157,31 @@ public class DataManager {
 			}
 		}
 		catch(FileNotFoundException e)
+		{
+			
+		}
+	}
+	
+	public void savePrices()
+	{
+		System.out.println("saveme");
+
+		Set<String> tempSet = itemMap.keySet();
+		ArrayList<String> tempList = new ArrayList<String>();
+		
+		for (String s : tempSet)
+		{
+			String altered = s.replace(" ", "_");
+			tempList.add(altered+" "+itemMap.get(s).worth);
+		}
+		
+		Path path = Paths.get("prices.txt");
+		
+		try
+		{
+			Files.write(path, tempList, StandardCharsets.UTF_8);
+		}
+		catch(IOException e)
 		{
 			
 		}

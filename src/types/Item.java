@@ -27,10 +27,10 @@ public class Item {
 	 * 	Changes: probably every gui setting of something
 	 * in craft tree ancestors
 	 */
-	public long cost; //cost to buy all of the components
+	public double cost; //cost to buy all of the components
 	public byte type;
-
-	public ArrayList<Item> craftsInto;
+	
+	public ArrayList<Craftable> craftsInto;
 	
 	/**
 	 * 
@@ -43,12 +43,21 @@ public class Item {
 		worth = 1;
 		cost = 1;
 		this.type = type; 
-		craftsInto = new ArrayList<Item>();
+		craftsInto = new ArrayList<Craftable>();
 	}
 	
 	public void updateCost()
 	{
-		cost = worth;
+		cost = worth; //craftable overrides
+		for (Craftable c : craftsInto)
+		{
+			c.updateCost();
+		}
+	}
+	
+	public void setWorth(long l)
+	{
+		worth = l;
 	}
 	
 	public String toString()
