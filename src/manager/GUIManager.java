@@ -2,6 +2,7 @@ package manager;
 
 import java.awt.BorderLayout;
 
+import gui.CraftIntoPanel;
 import gui.CraftItemTree;
 import gui.ItemPanel;
 import gui.MenuBar;
@@ -16,6 +17,7 @@ public class GUIManager {
 	public MenuBar mb = new MenuBar();
 	public CraftItemTree cit = new CraftItemTree();
 	public ItemPanel ip = new ItemPanel();
+	public CraftIntoPanel cip = new CraftIntoPanel();
 	
 	public GUIManager()
 	{
@@ -34,6 +36,7 @@ public class GUIManager {
 		
 		//frame.add(new TreeDemo(), BorderLayout.EAST);
 		frame.add(cit, BorderLayout.WEST);
+		frame.add(cip, BorderLayout.EAST);
 		frame.add(ip, BorderLayout.SOUTH);
 		
 		frame.pack();

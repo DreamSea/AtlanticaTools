@@ -49,17 +49,19 @@ public class DataManager {
 	private void initMaterial()
 	{
 		materials = new ArrayList<Material>();
-		addMaterial("Phoenix Crystal");
+		/*addMaterial("Phoenix Crystal");
 		addMaterial("Giant Crystal");
 		addMaterial("Redemption Crystal");
 		addMaterial("Dragon Crystal");
 		addMaterial("Ashen Crystal");
-		addMaterial("Salt");
 		addMaterial("Pork");
 		addMaterial("Wheat");
-		addMaterial("Barley");
 		addMaterial("Salt");
-		addMaterial("Sesame Oil");
+		addMaterial("Shrimp");
+		addMaterial("Octopus");
+		
+		addMaterial("Barley");
+		addMaterial("Sesame Oil");*/
 	}
 	
 	private void initCrystal()
@@ -90,6 +92,14 @@ public class DataManager {
 			addRecipe("Pork", 8);
 			addRecipe("Salt", 4);
 		
+		addCraftable("Grilled Shrimp", 800, 10, 2);
+			addRecipe("Shrimp", 10);
+			addRecipe("Salt", 5);	
+		
+		addCraftable("Octopus Soup", 960, 10, 2);
+			addRecipe("Octopus", 12);
+			addRecipe("Salt", 6);
+			
 		addCraftable("Barley Bibimbap", 7000, 10, 3);
 			addRecipe("Barley", 60);
 			addRecipe("Salt", 20);
@@ -100,7 +110,8 @@ public class DataManager {
 	private void addMaterial(String material)
 	{
 		itemMap.put(material, new Material(material));
-		materials.add((Material) itemMap.get(material));
+		//System.out.println(material+" "+itemMap.get(material));
+		materials.add((Material) (itemMap.get(material)));
 	}
 	
 	// Lazy Craftable Adding
@@ -112,12 +123,15 @@ public class DataManager {
 	
 	private void addRecipe(String name, int number)
 	{
+		if (!itemMap.containsKey(name))
+		{
+			addMaterial(name);
+			//itemMap.put(name, new Material(name));
+			//materials.add((Material) itemMap.get(name));
+		}
 		Item temp = itemMap.get(name);
 		temp.craftsInto.add(Craftable.lastCraftable);
 		Craftable.lastCraftable.addRecipe(itemMap.get(name), number);
-		
-		temp.craftsInto.add(Craftable.lastCraftable);
-		
 	}
 	
 	private void loadPrices()

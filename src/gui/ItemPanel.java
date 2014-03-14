@@ -53,6 +53,7 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 	private JLabel[] ingredientWorthTotal;
 
 	private Craftable loaded;
+	private Material loadedMat;
 
 	private NumberFormat nf;
 
@@ -157,8 +158,12 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 
 		if (i.type == 0) //Material
 		{
+			loaded = null;
+			loadedMat = (Material) i;
 			workloadLabel.setText("Workload: "+BLANKSTRING);
 			numCraftedLabel.setText("Size: "+BLANKSTRING);
+			costWithWorkloadLabel.setText("Cost w/ WL: "+BLANKSTRING);
+			profitWorkloadLabel.setText("Profit Ratio: "+BLANKSTRING);
 			for (int j = 0; j < ITEMROWS; j++)
 			{
 				disableRow(j);
@@ -180,6 +185,9 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 				disableRow(j);
 			}
 		}
+
+		Main.gm.cip.craftTable.setData(i.name);
+		
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -196,6 +204,15 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 			tempItem.worth = (long) e.getNewValue();
 
 			refreshItem(tempItem);
+			
+			if (loaded != null)
+			{
+				Main.gm.cip.craftTable.setData(loaded.name);
+			}
+			else
+			{
+				Main.gm.cip.craftTable.setData(loadedMat.name);
+			}
 			//System.out.println(tempItem.cost);
 
 			refreshPanel();
