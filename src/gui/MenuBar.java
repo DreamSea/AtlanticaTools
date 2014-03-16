@@ -36,56 +36,11 @@ public class MenuBar extends JMenuBar implements ActionListener
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		//System.out.println(e.getSource());
-		//System.out.println(save);
+	public void actionPerformed(ActionEvent e)
+	{
 		if (e.getSource().equals(save))
 		{
 			Main.dm.savePrices();
 		}
 	}
-	
-	/*
-	private void loadPrices()
-	{
-		try
-		{
-			Scanner input = new Scanner(new File("prices.txt"));
-
-			while (input.hasNext())
-			{
-				String temp = input.next().replace('_', ' ');
-				
-				if (itemMap.containsKey(temp))
-				{
-					itemMap.get(temp).worth = input.nextInt();
-				}
-				else
-				{
-					input.nextInt();
-				}
-			}
-			
-			input.close();
-			
-			for (Material m : materials)
-			{
-				m.updateCost();
-			}
-			
-			for (ArrayList<Craftable> s : skillTree)
-			{
-				//System.out.println("ping");
-				for (Craftable c : s)
-				{
-					c.updateCost();
-				}
-			}
-		}
-		catch(FileNotFoundException e)
-		{
-			
-		}
-	}
-	 */
 }

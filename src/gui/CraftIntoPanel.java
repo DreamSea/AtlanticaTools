@@ -39,9 +39,6 @@ public class CraftIntoPanel extends JPanel {
 		JScrollPane jsp = new JScrollPane(table);
 		jsp.setPreferredSize(new Dimension(200, 200));
 		add(jsp);
-		
-		//cit.setData("Salt");
-		
 	}
 	
 	class CraftIntoTable extends AbstractTableModel
@@ -52,7 +49,7 @@ public class CraftIntoPanel extends JPanel {
 
 		public CraftIntoTable()
 		{
-			//setData("Barley");
+
 		}
 		
 		public Class getColumnClass (int c)
@@ -137,7 +134,7 @@ public class CraftIntoPanel extends JPanel {
 			if (isActive)
 			{
 				Item selected = Main.dm.itemMap.get(table.getValueAt(e.getFirstIndex(), 0));
-				Main.gm.ip.loadItem(selected);
+				Main.gm.ccp.loadItem(selected);
 				//System.out.println(e.getSource());
 			
 				//System.out.println(e.getFirstIndex() +" " + e.getLastIndex());

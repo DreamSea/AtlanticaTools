@@ -4,7 +4,8 @@ import java.awt.BorderLayout;
 
 import gui.CraftIntoPanel;
 import gui.CraftItemTree;
-import gui.ItemPanel;
+import gui.CraftComponentPanel;
+import gui.ItemInfoPanel;
 import gui.MenuBar;
 
 import javax.swing.JFrame;
@@ -16,8 +17,9 @@ public class GUIManager {
 	
 	public MenuBar mb = new MenuBar();
 	public CraftItemTree cit = new CraftItemTree();
-	public ItemPanel ip = new ItemPanel();
+	public CraftComponentPanel ccp = new CraftComponentPanel();
 	public CraftIntoPanel cip = new CraftIntoPanel();
+	public ItemInfoPanel iip = new ItemInfoPanel();
 	
 	public GUIManager()
 	{
@@ -34,10 +36,10 @@ public class GUIManager {
 		
 		frame.setJMenuBar(mb);
 		
-		//frame.add(new TreeDemo(), BorderLayout.EAST);
 		frame.add(cit, BorderLayout.WEST);
+		frame.add(iip, BorderLayout.CENTER);
 		frame.add(cip, BorderLayout.EAST);
-		frame.add(ip, BorderLayout.SOUTH);
+		frame.add(ccp, BorderLayout.SOUTH);
 		
 		frame.pack();
 		frame.setVisible(true);

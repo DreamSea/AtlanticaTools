@@ -25,26 +25,17 @@ import types.Material;
  * 		ItemPanel : Contains main interface for switching
  * 			between crafted items and their components
  */
-public class ItemPanel extends JPanel implements ActionListener, PropertyChangeListener {
+public class CraftComponentPanel extends JPanel implements ActionListener, PropertyChangeListener {
 
-	final int BUTTONWIDTH = 100;
+	final int BUTTONWIDTH = 175;
 	final int WORTHWIDTH = 100;
 	final int SPACE = 35; //for each row
-	final int TOPSPACE = 80; //for top
+	final int TOPSPACE = 35; //for top
 
 	final int ITEMROWS = 10;
 	final int ROWHEIGHT = 30;
 
 	final String BLANKSTRING = "---";
-
-	private JLabel nameLabel;				//Item Name
-	private JLabel workloadLabel;			//Item Workload
-	private JLabel numCraftedLabel;			//Item Size
-	private JLabel costLabel;				//Cost to obtain item
-	private JLabel costWithWorkloadLabel;
-	private JLabel worthLabel;				//Worth on marketplace
-	private JLabel profitWorkloadLabel;		//worth - cost per workload
-	private JFormattedTextField worthField;	//Field to change Item worth
 
 	//for loop javax.swing items
 	private JButton[] ingredientButton;
@@ -58,21 +49,10 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 	private NumberFormat nf;
 
 
-	public ItemPanel()
+	public CraftComponentPanel()
 	{
 		nf = NumberFormat.getNumberInstance();
 		nf.setGroupingUsed(true);
-
-		nameLabel = new JLabel("Item: "+BLANKSTRING);
-		workloadLabel = new JLabel("Workload:"+BLANKSTRING);
-		numCraftedLabel = new JLabel("Size: "+BLANKSTRING);
-		costLabel = new JLabel("Cost: "+BLANKSTRING);
-		costWithWorkloadLabel = new JLabel("Cost w/ WL: "+BLANKSTRING);
-		profitWorkloadLabel = new JLabel("Profit Ratio: "+BLANKSTRING);
-		worthLabel = new JLabel("Worth:");
-		worthField = new JFormattedTextField(nf);
-		worthField.setText(BLANKSTRING);
-		worthField.addPropertyChangeListener("value", this);
 
 		//for loop javax.swing array
 		ingredientButton = new JButton[ITEMROWS];
@@ -85,32 +65,10 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 				5*SPACE+BUTTONWIDTH+WORTHWIDTH+WORTHWIDTH, 100+SPACE*ITEMROWS));
 		setBackground(Color.lightGray);
 
-		add(nameLabel);
-		add(workloadLabel);
-		add(numCraftedLabel);
-		add(costLabel);
-		add(costWithWorkloadLabel);
-		add(profitWorkloadLabel);
-		add(worthLabel);
-		add(worthField);
-
 		/*
 		 * TODO specific bounds set for now, to variables later
-		 */
-		nameLabel.setBounds(10, 5, BUTTONWIDTH, SPACE);
-		workloadLabel.setBounds(10, 20, BUTTONWIDTH, SPACE);
-		numCraftedLabel.setBounds(10, 35, BUTTONWIDTH, SPACE);
-		costLabel.setBounds(10 + BUTTONWIDTH + SPACE, 35, BUTTONWIDTH, SPACE);
-		costWithWorkloadLabel.setBounds(10+BUTTONWIDTH+SPACE, 50, BUTTONWIDTH*2, SPACE);
-		profitWorkloadLabel.setBounds(10 + 2*BUTTONWIDTH + 3*SPACE, 5, BUTTONWIDTH*2, SPACE);
-
-		worthLabel.setBounds(10 + BUTTONWIDTH + SPACE, 5, 50, SPACE);
-		worthField.setBounds(
-				worthLabel.getLocation().x+worthLabel.getWidth(), 5, WORTHWIDTH, SPACE);
-		worthField.setEnabled(false);
-
-		/*
-		 * 	Create the rows on panel with loop
+		 * 
+		 * Create the rows on panel with loop
 		 */
 		for (int i = 0; i < ITEMROWS; i++)
 		{
@@ -149,21 +107,10 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 	 */
 	public void loadItem(Item i)
 	{
-		nameLabel.setText("Item: " + i.name);
-		worthField.setEnabled(true);
-		worthField.setName(BLANKSTRING);
-		worthField.setText(nf.format(i.worth));
-		worthField.setName(i.name);
-		costLabel.setText("Cost: "+nf.format(i.cost));
-
 		if (i.type == 0) //Material
 		{
 			loaded = null;
 			loadedMat = (Material) i;
-			workloadLabel.setText("Workload: "+BLANKSTRING);
-			numCraftedLabel.setText("Size: "+BLANKSTRING);
-			costWithWorkloadLabel.setText("Cost w/ WL: "+BLANKSTRING);
-			profitWorkloadLabel.setText("Profit Ratio: "+BLANKSTRING);
 			for (int j = 0; j < ITEMROWS; j++)
 			{
 				disableRow(j);
@@ -172,10 +119,6 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 		else if (i.type == 1) //Craftable
 		{
 			loaded = (Craftable) i;
-			workloadLabel.setText("Workload: "+loaded.workload);
-			numCraftedLabel.setText("Size: "+loaded.numCrafted);
-			costWithWorkloadLabel.setText("Cost w/ WL: "+(loaded.cost+loaded.workload/DataManager.costPerWorkload/loaded.numCrafted));
-			profitWorkloadLabel.setText("Profit Ratio: "+nf.format(loaded.profitRatio));
 			for (int j = 0; j < loaded.craftedFromItems.length; j++)
 			{
 				setRow(j, loaded.craftedFromItems[j], loaded.craftedFromNumbers[j], loaded.craftedFromItems[j].worth);
@@ -186,7 +129,9 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 			}
 		}
 
+		//TODO: move these into data Manager?
 		Main.gm.cip.craftTable.setData(i.name);
+		Main.gm.iip.loadItem(i);
 		
 	}
 
@@ -208,10 +153,12 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 			if (loaded != null)
 			{
 				Main.gm.cip.craftTable.setData(loaded.name);
+				Main.gm.iip.loadItem(loaded);
 			}
 			else
 			{
 				Main.gm.cip.craftTable.setData(loadedMat.name);
+				Main.gm.iip.loadItem(loadedMat);
 			}
 			//System.out.println(tempItem.cost);
 
@@ -275,14 +222,6 @@ public class ItemPanel extends JPanel implements ActionListener, PropertyChangeL
 			for (int j = 0; j < loaded.craftedFromItems.length; j++)
 			{
 				setRow(j, loaded.craftedFromItems[j], loaded.craftedFromNumbers[j], loaded.craftedFromItems[j].worth);
-			}
-			costLabel.setText("Cost: "+nf.format(loaded.cost));
-			if (loaded.type == 1) //TODO lazy
-			{
-				costWithWorkloadLabel.setText("Cost w/ WL: "+(loaded.cost+loaded.workload*DataManager.costPerWorkload/loaded.numCrafted));
-				profitWorkloadLabel.setText("Profit Ratio: "+nf.format(loaded.profitRatio));
-				//System.out.println(loaded.worthPerWorkload);
-				//System.out.println(DataManager.costPerWorkload);
 			}
 		}
 	}

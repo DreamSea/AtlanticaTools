@@ -23,6 +23,7 @@ public class DataManager {
 	public ArrayList<Material> materials;
 	
 	public ArrayList<ArrayList<Craftable>> skillTree;
+	public ArrayList<Craftable> action;
 	public ArrayList<Craftable> crystal;
 	public ArrayList<Craftable> food;
 	
@@ -43,6 +44,7 @@ public class DataManager {
 	{
 		initMaterial();
 		initCrystal();
+		initAction(); //temporary, until load fix
 		initFood();
 	}
 	
@@ -62,6 +64,20 @@ public class DataManager {
 		
 		addMaterial("Barley");
 		addMaterial("Sesame Oil");*/
+	}
+	
+	private void initAction()
+	{
+		action = new ArrayList<Craftable>();
+		skillTree.add(action);
+		currentList = action;
+		
+		addCraftable("Auto-Craft [I]", 50000, 2, 4);
+			addRecipe("Multi-Hued Crystal Shard", 5);
+			addRecipe("Platinum Ingot", 50);
+			addRecipe("Hammer [I]", 100);
+			addRecipe("Enchant Stone [I]", 10);
+			
 	}
 	
 	private void initCrystal()
@@ -114,7 +130,13 @@ public class DataManager {
 		materials.add((Material) (itemMap.get(material)));
 	}
 	
-	// Lazy Craftable Adding
+	/**
+	 * 
+	 * @param craftable Item Name
+	 * @param workload Workload
+	 * @param numCrafted Size
+	 * @param numComponents Components
+	 */
 	private void addCraftable(String craftable, int workload, int numCrafted, int numComponents)
 	{
 		itemMap.put(craftable, new Craftable(craftable, workload, numCrafted, numComponents));
@@ -178,7 +200,7 @@ public class DataManager {
 	
 	public void savePrices()
 	{
-		System.out.println("saveme");
+		//System.out.println("saveme");
 
 		Set<String> tempSet = itemMap.keySet();
 		ArrayList<String> tempList = new ArrayList<String>();

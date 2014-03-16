@@ -66,7 +66,7 @@ public class CraftItemTree extends JPanel implements TreeSelectionListener
 		{
 			System.out.println(" (Craftable)");
 		}*/
-		Main.gm.ip.loadItem(selected);
+		Main.gm.ccp.loadItem(selected);
 	}
 	
 	private void createNodes(DefaultMutableTreeNode top)
@@ -80,6 +80,7 @@ public class CraftItemTree extends JPanel implements TreeSelectionListener
 			category.add(book);
 		}
 
+		craftableNodes("Action", Main.dm.action, top);
 		craftableNodes("Crystal", Main.dm.crystal, top);
 		craftableNodes("Food", Main.dm.food, top);
 		

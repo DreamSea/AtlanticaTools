@@ -1,24 +1,30 @@
 Todo: 
 
+DONE 2014/03/15 (MED) move worth from craftcomponentpanel into iteminfopanel, added autocraft[i]
+DONE 2014/03/14 (HIGH) Split item panel into craft/material panel and item detail panel
+DONE 2014/03/13 (HIGH) Basic craftsinto Panel
+DONE 2014/03/11 (HIGH) Sum of Craft costs
+DONE 2014/03/11 (HIGH) Ratio of Profit/WL: currently as total size, redo to individual prices
 
-DONE 2014/03/14 Basic craftsinto Panel
-DONE 2014/03/11 Sum of Craft costs
-DONE 2014/03/11 Ratio of Profit/WL: currently as total size, redo to individual prices
+(HIGH) fix item initial load
 
-***Split item panel into craft/material panel and item detail panel
+(MED) add color to craftTable, light green background for ratio > 1? bold text for ratio > 3?
+(MED) add craft books for workload prices
 
-public/private messups probably due to pass by value/reference shenanigans
-to patch later
+(LOW+) profit ratio by materials in item panel
+(LOW+) timestamp price changes
 
-return list of best profit ratios of everything
-return list of best profit ratio by maxworkload
+(LOW) return list of best profit ratios of everything
+(LOW) return list of best profit ratio by maxworkload
+(LOW) object streams for save/load
+(LOW) change gui to be based on window size/variables, change layout from border to something else
 
-profit ratio by materials in item panel
+(LOW-) log of price changes for items
 
-timestamp price changes
-keep a log of price changes (oh man)
-
-may eventually want to in/output object streams to load/save
+(forever) add recipes
+(forever) make the code less ugly, figure out public/private
+(forever) comment more.
+(forever) probably needless number of strings/objects created and garbage collected at the moment
 
 ~~~
 
@@ -28,16 +34,8 @@ Possible problems:
 	Current version: possible things added to material if unfound
 	fix: delete material and recreate properly? may have to transfer craftinto array
 
-~~~
-
-Pork 100
-Salt 100
-Wheat 100
-Dumpling 1000
-
-~~~
-
-Test: Panel within Panel?
+//public/private messups probably due to pass by value/reference shenanigans
+to patch later
 
 ~~~
 
