@@ -63,7 +63,7 @@ public class Craftable extends Item
 		for(int i = 0; i < craftedFromItems.length; i++)
 		{
 			Main.sb.append('-');
-			Main.sb.append(craftedFromItems[i].name);
+			Main.sb.append(craftedFromItems[i]);
 			Main.sb.append(':');
 			Main.sb.append(' ');
 			Main.sb.append(craftedFromNumbers[i]);
@@ -73,6 +73,15 @@ public class Craftable extends Item
 		Main.sb.append(cost);
 		
 		return Main.sb.toString();
+	}
+	
+	public void remapRecipe()
+	{
+		for (int i = 0; i < craftedFromItems.length; i++)
+		{
+			//System.out.println(craftedFromItems[i].name);
+			craftedFromItems[i] = Main.dm.itemMap.get(craftedFromItems[i].name);
+		}
 	}
 	
 	public void updateCost()
@@ -91,9 +100,9 @@ public class Craftable extends Item
 		 * TODO may lead to repeated updates on same item
 		 * Use boolean hasChecked set before each update?
 		 */
-		for (Craftable c : craftsInto)
+		for (String s : craftsInto)
 		{
-			c.updateCost();
+			Main.dm.itemMap.get(s).updateCost();
 		}
 	}
 

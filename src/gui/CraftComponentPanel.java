@@ -121,7 +121,9 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 			loaded = (Craftable) i;
 			for (int j = 0; j < loaded.craftedFromItems.length; j++)
 			{
-				setRow(j, loaded.craftedFromItems[j], loaded.craftedFromNumbers[j], loaded.craftedFromItems[j].worth);
+				setRow(j, loaded.craftedFromItems[j], 
+						loaded.craftedFromNumbers[j], 
+						loaded.craftedFromItems[j].worth);
 			}
 			for (int j = loaded.craftedFromItems.length; j < ITEMROWS; j++)
 			{
@@ -221,7 +223,9 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 			loaded.updateCost();
 			for (int j = 0; j < loaded.craftedFromItems.length; j++)
 			{
-				setRow(j, loaded.craftedFromItems[j], loaded.craftedFromNumbers[j], loaded.craftedFromItems[j].worth);
+				setRow(j, loaded.craftedFromItems[j], 
+						loaded.craftedFromNumbers[j], 
+						loaded.craftedFromItems[j].worth);
 			}
 		}
 	}

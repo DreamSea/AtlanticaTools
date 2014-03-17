@@ -102,7 +102,7 @@ public class CraftIntoPanel extends JPanel {
 			
 			for (int i = 0; i < length; i++)
 			{
-				Craftable tempCraft = tempItem.craftsInto.get(i);
+				Craftable tempCraft = (Craftable) Main.dm.itemMap.get(tempItem.craftsInto.get(i));
 				data[0][i] = tempCraft.name;
 				data[1][i] = tempCraft.profitRatio;
 				//System.out.println("CIP setData(): "+tempCraft.name+tempCraft.profitRatio);

@@ -1,15 +1,16 @@
 Todo: 
 
-DONE 2014/03/15 (MED) move worth from craftcomponentpanel into iteminfopanel, added autocraft[i]
-DONE 2014/03/14 (HIGH) Split item panel into craft/material panel and item detail panel
-DONE 2014/03/13 (HIGH) Basic craftsinto Panel
+DONE 2014/03/16 (HIGH) Fix initial item load, added craft tree for Auto-Craft[ii]
+DONE 2014/03/15 (MED) Move worth from CraftComponentPanel into ItemInfoPanel, added Auto-Craft[i]
+DONE 2014/03/14 (HIGH) Split Item panel into craft/material panel and item detail panel
+DONE 2014/03/13 (HIGH) Basic CraftsInto Panel
 DONE 2014/03/11 (HIGH) Sum of Craft costs
 DONE 2014/03/11 (HIGH) Ratio of Profit/WL: currently as total size, redo to individual prices
 
-(HIGH) fix item initial load
+(MED+) add craft books for workload prices, use menu selector to choose which workload to use
 
+(MED) add max wl (aka most wl stacked up in one craft cycle)
 (MED) add color to craftTable, light green background for ratio > 1? bold text for ratio > 3?
-(MED) add craft books for workload prices
 
 (LOW+) profit ratio by materials in item panel
 (LOW+) timestamp price changes
@@ -22,10 +23,12 @@ DONE 2014/03/11 (HIGH) Ratio of Profit/WL: currently as total size, redo to indi
 (LOW-) log of price changes for items
 
 (forever) add recipes
-(forever) make the code less ugly, figure out public/private
+(forever) make the code less ugly, figure out public/private, less public static
 (forever) comment more.
 (forever) probably needless number of strings/objects created and garbage collected at the moment
 
+(???) currently entering recipes by hand = many chances to make a mistake...
+		try putting all the recipes into various xmls/database type things outside of java?
 ~~~
 
 Possible problems:

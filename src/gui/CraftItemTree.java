@@ -83,7 +83,9 @@ public class CraftItemTree extends JPanel implements TreeSelectionListener
 		craftableNodes("Action", Main.dm.action, top);
 		craftableNodes("Crystal", Main.dm.crystal, top);
 		craftableNodes("Food", Main.dm.food, top);
-		
+		craftableNodes("Machine", Main.dm.machine, top);
+		craftableNodes("Medicine", Main.dm.medicine, top);
+		craftableNodes("Tool", Main.dm.tool, top);
 	}
 	
 	private void craftableNodes(String name, ArrayList<Craftable> skill, DefaultMutableTreeNode top)

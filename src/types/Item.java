@@ -2,6 +2,8 @@ package types;
 
 import java.util.ArrayList;
 
+import manager.Main;
+
 public class Item {
 
 	/*
@@ -30,7 +32,7 @@ public class Item {
 	public double cost; //cost to buy all of the components
 	public byte type;
 	
-	public ArrayList<Craftable> craftsInto;
+	public ArrayList<String> craftsInto;
 	
 	/**
 	 * 
@@ -43,15 +45,17 @@ public class Item {
 		worth = 1;
 		cost = 1;
 		this.type = type; 
-		craftsInto = new ArrayList<Craftable>();
+		craftsInto = new ArrayList<String>();
 	}
 	
 	public void updateCost()
 	{
 		cost = worth; //craftable overrides
-		for (Craftable c : craftsInto)
+		for (String s : craftsInto)
 		{
-			c.updateCost();
+			//System.out.println(s);
+			//System.out.println(Main.dm == null);
+			Main.dm.itemMap.get(s).updateCost();
 		}
 	}
 	

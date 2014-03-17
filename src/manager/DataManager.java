@@ -18,6 +18,8 @@ import types.Material;
 
 public class DataManager {
 	
+	private boolean hasInit = false;
+	
 	public HashMap<String, Item> itemMap;
 	
 	public ArrayList<Material> materials;
@@ -26,6 +28,9 @@ public class DataManager {
 	public ArrayList<Craftable> action;
 	public ArrayList<Craftable> crystal;
 	public ArrayList<Craftable> food;
+	public ArrayList<Craftable> machine;
+	public ArrayList<Craftable> medicine;
+	public ArrayList<Craftable> tool;
 	
 	private static ArrayList<Craftable> currentList;
 	
@@ -36,16 +41,24 @@ public class DataManager {
 		itemMap = new HashMap<String, Item>();
 		skillTree = new ArrayList<ArrayList<Craftable>>();
 		
-		init();
-		loadPrices();
+		//init();
+		//loadPrices();
 	}
 	
-	private void init()
+	public void init()
 	{
-		initMaterial();
-		initCrystal();
-		initAction(); //temporary, until load fix
-		initFood();
+		if (!hasInit) //makes sure init() only runs once... since it's public and all
+		{
+			hasInit = true;
+			
+			initMaterial();
+			initAction();
+			initCrystal();
+			initFood();
+			initMachine();
+			initMedicine();
+			initTool();
+		}
 	}
 	
 	private void initMaterial()
@@ -78,6 +91,13 @@ public class DataManager {
 			addRecipe("Hammer [I]", 100);
 			addRecipe("Enchant Stone [I]", 10);
 			
+		addCraftable("Auto-Craft [II]", 210000, 4, 5);
+			addRecipe("Multi-Hued Crystal", 1);
+			addRecipe("Platinum Ingot", 100);
+			addRecipe("Hammer [II]", 50);
+			addRecipe("Enchant Stone[II]", 10);
+			addRecipe("Auto-Craft Doll MK-1", 2);
+			
 	}
 	
 	private void initCrystal()
@@ -92,6 +112,13 @@ public class DataManager {
 			addRecipe("Redemption Crystal", 1);
 			addRecipe("Dragon Crystal", 1);
 			addRecipe("Ashen Crystal", 1);
+		
+		addCraftable("Multi-Hued Crystal", 200000, 5, 5);
+			addRecipe("Multi-Hued Crystal Shard", 5);
+			addRecipe("Mandragora", 2);
+			addRecipe("Platinum Ingot", 25);
+			addRecipe("Coral", 100);
+			addRecipe("Opal", 3);
 	}
 	
 	private void initFood()
@@ -122,6 +149,55 @@ public class DataManager {
 			addRecipe("Sesame Oil", 5);
 	}
 	
+	private void initMachine()
+	{
+		machine = new ArrayList<Craftable>();
+		skillTree.add(machine);
+		currentList = machine;
+		
+		addCraftable("Auto-Craft Doll MK-1", 1830000, 5, 8);
+			addRecipe("Small Marionette", 1);
+			addRecipe("Mysterious Vial: Wisdom", 1);
+			addRecipe("Earth Element Shard", 300);
+			addRecipe("Normal Crafting Secrets", 100);
+			addRecipe("Polish", 10);
+			addRecipe("Pearl", 150);
+			addRecipe("Oil", 15);
+			addRecipe("Small Bolt", 15);
+	}
+	
+	private void initMedicine()
+	{
+		medicine = new ArrayList<Craftable>();
+		skillTree.add(medicine);
+		currentList = medicine;
+		
+		addCraftable("Mana Potion [III]", 5700, 10, 3);
+			addRecipe("Chrysanthemum", 15);
+			addRecipe("Jasmine", 15);
+			addRecipe("Cyclamen", 10);
+		
+		addCraftable("Mysterious Vial: Wisdom", 1430000, 10, 6);
+			addRecipe("Mandragora", 4);
+			addRecipe("Multi-Hued Crystal", 5);
+			addRecipe("Growth Vial [II]", 50);
+			addRecipe("Mana Potion [III]", 100);
+			addRecipe("Jasmine", 400);
+			addRecipe("Green Mold", 600);
+	}
+	
+	private void initTool()
+	{
+		tool = new ArrayList<Craftable>();
+		skillTree.add(tool);
+		currentList = tool;
+		
+		addCraftable("Small Bolt", 3500, 20, 3);
+			addRecipe("Platinum Ingot", 1);
+			addRecipe("Silver Ingot", 30);
+			addRecipe("Coral", 100);
+	}
+	
 	// Lazy Material Adding
 	private void addMaterial(String material)
 	{
@@ -139,24 +215,56 @@ public class DataManager {
 	 */
 	private void addCraftable(String craftable, int workload, int numCrafted, int numComponents)
 	{
-		itemMap.put(craftable, new Craftable(craftable, workload, numCrafted, numComponents));
+		if (itemMap.containsKey(craftable))
+		{
+			if (itemMap.get(craftable).type == 0) //if trying to add an item previously deemed material
+			{
+				Material toConvert = (Material) itemMap.get(craftable);
+				
+				materials.remove(toConvert);
+				
+				Craftable converted = toConvert.convert(workload, numCrafted, numComponents);
+				
+				itemMap.remove(craftable);
+				itemMap.put(craftable,  converted);
+				
+				//resets all the components from the previous material into new craftable
+				for (String s : converted.craftsInto)
+				{
+					Item tempItem = Main.dm.itemMap.get(s);
+					if (tempItem.type == 1)
+					{
+						//System.out.println(s);
+						Craftable tempCraft = (Craftable) tempItem;
+						tempCraft.remapRecipe();
+					}
+				}
+				
+				//System.out.println("duplicate: "+toConvert.name);
+			}
+		}
+		else
+		{
+			itemMap.put(craftable, new Craftable(craftable, workload, numCrafted, numComponents));
+		}
+		
 		currentList.add((Craftable) itemMap.get(craftable));
 	}
 	
 	private void addRecipe(String name, int number)
 	{
+		//puts item into itemmap as a material if not already existing
 		if (!itemMap.containsKey(name))
 		{
 			addMaterial(name);
-			//itemMap.put(name, new Material(name));
-			//materials.add((Material) itemMap.get(name));
 		}
+		
 		Item temp = itemMap.get(name);
-		temp.craftsInto.add(Craftable.lastCraftable);
+		temp.craftsInto.add(Craftable.lastCraftable.name);
 		Craftable.lastCraftable.addRecipe(itemMap.get(name), number);
 	}
 	
-	private void loadPrices()
+	void loadPrices()
 	{
 		try
 		{
