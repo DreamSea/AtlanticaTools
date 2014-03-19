@@ -1,0 +1,46 @@
+Breaking all the package conventions.
+
+Package gui:
+	Class CraftComponentPanel: contains recipe component information
+		[on user input] Bumps DataManager refreshItem()
+		Bonus: Listener - fields changed, buttons pushed
+	Class CraftIntoPanel: contains what recipes this item is a component of
+		[on user input] Bumps GUIManager loadItem()
+		Bonus: Listener - field selected
+	Class CraftItemTree: contains tree 
+		[on user input] Bumps GUIManager loadItem()
+		Bonus: Listener - field selected
+	Class ItemInfoPanel
+		[on user input] Bumps DataManager refreshItem()
+		Bonus: Listener - field changed
+	Class MenuBar
+		[on user input] Only has save prices to .txt button for now
+		Bonus: Listener - menu selected
+
+Package manager:
+	Class Main: Starts the program. 
+		Figure out how to use listeners so that the gui components
+			themselves don't have to reference DataManager?
+			Bonus (reduce circular reference): have a ManagerManager
+				that holds, listens, and bumps GUI and Data Manager
+				methods? Try and make it so that GUI/DataManager only
+				respond to get/set type methods and sends notification
+				to listeners.
+	Class GUIManager:
+		Method loadItem() which updates all the GUI Panels
+	Class DataManager:
+		Method refreshItem() which updates the cost/worth
+			and triggers toUpdate on all relevant items and
+			resulting components? This in turn bumps GUIManager
+			loadItem() to include the new item information
+				[perhaps reloadItem() to modify only specific fields?
+
+Package types:
+	Class Item
+		Subclass Material: Kind of a placeholder for
+			now ('everything not craftable'), items of 
+			this subclass disables the CraftComponentPanel
+		Subclass Craftable:
+			Double profitRatio: calculated from other attributes
+				of Craftable, throw in 'toUpdate' boolean that
+				only runs when profitRatio information is sought?
