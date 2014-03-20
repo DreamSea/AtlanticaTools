@@ -1,5 +1,6 @@
 Todo: 
 
+DONE 2014/03/20 (MED) max wl, "updated # seconds ago"
 DONE 2014/03/16 (HIGH) Fix initial item load, added craft tree for Auto-Craft[ii]
 DONE 2014/03/15 (MED) Move worth from CraftComponentPanel into ItemInfoPanel, added Auto-Craft[i]
 DONE 2014/03/14 (HIGH) Split Item panel into craft/material panel and item detail panel
@@ -7,13 +8,12 @@ DONE 2014/03/13 (HIGH) Basic CraftsInto Panel
 DONE 2014/03/11 (HIGH) Sum of Craft costs
 DONE 2014/03/11 (HIGH) Ratio of Profit/WL: currently as total size, redo to individual prices
 
-(MED+) add craft books for workload prices, use menu selector to choose which workload to use
+(MED) add craft books for workload prices, use menu selector to choose which workload to use
+(MED-) profit ratio by materials in item panel
 
-(MED) add max wl (aka most wl stacked up in one craft cycle)
-(MED) add color to craftTable, light green background for ratio > 1? bold text for ratio > 3?
+(MED-) add color to craftTable, light green background for ratio > 1? bold text for ratio > 3?
 
-(LOW+) profit ratio by materials in item panel
-(LOW+) timestamp price changes
+(MED-) GRAND REFACTOR
 
 (LOW) return list of best profit ratios of everything
 (LOW) return list of best profit ratio by maxworkload

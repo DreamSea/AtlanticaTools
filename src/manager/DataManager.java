@@ -277,10 +277,12 @@ public class DataManager {
 				if (itemMap.containsKey(temp))
 				{
 					itemMap.get(temp).worth = input.nextInt();
+					itemMap.get(temp).setTimeUpdated(input.nextLong());
 				}
 				else
 				{
-					input.nextInt();
+					input.nextInt();	//advances past unfound item
+					input.nextLong();	//		'	'	
 				}
 			}
 			
@@ -316,7 +318,7 @@ public class DataManager {
 		for (String s : tempSet)
 		{
 			String altered = s.replace(" ", "_");
-			tempList.add(altered+" "+itemMap.get(s).worth);
+			tempList.add(altered+" "+itemMap.get(s).worth+" "+itemMap.get(s).getTimeUpdated());
 		}
 		
 		Path path = Paths.get("prices.txt");

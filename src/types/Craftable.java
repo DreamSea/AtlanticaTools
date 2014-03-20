@@ -105,5 +105,18 @@ public class Craftable extends Item
 			Main.dm.itemMap.get(s).updateCost();
 		}
 	}
+	
+	public long maxWorkload()
+	{
+		int max = 10000/numCrafted;
+		for (int i = 0; i < craftedFromNumbers.length; i++)
+		{
+			if (10000/craftedFromNumbers[i] < max)
+			{
+				max = 10000/craftedFromNumbers[i];
+			}
+		}
+		return max*workload;
+	}
 
 }

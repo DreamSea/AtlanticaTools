@@ -1,5 +1,6 @@
 package types;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 import manager.Main;
@@ -22,6 +23,9 @@ public class Item {
 	 * 	Changes: only through gui setting.
 	 */
 	public long worth; //how much it can be sold for
+	private long timeUpdated; //when worth was updated
+	public static DateFormat df = DateFormat.getDateInstance();
+	private static long currentTime = System.currentTimeMillis(); //when the program started
 	
 	/*
 	 * temp: using long because of how FormattedTextField returns value (long)
@@ -46,6 +50,7 @@ public class Item {
 		cost = 1;
 		this.type = type; 
 		craftsInto = new ArrayList<String>();
+		timeUpdated = currentTime;
 	}
 	
 	public void updateCost()
@@ -62,10 +67,30 @@ public class Item {
 	public void setWorth(long l)
 	{
 		worth = l;
+		timeUpdated = System.currentTimeMillis();
 	}
 	
 	public String toString()
 	{
 		return name;
+	}
+	
+	public long getTimeUpdated()
+	{
+		return timeUpdated;
+	}
+	
+	public void setTimeUpdated(long l)
+	{
+		timeUpdated = l;
+	}
+	
+	/**
+	 * 
+	 * @return seconds since the worth of this item has been updated
+	 */
+	public long getTimeSinceUpdate()
+	{
+		return Math.max((currentTime - timeUpdated)/1000, 0);
 	}
 }

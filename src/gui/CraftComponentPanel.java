@@ -42,6 +42,7 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 	private JLabel[] ingredientNumber;
 	private JFormattedTextField[] ingredientWorth;
 	private JLabel[] ingredientWorthTotal;
+	private JLabel[] ingredientDateUpdated;
 
 	private Craftable loaded;
 	private Material loadedMat;
@@ -59,6 +60,7 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 		ingredientNumber = new JLabel[ITEMROWS];
 		ingredientWorth = new JFormattedTextField[ITEMROWS];
 		ingredientWorthTotal = new JLabel[ITEMROWS];
+		ingredientDateUpdated = new JLabel[ITEMROWS];
 
 		setLayout(null);
 		setPreferredSize(new Dimension(
@@ -82,11 +84,13 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 			ingredientWorth[i].addPropertyChangeListener("value", this);
 
 			ingredientWorthTotal[i] = new JLabel(BLANKSTRING);
+			ingredientDateUpdated[i] = new JLabel(BLANKSTRING);
 
 			add(ingredientButton[i]);
 			add(ingredientNumber[i]);
 			add(ingredientWorth[i]);
 			add(ingredientWorthTotal[i]);
+			add(ingredientDateUpdated[i]);
 
 			ingredientButton[i].setBounds(
 					SPACE, TOPSPACE+SPACE*i, BUTTONWIDTH, ROWHEIGHT);
@@ -96,7 +100,9 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 					3*SPACE+BUTTONWIDTH, TOPSPACE+SPACE*i, WORTHWIDTH, ROWHEIGHT);
 			ingredientWorthTotal[i].setBounds(
 					4*SPACE+BUTTONWIDTH+WORTHWIDTH, TOPSPACE+SPACE*i, WORTHWIDTH, ROWHEIGHT);
-
+			ingredientDateUpdated[i].setBounds(
+					8*SPACE+BUTTONWIDTH+WORTHWIDTH, TOPSPACE+SPACE*i, WORTHWIDTH, ROWHEIGHT);
+			
 			disableRow(i);
 		}
 	}
@@ -148,7 +154,7 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 		{
 			//System.out.print(e.getNewValue()+" "+tempName);
 			Item tempItem = Main.dm.itemMap.get(tempName);
-			tempItem.worth = (long) e.getNewValue();
+			tempItem.setWorth((long) e.getNewValue());
 
 			refreshItem(tempItem);
 			
@@ -182,6 +188,8 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 		ingredientWorth[row].setEnabled(false);
 		ingredientWorthTotal[row].setText(BLANKSTRING);
 		ingredientWorthTotal[row].setEnabled(false);
+		ingredientDateUpdated[row].setText(BLANKSTRING);
+		ingredientDateUpdated[row].setEnabled(false);
 	}
 
 
@@ -203,6 +211,9 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 
 		ingredientWorthTotal[row].setEnabled(true);
 		ingredientWorthTotal[row].setText(nf.format(number*worth));
+		
+		ingredientDateUpdated[row].setEnabled(true);
+		ingredientDateUpdated[row].setText(String.valueOf(i.getTimeSinceUpdate()));
 	}
 
 	/*

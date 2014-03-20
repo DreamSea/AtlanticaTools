@@ -37,13 +37,13 @@ public class CraftIntoPanel extends JPanel {
 		table.getSelectionModel().addListSelectionListener(tl);
 		
 		JScrollPane jsp = new JScrollPane(table);
-		jsp.setPreferredSize(new Dimension(200, 200));
+		jsp.setPreferredSize(new Dimension(300, 200));
 		add(jsp);
 	}
 	
 	class CraftIntoTable extends AbstractTableModel
 	{
-		private String[] columnNames = {"Item", "Ratio"};
+		private String[] columnNames = {"Item", "Ratio", "Updated (sec)"};
 		
 		private Object[][] data;
 
@@ -98,13 +98,14 @@ public class CraftIntoPanel extends JPanel {
 			//System.out.println("CIP setData(): "+tempItem.craftsInto.toString());
 			int length = tempItem.craftsInto.size();
 
-			data = new Object[2][length];
+			data = new Object[3][length];
 			
 			for (int i = 0; i < length; i++)
 			{
 				Craftable tempCraft = (Craftable) Main.dm.itemMap.get(tempItem.craftsInto.get(i));
 				data[0][i] = tempCraft.name;
 				data[1][i] = tempCraft.profitRatio;
+				data[2][i] = tempCraft.getTimeSinceUpdate();
 				//System.out.println("CIP setData(): "+tempCraft.name+tempCraft.profitRatio);
 			}
 			repaint();

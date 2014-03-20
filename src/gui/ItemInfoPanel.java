@@ -69,13 +69,14 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	
 	public void loadItem(Item i)
 	{
-		
+		//TODO Make field addition/deletion more easy
 		panelStrings[0] = "Item Name";
-		panelStrings[1] = "Workload: "+BLANKSTRING;
+		panelStrings[1] = "Workload: "+BLANKSTRING+" ("+BLANKSTRING+" Max)";
 		panelStrings[2] = "Size: "+BLANKSTRING;
 		panelStrings[3] = "Cost w/ Workload: "+BLANKSTRING;
 		panelStrings[4] = "Worth: "+BLANKSTRING;
-		panelStrings[5] = "Profit Ratio: "+BLANKSTRING;
+		panelStrings[5] = "[Updated: "+BLANKSTRING+" seconds ago]";
+		panelStrings[6] = "Profit Ratio: "+BLANKSTRING;
 		
 		if (i != null)
 		{	
@@ -87,16 +88,17 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 			
 			panelStrings[0] = i.name;
 			panelStrings[4] = "Worth: "+nf.format(i.worth);
+			panelStrings[5] = "[Updated "+i.getTimeSinceUpdate()+" seconds ago]";
 			
 			if (i.type == 1)
 			{
 				loadedCraft = (Craftable) i;
 				
-				panelStrings[1] = "Workload: "+nf.format(loadedCraft.workload);
+				panelStrings[1] = "Workload: "+nf.format(loadedCraft.workload)+" ("+nf.format(loadedCraft.maxWorkload())+" Max)";
 				panelStrings[2] = "Size: "+loadedCraft.numCrafted;
 				//TODO: panelStrings[3] cost w/ workload doing too much work
 				panelStrings[3] = "Cost w/ Workload: "+nf.format(loaded.cost+loadedCraft.workload*DataManager.costPerWorkload/loadedCraft.numCrafted);
-				panelStrings[5] = "Profit Ratio: "+nf.format(loadedCraft.profitRatio);
+				panelStrings[6] = "Profit Ratio: "+nf.format(loadedCraft.profitRatio);
 			}
 			else
 			{
@@ -122,7 +124,7 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	
 	private JTextPane createTextPane()
 	{
-		panelStrings = new String[6];
+		panelStrings = new String[7];
 		
 		textPane = new JTextPane();
 		doc = textPane.getStyledDocument();
@@ -153,7 +155,7 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 		{
 			//System.out.print(e.getNewValue()+" "+tempName);
 			Item tempItem = Main.dm.itemMap.get(tempName);
-			tempItem.worth = (long) e.getNewValue();
+			tempItem.setWorth((long) e.getNewValue());
 			tempItem.updateCost();
 
 			//refreshItem(tempItem);
