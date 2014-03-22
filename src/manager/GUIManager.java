@@ -10,6 +10,8 @@ import gui.MenuBar;
 
 import javax.swing.JFrame;
 
+import types.Item;
+
 public class GUIManager {
 	
 	final static int WIDTH = 300;
@@ -20,6 +22,8 @@ public class GUIManager {
 	public CraftComponentPanel ccp = new CraftComponentPanel();
 	public CraftIntoPanel cip = new CraftIntoPanel();
 	public ItemInfoPanel iip = new ItemInfoPanel();
+	
+	public Item currentItem;
 	
 	public GUIManager()
 	{
@@ -43,6 +47,14 @@ public class GUIManager {
 		
 		frame.pack();
 		frame.setVisible(true);
+	}
+	
+	public void showItem(Item i)
+	{
+		currentItem = i;
+		ccp.loadItem(i);
+		cip.craftTable.setData(i.name);
+		iip.loadItem(i);
 	}
 
 }

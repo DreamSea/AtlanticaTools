@@ -18,6 +18,7 @@ import javax.swing.text.StyledDocument;
 
 import manager.DataManager;
 import manager.Main;
+import types.CraftBook;
 import types.Craftable;
 import types.Item;
 import types.Material;
@@ -30,6 +31,7 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	private Item loaded;
 	private Craftable loadedCraft;
 	private Material loadedMat;
+	private CraftBook loadedCraftBook;
 	
 	// Text Pane
 	private String[] panelStrings;
@@ -100,6 +102,12 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 				panelStrings[3] = "Cost w/ Workload: "+nf.format(loaded.cost+loadedCraft.workload*DataManager.costPerWorkload/loadedCraft.numCrafted);
 				panelStrings[6] = "Profit Ratio: "+nf.format(loadedCraft.profitRatio);
 			}
+			else if (i.type == 2)
+			{
+				loadedCraftBook = (CraftBook) i;
+				panelStrings[1] = "Workload provided: "+nf.format(loadedCraftBook.getWorkload());
+				panelStrings[6] = "Book Ratio: "+nf.format(loadedCraftBook.getWorthPerWorkload());
+			}
 			else
 			{
 				loadedMat = (Material) i;
@@ -162,13 +170,15 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 			
 			if (loaded != null)
 			{
-				Main.gm.cip.craftTable.setData(loaded.name);
-				Main.gm.iip.loadItem(loaded);
+				Main.gm.showItem(loaded);
+				//Main.gm.cip.craftTable.setData(loaded.name);
+				//Main.gm.iip.loadItem(loaded);
 			}
 			else
 			{
-				Main.gm.cip.craftTable.setData(loadedMat.name);
-				Main.gm.iip.loadItem(loadedMat);
+				Main.gm.showItem(loadedMat);
+				//Main.gm.cip.craftTable.setData(loadedMat.name);
+				//Main.gm.iip.loadItem(loadedMat);
 			}
 			//System.out.println(tempItem.cost);
 

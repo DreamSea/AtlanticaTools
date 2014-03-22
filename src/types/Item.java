@@ -12,6 +12,7 @@ public class Item {
 	 */
 	static final byte TYPE_MATERIAL = 0;
 	static final byte TYPE_CRAFTABLE = 1;
+	static final byte TYPE_CRAFTBOOK = 2;
 
 	public String name;
 	
@@ -75,6 +76,12 @@ public class Item {
 		return name;
 	}
 	
+	//lol this duplicate ^^^
+	public String getName()
+	{
+		return name;
+	}
+	
 	public long getTimeUpdated()
 	{
 		return timeUpdated;
@@ -84,6 +91,7 @@ public class Item {
 	{
 		timeUpdated = l;
 	}
+	
 	
 	/**
 	 * 

@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 
 import manager.DataManager;
 import manager.Main;
+import types.CraftBook;
 import types.Craftable;
 import types.Item;
 import types.Material;
@@ -46,6 +47,7 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 
 	private Craftable loaded;
 	private Material loadedMat;
+	private CraftBook loadedCraftBook;
 
 	private NumberFormat nf;
 
@@ -136,10 +138,18 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 				disableRow(j);
 			}
 		}
+		else if (i.type == 2)
+		{
+			loadedCraftBook = (CraftBook) i;
+			for (int j = 0; j < ITEMROWS; j++)
+			{
+				disableRow(j);
+			}
+		}
 
 		//TODO: move these into data Manager?
-		Main.gm.cip.craftTable.setData(i.name);
-		Main.gm.iip.loadItem(i);
+		//Main.gm.cip.craftTable.setData(i.name);
+		//Main.gm.iip.loadItem(i);
 		
 	}
 
@@ -160,13 +170,15 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 			
 			if (loaded != null)
 			{
-				Main.gm.cip.craftTable.setData(loaded.name);
-				Main.gm.iip.loadItem(loaded);
+				//Main.gm.cip.craftTable.setData(loaded.name);
+				//Main.gm.iip.loadItem(loaded);
+				Main.gm.showItem(loaded);
 			}
 			else
 			{
-				Main.gm.cip.craftTable.setData(loadedMat.name);
-				Main.gm.iip.loadItem(loadedMat);
+				//Main.gm.cip.craftTable.setData(loadedMat.name);
+				//Main.gm.iip.loadItem(loadedMat);
+				Main.gm.showItem(loadedMat);
 			}
 			//System.out.println(tempItem.cost);
 

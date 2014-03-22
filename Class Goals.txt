@@ -1,5 +1,7 @@
 Breaking all the package conventions.
 
+Hopeful/ideas for the refactor.
+
 Package gui:
 	Class CraftComponentPanel: contains recipe component information
 		[on user input] Bumps DataManager refreshItem()
@@ -21,19 +23,21 @@ Package manager:
 	Class Main: Starts the program. 
 		Figure out how to use listeners so that the gui components
 			themselves don't have to reference DataManager?
-			Bonus (reduce circular reference): have a ManagerManager
+			-Bonus (reduce circular reference): have a ManagerManager
 				that holds, listens, and bumps GUI and Data Manager
 				methods? Try and make it so that GUI/DataManager only
 				respond to get/set type methods and sends notification
 				to listeners.
-	Class GUIManager:
-		Method loadItem() which updates all the GUI Panels
-	Class DataManager:
-		Method refreshItem() which updates the cost/worth
+	Class GUIManager: Request Item changes through DataManager and receives
+		Item information from DataManager.
+		-Method loadItem() which updates all the GUI Panels
+	Class DataManager: Process Item change requests and sends Item back to GUIManager
+		-Method refreshItem() which updates the cost/worth
 			and triggers toUpdate on all relevant items and
 			resulting components? This in turn bumps GUIManager
 			loadItem() to include the new item information
 				[perhaps reloadItem() to modify only specific fields?
+		-Have separate class to contain all the recipes for loading?
 
 Package types:
 	Class Item

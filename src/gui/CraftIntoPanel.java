@@ -41,7 +41,7 @@ public class CraftIntoPanel extends JPanel {
 		add(jsp);
 	}
 	
-	class CraftIntoTable extends AbstractTableModel
+	public class CraftIntoTable extends AbstractTableModel
 	{
 		private String[] columnNames = {"Item", "Ratio", "Updated (sec)"};
 		
@@ -135,7 +135,8 @@ public class CraftIntoPanel extends JPanel {
 			if (isActive)
 			{
 				Item selected = Main.dm.itemMap.get(table.getValueAt(e.getFirstIndex(), 0));
-				Main.gm.ccp.loadItem(selected);
+				//Main.gm.ccp.loadItem(selected);
+				Main.gm.showItem(selected);
 				//System.out.println(e.getSource());
 			
 				//System.out.println(e.getFirstIndex() +" " + e.getLastIndex());

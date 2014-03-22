@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Set;
 
+import types.CraftBook;
 import types.Craftable;
 import types.Item;
 import types.Material;
@@ -23,6 +24,7 @@ public class DataManager {
 	public HashMap<String, Item> itemMap;
 	
 	public ArrayList<Material> materials;
+	public ArrayList<CraftBook> craftBooks;
 	
 	public ArrayList<ArrayList<Craftable>> skillTree;
 	public ArrayList<Craftable> action;
@@ -52,6 +54,7 @@ public class DataManager {
 			hasInit = true;
 			
 			initMaterial();
+			initCraftBook();
 			initAction();
 			initCrystal();
 			initFood();
@@ -63,20 +66,25 @@ public class DataManager {
 	
 	private void initMaterial()
 	{
-		materials = new ArrayList<Material>();
-		/*addMaterial("Phoenix Crystal");
-		addMaterial("Giant Crystal");
-		addMaterial("Redemption Crystal");
-		addMaterial("Dragon Crystal");
-		addMaterial("Ashen Crystal");
-		addMaterial("Pork");
-		addMaterial("Wheat");
-		addMaterial("Salt");
-		addMaterial("Shrimp");
-		addMaterial("Octopus");
+		materials = new ArrayList<Material>();	
+	}
+	
+	private void initCraftBook()
+	{
+		craftBooks = new ArrayList<CraftBook>();
 		
-		addMaterial("Barley");
-		addMaterial("Sesame Oil");*/
+		craftBooks.add(new CraftBook("Small Crafting Secrets", 100));
+		craftBooks.add(new CraftBook("Normal Crafting Secrets", 1000));
+		craftBooks.add(new CraftBook("Artisan Crafting Secrets", 10000));
+		craftBooks.add(new CraftBook("Book of Craftsmanship", 100000));
+		craftBooks.add(new CraftBook("Book of Expertise", 1000000));
+		craftBooks.add(new CraftBook("Book of Mastery", 5000000));
+		craftBooks.add(new CraftBook("Golden Book of Craftsmanship", 50000000));
+		
+		for (CraftBook cb : craftBooks)
+		{
+			itemMap.put(cb.getName(), cb);
+		}
 	}
 	
 	private void initAction()
@@ -336,5 +344,20 @@ public class DataManager {
 	Item getItem(String name)
 	{
 		return itemMap.get(name);
+	}
+	
+	public void refreshItems()
+	{
+		for (ArrayList<Craftable> al : skillTree)
+		{
+			for (Craftable c : al)
+			{
+				c.updateCost();
+			}
+		}
+		if (Main.gm.currentItem != null)
+		{
+			Main.gm.showItem(Main.gm.currentItem);
+		}
 	}
 }

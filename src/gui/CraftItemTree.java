@@ -12,6 +12,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 import manager.Main;
+import types.CraftBook;
 import types.Craftable;
 import types.Item;
 import types.Material;
@@ -66,14 +67,22 @@ public class CraftItemTree extends JPanel implements TreeSelectionListener
 		{
 			System.out.println(" (Craftable)");
 		}*/
-		Main.gm.ccp.loadItem(selected);
+		//Main.gm.ccp.loadItem(selected);
+		Main.gm.showItem(selected);
 	}
 	
 	private void createNodes(DefaultMutableTreeNode top)
 	{	
+		category = new DefaultMutableTreeNode("Craft Book");
+		top.add(category);
+		for (CraftBook cb : Main.dm.craftBooks)
+		{
+			book = new DefaultMutableTreeNode(cb);
+			category.add(book);
+		}
+		
 		category = new DefaultMutableTreeNode("Material");
 		top.add(category);
-		
 		for (Material m : Main.dm.materials)
 		{
 			book = new DefaultMutableTreeNode(m);
