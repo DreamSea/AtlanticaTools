@@ -1,4 +1,4 @@
-package manager;
+package model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Set;
 
+import manager.Main;
 import types.CraftBook;
 import types.Craftable;
 import types.Item;
@@ -38,6 +39,8 @@ public class DataManager {
 	
 	public static double costPerWorkload = 1.0;	//TODO temporary, replace with craft book item later
 	
+	private CraftBook loadedCraftBook;
+	
 	public DataManager()
 	{
 		itemMap = new HashMap<String, Item>();
@@ -55,12 +58,19 @@ public class DataManager {
 			
 			initMaterial();
 			initCraftBook();
+			
 			initAction();
 			initCrystal();
 			initFood();
 			initMachine();
 			initMedicine();
 			initTool();
+			
+			//TODO: move/explain costPerWorkload init better
+			//default cost at 1mill workload book
+			costPerWorkload = craftBooks.get(4).getWorthPerWorkload();
+			
+			loadedCraftBook = (CraftBook) itemMap.get("Book of Expertise");
 		}
 	}
 	
@@ -272,7 +282,7 @@ public class DataManager {
 		Craftable.lastCraftable.addRecipe(itemMap.get(name), number);
 	}
 	
-	void loadPrices()
+	public void loadPrices()
 	{
 		try
 		{

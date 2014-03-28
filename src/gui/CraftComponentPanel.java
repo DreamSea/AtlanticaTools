@@ -14,8 +14,8 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import manager.DataManager;
 import manager.Main;
+import model.DataManager;
 import types.CraftBook;
 import types.Craftable;
 import types.Item;
@@ -154,7 +154,7 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		loadItem(Main.dm.itemMap.get(e.getActionCommand()));
+		Main.gm.showItem(Main.dm.itemMap.get(e.getActionCommand()));
 	}
 
 

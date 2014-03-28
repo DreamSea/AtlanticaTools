@@ -26,7 +26,7 @@ public class Item {
 	public long worth; //how much it can be sold for
 	private long timeUpdated; //when worth was updated
 	public static DateFormat df = DateFormat.getDateInstance();
-	private static long currentTime = System.currentTimeMillis(); //when the program started
+	private static long bootTime = System.currentTimeMillis(); //when the program started
 	
 	/*
 	 * temp: using long because of how FormattedTextField returns value (long)
@@ -51,7 +51,7 @@ public class Item {
 		cost = 1;
 		this.type = type; 
 		craftsInto = new ArrayList<String>();
-		timeUpdated = currentTime;
+		timeUpdated = bootTime;
 	}
 	
 	public void updateCost()
@@ -99,6 +99,11 @@ public class Item {
 	 */
 	public long getTimeSinceUpdate()
 	{
-		return Math.max((currentTime - timeUpdated)/1000, 0);
+		return Math.max((bootTime - timeUpdated)/1000, 0);
+	}
+	
+	public double getDaysSinceUpdate()
+	{
+		return getTimeSinceUpdate()/86400.0;
 	}
 }

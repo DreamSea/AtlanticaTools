@@ -43,7 +43,7 @@ public class CraftIntoPanel extends JPanel {
 	
 	public class CraftIntoTable extends AbstractTableModel
 	{
-		private String[] columnNames = {"Item", "Ratio", "Updated (sec)"};
+		private String[] columnNames = {"Item", "Ratio", "Updated (days)"};
 		
 		private Object[][] data;
 
@@ -105,7 +105,7 @@ public class CraftIntoPanel extends JPanel {
 				Craftable tempCraft = (Craftable) Main.dm.itemMap.get(tempItem.craftsInto.get(i));
 				data[0][i] = tempCraft.name;
 				data[1][i] = tempCraft.profitRatio;
-				data[2][i] = tempCraft.getTimeSinceUpdate();
+				data[2][i] = tempCraft.getDaysSinceUpdate();
 				//System.out.println("CIP setData(): "+tempCraft.name+tempCraft.profitRatio);
 			}
 			repaint();

@@ -1,12 +1,7 @@
-package manager;
+package gui;
 
 import java.awt.BorderLayout;
-
-import gui.CraftIntoPanel;
-import gui.CraftItemTree;
-import gui.CraftComponentPanel;
-import gui.ItemInfoPanel;
-import gui.MenuBar;
+import java.text.NumberFormat;
 
 import javax.swing.JFrame;
 
@@ -17,21 +12,30 @@ public class GUIManager {
 	final static int WIDTH = 300;
 	final static int HEIGHT = 600;
 	
-	public MenuBar mb = new MenuBar();
-	public CraftItemTree cit = new CraftItemTree();
-	public CraftComponentPanel ccp = new CraftComponentPanel();
-	public CraftIntoPanel cip = new CraftIntoPanel();
-	public ItemInfoPanel iip = new ItemInfoPanel();
+	public MenuBar mb;// = new MenuBar();
+	public CraftItemTree cit;// = new CraftItemTree();
+	public CraftComponentPanel ccp;// = new CraftComponentPanel();
+	public CraftIntoPanel cip;// = new CraftIntoPanel();
+	public ItemInfoPanel iip;// = new ItemInfoPanel();
 	
 	public Item currentItem;
 	
+	private NumberFormat nf;
+	
 	public GUIManager()
 	{
+		nf = NumberFormat.getInstance();
 		createAndShowGUI();
 	}
 	
 	private void createAndShowGUI()
 	{
+		mb = new MenuBar(nf);
+		cit = new CraftItemTree();
+		ccp = new CraftComponentPanel();
+		cip = new CraftIntoPanel();
+		iip = new ItemInfoPanel();
+		
 		JFrame frame = new JFrame("Atlantica Dreaming");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);

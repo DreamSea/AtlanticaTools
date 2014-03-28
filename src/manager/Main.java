@@ -1,5 +1,8 @@
 package manager;
 
+import model.DataManager;
+import gui.GUIManager;
+
 /*
  * 	The manager manager. Holds Data/GUI and communicates in between.
  * 
@@ -12,11 +15,13 @@ public class Main {
 	
 	public static StringBuilder sb = new StringBuilder();
 	
+	private static ManagerManager mm;
+	
 	public static DataManager dm;
 	public static GUIManager gm;
 	
 	public static void main(String args[])
-	{		
+	{
 		dm = new DataManager();
 		
 		/*
@@ -33,5 +38,8 @@ public class Main {
 		//System.out.println(dm.getItem("Dumpling"));
 		//System.out.println(dm.getItem("Grilled Pork"));
 		//System.out.println(dm.getItem("Pork").craftsInto.toString());
+
+		
+		//mm = new ManagerManager();
 	}
 }

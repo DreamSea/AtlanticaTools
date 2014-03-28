@@ -1,7 +1,7 @@
 package types;
 
-import manager.DataManager;
 import manager.Main;
+import model.DataManager;
 
 public class Craftable extends Item
 {

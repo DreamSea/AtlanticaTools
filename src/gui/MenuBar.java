@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,22 +13,26 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import manager.DataManager;
 import manager.Main;
+import model.DataManager;
 import types.CraftBook;
 import types.Craftable;
 import types.Material;
 
 public class MenuBar extends JMenuBar implements ActionListener
 {
+	private NumberFormat nf;
+	
 	JMenu menu;
 	JMenu craftBooksSubMenu;
 	JMenuItem[] craftBooks;
 	
 	JMenuItem save;
 	
-	public MenuBar()
+	public MenuBar(NumberFormat format)
 	{
+		nf = format;
+		
 		menu = new JMenu("Stuffs.");
 		
 		add(menu);
@@ -50,9 +55,12 @@ public class MenuBar extends JMenuBar implements ActionListener
 		craftBooks = new JMenuItem[Main.dm.craftBooks.size()];
 		for (int i = 0; i < craftBooks.length; i++)
 		{
-			craftBooks[i] = new JMenuItem(Main.dm.craftBooks.get(i).name);
+			CraftBook cb = Main.dm.craftBooks.get(i);
+			
+			craftBooks[i] = new JMenuItem(cb.name +" ("+nf.format(cb.getWorkload())+")");
 			craftBooksSubMenu.add(craftBooks[i]);
 			craftBooks[i].addActionListener(this);
+			craftBooks[i].setActionCommand(cb.name);
 		}
 	}
 	
@@ -71,7 +79,7 @@ public class MenuBar extends JMenuBar implements ActionListener
 				//System.out.println(DataManager.costPerWorkload);
 				Main.dm.refreshItems();
 			}
-			//System.out.println(e.getActionCommand());
+			System.out.println(e.getActionCommand());
 		}
 	}
 }

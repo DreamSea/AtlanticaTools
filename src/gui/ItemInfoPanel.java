@@ -16,8 +16,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
-import manager.DataManager;
 import manager.Main;
+import model.DataManager;
 import types.CraftBook;
 import types.Craftable;
 import types.Item;
@@ -77,7 +77,7 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 		panelStrings[2] = "Size: "+BLANKSTRING;
 		panelStrings[3] = "Cost w/ Workload: "+BLANKSTRING;
 		panelStrings[4] = "Worth: "+BLANKSTRING;
-		panelStrings[5] = "[Updated: "+BLANKSTRING+" seconds ago]";
+		panelStrings[5] = "[Updated: "+BLANKSTRING+" days ago]";
 		panelStrings[6] = "Profit Ratio: "+BLANKSTRING;
 		
 		if (i != null)
@@ -90,7 +90,7 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 			
 			panelStrings[0] = i.name;
 			panelStrings[4] = "Worth: "+nf.format(i.worth);
-			panelStrings[5] = "[Updated "+i.getTimeSinceUpdate()+" seconds ago]";
+			panelStrings[5] = "[Updated "+nf.format(i.getDaysSinceUpdate())+" days ago]";
 			
 			if (i.type == 1)
 			{
