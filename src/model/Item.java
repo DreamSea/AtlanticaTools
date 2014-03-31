@@ -1,7 +1,8 @@
-package types;
+package model;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import manager.Main;
 
@@ -14,7 +15,7 @@ public class Item {
 	static final byte TYPE_CRAFTABLE = 1;
 	static final byte TYPE_CRAFTBOOK = 2;
 
-	public String name;
+	protected String name;
 	
 	
 	
@@ -23,7 +24,7 @@ public class Item {
 	 * 	Init: from .txt during first load
 	 * 	Changes: only through gui setting.
 	 */
-	public long worth; //how much it can be sold for
+	private long worth; //how much it can be sold for
 	private long timeUpdated; //when worth was updated
 	public static DateFormat df = DateFormat.getDateInstance();
 	private static long bootTime = System.currentTimeMillis(); //when the program started
@@ -34,10 +35,11 @@ public class Item {
 	 * 	Changes: probably every gui setting of something
 	 * in craft tree ancestors
 	 */
-	public double cost; //cost to buy all of the components
-	public byte type;
+	private long cost; //cost to buy all of the components
+	private byte type;
 	
-	public ArrayList<String> craftsInto;
+	//TODO: private craftsInto
+	ArrayList<Craftable> craftsInto;
 	
 	/**
 	 * 
@@ -50,25 +52,8 @@ public class Item {
 		worth = 1;
 		cost = 1;
 		this.type = type; 
-		craftsInto = new ArrayList<String>();
+		craftsInto = new ArrayList<Craftable>();
 		timeUpdated = bootTime;
-	}
-	
-	public void updateCost()
-	{
-		cost = worth; //craftable overrides
-		for (String s : craftsInto)
-		{
-			//System.out.println(s);
-			//System.out.println(Main.dm == null);
-			Main.dm.itemMap.get(s).updateCost();
-		}
-	}
-	
-	public void setWorth(long l)
-	{
-		worth = l;
-		timeUpdated = System.currentTimeMillis();
 	}
 	
 	public String toString()
@@ -81,15 +66,25 @@ public class Item {
 	{
 		return name;
 	}
+
+	public long getWorth()
+	{
+		return worth;
+	}
+	
+	public long getCost()
+	{
+		return cost;
+	}
+	
+	public byte getType()
+	{
+		return type;
+	}
 	
 	public long getTimeUpdated()
 	{
 		return timeUpdated;
-	}
-	
-	public void setTimeUpdated(long l)
-	{
-		timeUpdated = l;
 	}
 	
 	
@@ -105,5 +100,55 @@ public class Item {
 	public double getDaysSinceUpdate()
 	{
 		return getTimeSinceUpdate()/86400.0;
+	}
+	
+	
+	/*
+	 * Following methods can only be used by package members (mainly DataManager)
+	 */
+	void setWorth(long newWorth)
+	{
+		if (worth > 0)
+		{
+			worth = newWorth;
+			timeUpdated = System.currentTimeMillis();
+		}
+	}
+	
+	void setCost(long newCost)
+	{
+		cost = newCost;
+	}
+	
+	void setTimeUpdated(long l)
+	{
+		timeUpdated = l;
+	}
+	
+	void updateCost()
+	{
+		/*
+		 * Craftable overrides, but for non-craftables, cost becomes
+		 * the price to buy it off the market
+		 */
+		cost = worth;
+		
+		
+		for (Craftable c : craftsInto)
+		{
+			//System.out.println(s);
+			//System.out.println(Main.dm == null);
+			c.updateCost();
+		}
+	}
+	
+	public int getCraftsIntoLength()
+	{
+		return craftsInto.size();
+	}
+	
+	public Craftable getCraftsInto(int i)
+	{
+		return craftsInto.get(i);
 	}
 }

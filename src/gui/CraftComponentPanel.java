@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -14,12 +13,12 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import manager.Main;
-import model.DataManager;
-import types.CraftBook;
-import types.Craftable;
-import types.Item;
-import types.Material;
+import events.ItemChangeEvent;
+import events.ItemChangeNotifier;
+import model.CraftBook;
+import model.Craftable;
+import model.Item;
+import model.Material;
 
 
 /*
@@ -51,9 +50,15 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 
 	private NumberFormat nf;
 
+	//private PropertyChangeListener pcl;
+	
+	private ItemChangeNotifier icn;
 
-	public CraftComponentPanel()
+	public CraftComponentPanel(ItemChangeNotifier icn)
 	{
+		this.icn = icn;
+		//this.pcl = pcl;
+		
 		nf = NumberFormat.getNumberInstance();
 		nf.setGroupingUsed(true);
 
@@ -84,6 +89,7 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 			ingredientWorth[i] = new JFormattedTextField(nf);
 			ingredientWorth[i].setText(BLANKSTRING);
 			ingredientWorth[i].addPropertyChangeListener("value", this);
+			
 
 			ingredientWorthTotal[i] = new JLabel(BLANKSTRING);
 			ingredientDateUpdated[i] = new JLabel(BLANKSTRING);
@@ -115,7 +121,7 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 	 */
 	public void loadItem(Item i)
 	{
-		if (i.type == 0) //Material
+		if (i.getType() == 0) //Material
 		{
 			loaded = null;
 			loadedMat = (Material) i;
@@ -124,21 +130,21 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 				disableRow(j);
 			}
 		}
-		else if (i.type == 1) //Craftable
+		else if (i.getType() == 1) //Craftable
 		{
 			loaded = (Craftable) i;
-			for (int j = 0; j < loaded.craftedFromItems.length; j++)
+			for (int j = 0; j < loaded.getCraftedFromLength(); j++)
 			{
-				setRow(j, loaded.craftedFromItems[j], 
-						loaded.craftedFromNumbers[j], 
-						loaded.craftedFromItems[j].worth);
+				setRow(j, loaded.getCraftedFromItems(j), 
+						loaded.getCraftedFromNumbers(j), 
+						loaded.getCraftedFromItems(j).getWorth());
 			}
-			for (int j = loaded.craftedFromItems.length; j < ITEMROWS; j++)
+			for (int j = loaded.getCraftedFromLength(); j < ITEMROWS; j++)
 			{
 				disableRow(j);
 			}
 		}
-		else if (i.type == 2)
+		else if (i.getType() == 2)
 		{
 			loadedCraftBook = (CraftBook) i;
 			for (int j = 0; j < ITEMROWS; j++)
@@ -154,7 +160,8 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		Main.gm.showItem(Main.dm.itemMap.get(e.getActionCommand()));
+		//Main.gm.showItem(Main.dm.itemMap.get(e.getActionCommand()));
+		icn.fireItemChangeEvent(new ItemChangeEvent(this, e.getActionCommand()));
 	}
 
 
@@ -162,7 +169,9 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 		String tempName = ((JFormattedTextField) e.getSource()).getName();
 		if (tempName.compareTo(BLANKSTRING) != 0) //only fires when user changes value
 		{
-			//System.out.print(e.getNewValue()+" "+tempName);
+			icn.fireItemChangeEvent(new ItemChangeEvent(this, tempName, (long) e.getNewValue()));
+			
+		/*	//System.out.print(e.getNewValue()+" "+tempName);
 			Item tempItem = Main.dm.itemMap.get(tempName);
 			tempItem.setWorth((long) e.getNewValue());
 
@@ -182,7 +191,7 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 			}
 			//System.out.println(tempItem.cost);
 
-			refreshPanel();
+			refreshPanel();*/
 		}
 	}
 
@@ -211,15 +220,17 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 	private void setRow(int row, Item i, int number, long worth)
 	{
 		ingredientButton[row].setEnabled(true);
-		ingredientButton[row].setText(i.name);
-		ingredientButton[row].setActionCommand(i.name);
+		ingredientButton[row].setText(i.getName());
+		ingredientButton[row].setActionCommand(i.getName());
 		ingredientNumber[row].setEnabled(true);
 		ingredientNumber[row].setText(String.valueOf(number));
 
+		//ingredientWorth[row].removePropertyChangeListener("value", pcl);
 		ingredientWorth[row].setEnabled(true);
 		ingredientWorth[row].setName(BLANKSTRING);
 		ingredientWorth[row].setValue(worth);
-		ingredientWorth[row].setName(i.name);
+		ingredientWorth[row].setName(i.getName());
+		//ingredientWorth[row].addPropertyChangeListener("value", pcl);
 
 		ingredientWorthTotal[row].setEnabled(true);
 		ingredientWorthTotal[row].setText(nf.format(number*worth));
@@ -231,15 +242,16 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 	/*
 	 * 	Update object item fields
 	 */
-	private void refreshItem(Item i)
+	/*private void refreshItem(Item i)
 	{
 		i.updateCost();
-	}
+	}*/
 
 	/*
 	 * 	Update shown item fields after a change has occurred
 	 */
-	private void refreshPanel()	//TODO clean this up vs original loadItem(Item i)
+	
+	/*private void refreshPanel()	//TODO clean this up vs original loadItem(Item i)
 	{
 		if (loaded != null)
 		{
@@ -251,5 +263,5 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 						loaded.craftedFromItems[j].worth);
 			}
 		}
-	}
+	}*/
 }

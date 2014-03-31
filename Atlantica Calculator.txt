@@ -1,5 +1,6 @@
 Todo: 
 
+DONE-ish 2014/03/30 (MED-) GRAND REFACTORish. Information passed with listeners. Lots of cleanup to do though.
 DONE 2014/03/21 (MED) add craft books for workload prices, use menu selector to choose which workload to use
 DONE 2014/03/20 (MED) max wl, "updated # seconds ago"
 DONE 2014/03/16 (HIGH) Fix initial item load, added craft tree for Auto-Craft[ii]
@@ -14,7 +15,7 @@ DONE 2014/03/11 (HIGH) Ratio of Profit/WL: currently as total size, redo to indi
 
 (MED-) add color to craftTable, light green background for ratio > 1? bold text for ratio > 3?
 
-(MED-) GRAND REFACTOR
+(MED-) GRAND REFACTOR cleanup
 
 (LOW) return list of best profit ratios of everything
 (LOW) return list of best profit ratio by maxworkload

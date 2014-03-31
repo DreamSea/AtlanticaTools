@@ -1,4 +1,4 @@
-package types;
+package model;
 
 public class CraftBook extends Item{
 
@@ -20,6 +20,6 @@ public class CraftBook extends Item{
 	
 	public double getWorthPerWorkload()
 	{
-		return worth*1.0/workload;
+		return getWorth()*1.0/workload;
 	}
 }

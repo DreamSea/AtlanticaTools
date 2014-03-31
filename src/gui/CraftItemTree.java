@@ -11,26 +11,35 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import events.ItemChangeEvent;
+import events.ItemChangeNotifier;
 import manager.Main;
-import types.CraftBook;
-import types.Craftable;
-import types.Item;
-import types.Material;
+import model.CraftBook;
+import model.Craftable;
+import model.Item;
+import model.Material;
 
 public class CraftItemTree extends JPanel implements TreeSelectionListener
 {
 	
 	private JTree tree;
+	private ItemChangeNotifier icn;
 	
 	DefaultMutableTreeNode category = null;
 	DefaultMutableTreeNode book = null;
 	
-	public CraftItemTree()
+	public CraftItemTree(ItemChangeNotifier icn, 
+			ArrayList<CraftBook> craftBooks,
+			ArrayList<Material> materials,
+			ArrayList<ArrayList<Craftable>> skillTree)
 	{	
+		//System.out.println(icn == null);
+		this.icn = icn;
+		
 		DefaultMutableTreeNode top =
 				new DefaultMutableTreeNode("Items");
 		
-		createNodes(top);
+		createNodes(top, craftBooks, materials, skillTree);
 		
 		tree = new JTree(top);
 		tree.getSelectionModel().setSelectionMode
@@ -56,6 +65,8 @@ public class CraftItemTree extends JPanel implements TreeSelectionListener
 		if (node == null || !node.isLeaf()) return;
 	
 		Item selected = (Item) node.getUserObject();
+		//System.out.println(selected.getName());
+		//System.out.println(icn == null);
 		
 		/*System.out.print("Ping: "+ selected.name);
 		if (selected.type == 0)
@@ -68,14 +79,18 @@ public class CraftItemTree extends JPanel implements TreeSelectionListener
 			System.out.println(" (Craftable)");
 		}*/
 		//Main.gm.ccp.loadItem(selected);
-		Main.gm.showItem(selected);
+		icn.fireItemChangeEvent(new ItemChangeEvent(e.getSource(), selected.getName()));
+		//Main.gm.showItem(selected);
 	}
 	
-	private void createNodes(DefaultMutableTreeNode top)
+	private void createNodes(DefaultMutableTreeNode top, 
+			ArrayList<CraftBook> craftBooks,
+			ArrayList<Material> materials,
+			ArrayList<ArrayList<Craftable>> skillTree)
 	{	
 		category = new DefaultMutableTreeNode("Craft Book");
 		top.add(category);
-		for (CraftBook cb : Main.dm.craftBooks)
+		for (CraftBook cb : craftBooks)
 		{
 			book = new DefaultMutableTreeNode(cb);
 			category.add(book);
@@ -83,18 +98,19 @@ public class CraftItemTree extends JPanel implements TreeSelectionListener
 		
 		category = new DefaultMutableTreeNode("Material");
 		top.add(category);
-		for (Material m : Main.dm.materials)
+		for (Material m : materials)
 		{
 			book = new DefaultMutableTreeNode(m);
 			category.add(book);
 		}
 
-		craftableNodes("Action", Main.dm.action, top);
-		craftableNodes("Crystal", Main.dm.crystal, top);
-		craftableNodes("Food", Main.dm.food, top);
-		craftableNodes("Machine", Main.dm.machine, top);
-		craftableNodes("Medicine", Main.dm.medicine, top);
-		craftableNodes("Tool", Main.dm.tool, top);
+		//TODO: TEMPORARY TERRIBLE SHORTCUT
+		craftableNodes("Action", skillTree.get(0), top);
+		craftableNodes("Crystal", skillTree.get(1), top);
+		craftableNodes("Food", skillTree.get(2), top);
+		craftableNodes("Machine", skillTree.get(3), top);
+		craftableNodes("Medicine", skillTree.get(4), top);
+		craftableNodes("Tool", skillTree.get(5), top);
 	}
 	
 	private void craftableNodes(String name, ArrayList<Craftable> skill, DefaultMutableTreeNode top)

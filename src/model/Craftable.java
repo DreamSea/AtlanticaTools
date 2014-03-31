@@ -1,21 +1,22 @@
-package types;
+package model;
+
+import java.util.HashMap;
 
 import manager.Main;
-import model.DataManager;
 
 public class Craftable extends Item
 {
-	public Item[] craftedFromItems;
-	public int[] craftedFromNumbers;
+	private Item[] craftedFromItems;
+	private int[] craftedFromNumbers;
 	
 	public static Craftable lastCraftable;
 	private static int slotNumber;
 	
-	public int numCrafted;
-	public int workload;
+	private int numCrafted;
+	private int workload;
 	
-	public double worthPerWorkload;
-	public double profitRatio;
+	private double worthPerWorkload;
+	private double profitRatio;
 	
 	/**
 	 * @param name : Craftable Name
@@ -35,8 +36,8 @@ public class Craftable extends Item
 		lastCraftable = this;
 		
 		
-		worthPerWorkload = (worth*0.99 - cost)/(workload/numCrafted);
-		profitRatio = worthPerWorkload - DataManager.costPerWorkload;
+		worthPerWorkload = (getWorth()*0.99 - getCost())/(workload/numCrafted);
+		profitRatio = worthPerWorkload - DataManager.getCostPerWorkload();
 	}
 	
 	/**
@@ -44,14 +45,14 @@ public class Craftable extends Item
 	 * @param name
 	 * @param number
 	 */
-	public void addRecipe(Item item, int number)
+	void addRecipe(Item item, int number)
 	{
 		craftedFromItems[slotNumber] = item;
 		craftedFromNumbers[slotNumber] = number;
 		slotNumber++;
 	}
 	
-	public String testInfo()
+	/*public String testInfo()
 	{
 		Main.sb.delete(0, Main.sb.length());
 		Main.sb.append(name);
@@ -73,36 +74,38 @@ public class Craftable extends Item
 		Main.sb.append(cost);
 		
 		return Main.sb.toString();
-	}
+	}*/
 	
-	public void remapRecipe()
+	void remapRecipe(HashMap<String, Item> itemMap)
 	{
 		for (int i = 0; i < craftedFromItems.length; i++)
 		{
 			//System.out.println(craftedFromItems[i].name);
-			craftedFromItems[i] = Main.dm.itemMap.get(craftedFromItems[i].name);
+			craftedFromItems[i] = itemMap.get(craftedFromItems[i].getName());
 		}
 	}
 	
-	public void updateCost()
+	void updateCost()
 	{
-		cost = 0;
+		long tempCost = 0;
 		for (int i = 0; i < craftedFromItems.length; i++)
 		{
-			cost += craftedFromItems[i].worth * craftedFromNumbers[i];
+			tempCost += craftedFromItems[i].getWorth() * craftedFromNumbers[i];
 		}
-		cost /= numCrafted;
+		tempCost /= numCrafted;
 		
-		worthPerWorkload = (worth*0.99 - cost)/(workload/numCrafted);
-		profitRatio = worthPerWorkload - DataManager.costPerWorkload;
+		worthPerWorkload = (getWorth()*0.99 - tempCost)/(workload/numCrafted);
+		profitRatio = worthPerWorkload - DataManager.getCostPerWorkload();
+		
+		setCost(tempCost);
 		
 		/*
 		 * TODO may lead to repeated updates on same item
 		 * Use boolean hasChecked set before each update?
 		 */
-		for (String s : craftsInto)
+		for (Craftable c : craftsInto)
 		{
-			Main.dm.itemMap.get(s).updateCost();
+			c.updateCost();
 		}
 	}
 	
@@ -118,5 +121,35 @@ public class Craftable extends Item
 		}
 		return max*workload;
 	}
+	
+	public int getCraftedFromLength()
+	{
+		return craftedFromItems.length;
+	}
+	
+	public Item getCraftedFromItems(int i)
+	{
+		return craftedFromItems[i];
+	}
+	
+	public int getCraftedFromNumbers(int i)
+	{
+		return craftedFromNumbers[i];
+	}
 
+	public int getWorkload()
+	{
+		return workload;
+	}
+	
+	public int getCraftSize()
+	{
+		return numCrafted;
+	}
+	
+	public double getProfitRatio()
+	{
+		return profitRatio;
+	}
+	
 }

@@ -1,4 +1,4 @@
-package types;
+package model;
 
 public class Material extends Item {
 	
@@ -11,9 +11,9 @@ public class Material extends Item {
 	public Craftable convert(int workload, int numCrafted, int numComponents)
 	{
 		Craftable toReturn = new Craftable(name, workload, numCrafted, numComponents);
-		for (String s : craftsInto)
+		for (Craftable c : craftsInto)
 		{
-			toReturn.craftsInto.add(s);
+			toReturn.craftsInto.add(c);
 		}
 		//toReturn.craftsInto = craftsInto.;
 		return toReturn;

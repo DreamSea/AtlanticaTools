@@ -16,12 +16,14 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
+import events.ItemChangeEvent;
+import events.ItemChangeNotifier;
 import manager.Main;
+import model.CraftBook;
+import model.Craftable;
 import model.DataManager;
-import types.CraftBook;
-import types.Craftable;
-import types.Item;
-import types.Material;
+import model.Item;
+import model.Material;
 
 public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 
@@ -43,9 +45,14 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	private JLabel worthLabel;
 	private JFormattedTextField worthField;
 	
+	private PropertyChangeListener pcl;
+	private ItemChangeNotifier icn;
 	
-	public ItemInfoPanel()
+	public ItemInfoPanel(ItemChangeNotifier icn)
 	{
+		this.icn = icn;
+		this.pcl = pcl;
+		
 		nf = NumberFormat.getNumberInstance();
 		setPreferredSize(new Dimension(300,200));
 		
@@ -84,25 +91,27 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 		{	
 			loaded = i;
 			
+			worthField.removePropertyChangeListener("value", pcl); //reduces listener events during item changes...
 			worthField.setEnabled(true);
-			worthField.setText(nf.format(i.worth));
-			worthField.setName(i.name);
+			worthField.setText(nf.format(i.getWorth()));
+			worthField.setName(i.getName());
+			worthField.addPropertyChangeListener("value", pcl); //BUT AT WHAT COST?!!
 			
-			panelStrings[0] = i.name;
-			panelStrings[4] = "Worth: "+nf.format(i.worth);
+			panelStrings[0] = i.getName();
+			panelStrings[4] = "Worth: "+nf.format(i.getWorth());
 			panelStrings[5] = "[Updated "+nf.format(i.getDaysSinceUpdate())+" days ago]";
 			
-			if (i.type == 1)
+			if (i.getType() == 1)
 			{
 				loadedCraft = (Craftable) i;
 				
-				panelStrings[1] = "Workload: "+nf.format(loadedCraft.workload)+" ("+nf.format(loadedCraft.maxWorkload())+" Max)";
-				panelStrings[2] = "Size: "+loadedCraft.numCrafted;
+				panelStrings[1] = "Workload: "+nf.format(loadedCraft.getWorkload())+" ("+nf.format(loadedCraft.maxWorkload())+" Max)";
+				panelStrings[2] = "Size: "+loadedCraft.getCraftSize();
 				//TODO: panelStrings[3] cost w/ workload doing too much work
-				panelStrings[3] = "Cost w/ Workload: "+nf.format(loaded.cost+loadedCraft.workload*DataManager.costPerWorkload/loadedCraft.numCrafted);
-				panelStrings[6] = "Profit Ratio: "+nf.format(loadedCraft.profitRatio);
+				panelStrings[3] = "Cost w/ Workload: "+nf.format(loaded.getCost()+loadedCraft.getWorkload()*DataManager.getCostPerWorkload()/loadedCraft.getCraftSize());
+				panelStrings[6] = "Profit Ratio: "+nf.format(loadedCraft.getProfitRatio());
 			}
-			else if (i.type == 2)
+			else if (i.getType() == 2)
 			{
 				loadedCraftBook = (CraftBook) i;
 				panelStrings[1] = "Workload provided: "+nf.format(loadedCraftBook.getWorkload());
@@ -161,7 +170,8 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 		//System.out.println(e);
 		if (tempName.compareTo(BLANKSTRING) != 0) //only fires when user changes value
 		{
-			//System.out.print(e.getNewValue()+" "+tempName);
+			icn.fireItemChangeEvent(new ItemChangeEvent(e.getSource(), tempName, (long)e.getNewValue()));
+			/*//System.out.print(e.getNewValue()+" "+tempName);
 			Item tempItem = Main.dm.itemMap.get(tempName);
 			tempItem.setWorth((long) e.getNewValue());
 			tempItem.updateCost();
@@ -184,9 +194,8 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 
 			
 			//refreshPanel();
-			loadItem(loaded);
+			loadItem(loaded);*/
 		}
-		
 	}
 	
 }

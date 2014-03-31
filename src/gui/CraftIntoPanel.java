@@ -3,6 +3,7 @@ package gui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -14,9 +15,11 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
-import types.Craftable;
-import types.Item;
+import events.ItemChangeEvent;
+import events.ItemChangeNotifier;
 import manager.Main;
+import model.Craftable;
+import model.Item;
 
 public class CraftIntoPanel extends JPanel {
 	
@@ -24,15 +27,18 @@ public class CraftIntoPanel extends JPanel {
 	
 	private JTable table;
 	private TableListener tl;
+	private ItemChangeNotifier icn;
 	
-	public CraftIntoPanel ()
+	public CraftIntoPanel (ItemChangeNotifier icn)
 	{
 		craftTable = new CraftIntoTable();
+		this.icn = icn;
 		
 		table = new JTable (craftTable);
 		table.setAutoCreateRowSorter(true);
 		table.setFillsViewportHeight(true);
 		tl = new TableListener();
+		
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(tl);
 		
@@ -89,23 +95,22 @@ public class CraftIntoPanel extends JPanel {
 		 * All in all this entire setData() looks really ugly... but it
 		 * works for now -_-
 		 */
-		public void setData(String s)
+		public void setData(Item i)
 		{
 			table.setAutoCreateRowSorter(false);
 			tl.setActive(false);
 			
-			Item tempItem = Main.dm.itemMap.get(s);
 			//System.out.println("CIP setData(): "+tempItem.craftsInto.toString());
-			int length = tempItem.craftsInto.size();
+			int length = i.getCraftsIntoLength();
 
 			data = new Object[3][length];
 			
-			for (int i = 0; i < length; i++)
+			for (int j = 0; j < length; j++)
 			{
-				Craftable tempCraft = (Craftable) Main.dm.itemMap.get(tempItem.craftsInto.get(i));
-				data[0][i] = tempCraft.name;
-				data[1][i] = tempCraft.profitRatio;
-				data[2][i] = tempCraft.getDaysSinceUpdate();
+				Craftable tempCraft = i.getCraftsInto(j);
+				data[0][j] = tempCraft.getName();
+				data[1][j] = tempCraft.getProfitRatio();
+				data[2][j] = tempCraft.getDaysSinceUpdate();
 				//System.out.println("CIP setData(): "+tempCraft.name+tempCraft.profitRatio);
 			}
 			repaint();
@@ -134,11 +139,19 @@ public class CraftIntoPanel extends JPanel {
 			}
 			if (isActive)
 			{
-				Item selected = Main.dm.itemMap.get(table.getValueAt(e.getFirstIndex(), 0));
-				//Main.gm.ccp.loadItem(selected);
-				Main.gm.showItem(selected);
+				//Item selected = Main.dm.itemMap.get(table.getValueAt(e.getFirstIndex(), 0));
+					//Main.gm.ccp.loadItem(selected);
+				
+				//Main.gm.showItem(selected);
+				
+				icn.fireItemChangeEvent(
+						new ItemChangeEvent(
+								e.getSource(),
+								String.valueOf(table.getValueAt(e.getFirstIndex(), 0))));
+				
 				//System.out.println(e.getSource());
-			
+				//table.dispatchEvent(new ActionEvent(table, ActionEvent.ACTION_PERFORMED, selected.getName()));
+				
 				//System.out.println(e.getFirstIndex() +" " + e.getLastIndex());
 				//System.out.println(table.getValueAt(e.getFirstIndex(), 0));
 			}

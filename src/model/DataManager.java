@@ -13,273 +13,75 @@ import java.util.Scanner;
 import java.util.Set;
 
 import manager.Main;
-import types.CraftBook;
-import types.Craftable;
-import types.Item;
-import types.Material;
 
 public class DataManager {
 	
-	private boolean hasInit = false;
+	private HashMap<String, Item> itemMap = new HashMap<String, Item>();
 	
-	public HashMap<String, Item> itemMap;
+	private ArrayList<Material> materials;
+	private ArrayList<CraftBook> craftBooks;
 	
-	public ArrayList<Material> materials;
-	public ArrayList<CraftBook> craftBooks;
-	
-	public ArrayList<ArrayList<Craftable>> skillTree;
-	public ArrayList<Craftable> action;
-	public ArrayList<Craftable> crystal;
-	public ArrayList<Craftable> food;
-	public ArrayList<Craftable> machine;
-	public ArrayList<Craftable> medicine;
-	public ArrayList<Craftable> tool;
+	private ArrayList<ArrayList<Craftable>> skillTree;
+	private ArrayList<Craftable> action;
+	private ArrayList<Craftable> crystal;
+	private ArrayList<Craftable> food;
+	private ArrayList<Craftable> machine;
+	private ArrayList<Craftable> medicine;
+	private ArrayList<Craftable> tool;
 	
 	private static ArrayList<Craftable> currentList;
 	
-	public static double costPerWorkload = 1.0;	//TODO temporary, replace with craft book item later
+	//public static double costPerWorkload = 1.0;	//TODO temporary, replace with craft book item later
 	
-	private CraftBook loadedCraftBook;
+	private final String DEFAULT_CRAFTBOOK = "Book of Expertise";
+	private static CraftBook loadedCraftBook;
 	
 	public DataManager()
 	{
-		itemMap = new HashMap<String, Item>();
+		//itemMap = new HashMap<String, Item>();
 		skillTree = new ArrayList<ArrayList<Craftable>>();
 		
-		//init();
-		//loadPrices();
+		init();
+		loadPrices();
 	}
 	
-	public void init()
+	private void init()
 	{
-		if (!hasInit) //makes sure init() only runs once... since it's public and all
-		{
-			hasInit = true;
-			
-			initMaterial();
-			initCraftBook();
-			
-			initAction();
-			initCrystal();
-			initFood();
-			initMachine();
-			initMedicine();
-			initTool();
-			
-			//TODO: move/explain costPerWorkload init better
-			//default cost at 1mill workload book
-			costPerWorkload = craftBooks.get(4).getWorthPerWorkload();
-			
-			loadedCraftBook = (CraftBook) itemMap.get("Book of Expertise");
-		}
-	}
-	
-	private void initMaterial()
-	{
-		materials = new ArrayList<Material>();	
-	}
-	
-	private void initCraftBook()
-	{
+		materials = new ArrayList<Material>();
+		
 		craftBooks = new ArrayList<CraftBook>();
 		
-		craftBooks.add(new CraftBook("Small Crafting Secrets", 100));
-		craftBooks.add(new CraftBook("Normal Crafting Secrets", 1000));
-		craftBooks.add(new CraftBook("Artisan Crafting Secrets", 10000));
-		craftBooks.add(new CraftBook("Book of Craftsmanship", 100000));
-		craftBooks.add(new CraftBook("Book of Expertise", 1000000));
-		craftBooks.add(new CraftBook("Book of Mastery", 5000000));
-		craftBooks.add(new CraftBook("Golden Book of Craftsmanship", 50000000));
+		ItemLoader loader = new ItemLoader(itemMap, materials);
+		loader.loadCraftBook(craftBooks);
+		loadedCraftBook = (CraftBook) itemMap.get(DEFAULT_CRAFTBOOK);
 		
-		for (CraftBook cb : craftBooks)
-		{
-			itemMap.put(cb.getName(), cb);
-		}
-	}
-	
-	private void initAction()
-	{
+		//init craftable lists
 		action = new ArrayList<Craftable>();
-		skillTree.add(action);
-		currentList = action;
-		
-		addCraftable("Auto-Craft [I]", 50000, 2, 4);
-			addRecipe("Multi-Hued Crystal Shard", 5);
-			addRecipe("Platinum Ingot", 50);
-			addRecipe("Hammer [I]", 100);
-			addRecipe("Enchant Stone [I]", 10);
-			
-		addCraftable("Auto-Craft [II]", 210000, 4, 5);
-			addRecipe("Multi-Hued Crystal", 1);
-			addRecipe("Platinum Ingot", 100);
-			addRecipe("Hammer [II]", 50);
-			addRecipe("Enchant Stone[II]", 10);
-			addRecipe("Auto-Craft Doll MK-1", 2);
-			
-	}
-	
-	private void initCrystal()
-	{
 		crystal = new ArrayList<Craftable>();
-		skillTree.add(crystal);
-		currentList = crystal;
-		
-		addCraftable("Multi-Hued Crystal Shard", 46000, 5, 5);
-			addRecipe("Phoenix Crystal", 1);
-			addRecipe("Giant Crystal", 1);
-			addRecipe("Redemption Crystal", 1);
-			addRecipe("Dragon Crystal", 1);
-			addRecipe("Ashen Crystal", 1);
-		
-		addCraftable("Multi-Hued Crystal", 200000, 5, 5);
-			addRecipe("Multi-Hued Crystal Shard", 5);
-			addRecipe("Mandragora", 2);
-			addRecipe("Platinum Ingot", 25);
-			addRecipe("Coral", 100);
-			addRecipe("Opal", 3);
-	}
-	
-	private void initFood()
-	{
 		food = new ArrayList<Craftable>();
-		skillTree.add(food);
-		currentList = food;
-		
-		addCraftable("Dumpling", 500, 10, 2);
-			addRecipe("Pork", 4);
-			addRecipe("Wheat", 6);
-			
-		addCraftable("Grilled Pork", 600, 10, 2);
-			addRecipe("Pork", 8);
-			addRecipe("Salt", 4);
-		
-		addCraftable("Grilled Shrimp", 800, 10, 2);
-			addRecipe("Shrimp", 10);
-			addRecipe("Salt", 5);	
-		
-		addCraftable("Octopus Soup", 960, 10, 2);
-			addRecipe("Octopus", 12);
-			addRecipe("Salt", 6);
-			
-		addCraftable("Barley Bibimbap", 7000, 10, 3);
-			addRecipe("Barley", 60);
-			addRecipe("Salt", 20);
-			addRecipe("Sesame Oil", 5);
-	}
-	
-	private void initMachine()
-	{
 		machine = new ArrayList<Craftable>();
-		skillTree.add(machine);
-		currentList = machine;
-		
-		addCraftable("Auto-Craft Doll MK-1", 1830000, 5, 8);
-			addRecipe("Small Marionette", 1);
-			addRecipe("Mysterious Vial: Wisdom", 1);
-			addRecipe("Earth Element Shard", 300);
-			addRecipe("Normal Crafting Secrets", 100);
-			addRecipe("Polish", 10);
-			addRecipe("Pearl", 150);
-			addRecipe("Oil", 15);
-			addRecipe("Small Bolt", 15);
-	}
-	
-	private void initMedicine()
-	{
 		medicine = new ArrayList<Craftable>();
-		skillTree.add(medicine);
-		currentList = medicine;
-		
-		addCraftable("Mana Potion [III]", 5700, 10, 3);
-			addRecipe("Chrysanthemum", 15);
-			addRecipe("Jasmine", 15);
-			addRecipe("Cyclamen", 10);
-		
-		addCraftable("Mysterious Vial: Wisdom", 1430000, 10, 6);
-			addRecipe("Mandragora", 4);
-			addRecipe("Multi-Hued Crystal", 5);
-			addRecipe("Growth Vial [II]", 50);
-			addRecipe("Mana Potion [III]", 100);
-			addRecipe("Jasmine", 400);
-			addRecipe("Green Mold", 600);
-	}
-	
-	private void initTool()
-	{
 		tool = new ArrayList<Craftable>();
-		skillTree.add(tool);
-		currentList = tool;
 		
-		addCraftable("Small Bolt", 3500, 20, 3);
-			addRecipe("Platinum Ingot", 1);
-			addRecipe("Silver Ingot", 30);
-			addRecipe("Coral", 100);
-	}
-	
-	// Lazy Material Adding
-	private void addMaterial(String material)
-	{
-		itemMap.put(material, new Material(material));
-		//System.out.println(material+" "+itemMap.get(material));
-		materials.add((Material) (itemMap.get(material)));
-	}
-	
-	/**
-	 * 
-	 * @param craftable Item Name
-	 * @param workload Workload
-	 * @param numCrafted Size
-	 * @param numComponents Components
-	 */
-	private void addCraftable(String craftable, int workload, int numCrafted, int numComponents)
-	{
-		if (itemMap.containsKey(craftable))
-		{
-			if (itemMap.get(craftable).type == 0) //if trying to add an item previously deemed material
-			{
-				Material toConvert = (Material) itemMap.get(craftable);
-				
-				materials.remove(toConvert);
-				
-				Craftable converted = toConvert.convert(workload, numCrafted, numComponents);
-				
-				itemMap.remove(craftable);
-				itemMap.put(craftable,  converted);
-				
-				//resets all the components from the previous material into new craftable
-				for (String s : converted.craftsInto)
-				{
-					Item tempItem = Main.dm.itemMap.get(s);
-					if (tempItem.type == 1)
-					{
-						//System.out.println(s);
-						Craftable tempCraft = (Craftable) tempItem;
-						tempCraft.remapRecipe();
-					}
-				}
-				
-				//System.out.println("duplicate: "+toConvert.name);
-			}
-		}
-		else
-		{
-			itemMap.put(craftable, new Craftable(craftable, workload, numCrafted, numComponents));
-		}
+		//add craftable lists to skillTree (is this even needed?)
+		skillTree.add(action);
+		skillTree.add(crystal);
+		skillTree.add(food);
+		skillTree.add(machine);
+		skillTree.add(medicine);
+		skillTree.add(tool);			
 		
-		currentList.add((Craftable) itemMap.get(craftable));
-	}
-	
-	private void addRecipe(String name, int number)
-	{
-		//puts item into itemmap as a material if not already existing
-		if (!itemMap.containsKey(name))
-		{
-			addMaterial(name);
-		}
+		//load craftable recipes
+		loader.loadAction(action);
+		loader.loadCrystal(crystal);
+		loader.loadFood(food);
+		loader.loadMachine(machine);
+		loader.loadMedicine(medicine);
+		loader.loadTool(tool);
 		
-		Item temp = itemMap.get(name);
-		temp.craftsInto.add(Craftable.lastCraftable.name);
-		Craftable.lastCraftable.addRecipe(itemMap.get(name), number);
+		//TODO: move/explain costPerWorkload init better
+		//default cost at 1mill workload book
+		//costPerWorkload = craftBooks.get(4).getWorthPerWorkload();
 	}
 	
 	public void loadPrices()
@@ -294,7 +96,7 @@ public class DataManager {
 				
 				if (itemMap.containsKey(temp))
 				{
-					itemMap.get(temp).worth = input.nextInt();
+					itemMap.get(temp).setWorth(input.nextInt());
 					itemMap.get(temp).setTimeUpdated(input.nextLong());
 				}
 				else
@@ -336,7 +138,7 @@ public class DataManager {
 		for (String s : tempSet)
 		{
 			String altered = s.replace(" ", "_");
-			tempList.add(altered+" "+itemMap.get(s).worth+" "+itemMap.get(s).getTimeUpdated());
+			tempList.add(altered+" "+itemMap.get(s).getWorth()+" "+itemMap.get(s).getTimeUpdated());
 		}
 		
 		Path path = Paths.get("prices.txt");
@@ -351,7 +153,18 @@ public class DataManager {
 		}
 	}
 	
-	Item getItem(String name)
+	public static double getCostPerWorkload()
+	{
+		return loadedCraftBook.getWorthPerWorkload();
+	}
+	
+	public static void setCraftBook(CraftBook cb)
+	{
+		loadedCraftBook = cb;
+	}
+	
+	
+	public Item getItem(String name)
 	{
 		return itemMap.get(name);
 	}
@@ -365,9 +178,39 @@ public class DataManager {
 				c.updateCost();
 			}
 		}
-		if (Main.gm.currentItem != null)
+		/*if (Main.gm.currentItem != null)
 		{
 			Main.gm.showItem(Main.gm.currentItem);
-		}
+		}*/
+	}
+	
+	public void setItemWorth(String itemName, long worth)
+	{
+		itemMap.get(itemName).setWorth(worth);
+	}
+	
+	public boolean itemExists(String itemName)
+	{
+		return itemMap.containsKey(itemName);
+	}
+	
+	
+	/*
+	 * Feels like having these ArrayList returns defeats the purpose
+	 * of having them be private in the first place.
+	 */
+	public ArrayList<CraftBook> getCraftBookList()
+	{
+		return craftBooks;
+	}
+	
+	public ArrayList<Material> getMaterialList()
+	{
+		return materials;
+	}
+	
+	public ArrayList<ArrayList<Craftable>> getSkillTree()
+	{
+		return skillTree;
 	}
 }

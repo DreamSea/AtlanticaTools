@@ -1,8 +1,5 @@
 package manager;
 
-import model.DataManager;
-import gui.GUIManager;
-
 /*
  * 	The manager manager. Holds Data/GUI and communicates in between.
  * 
@@ -13,16 +10,21 @@ import gui.GUIManager;
 
 public class Main {
 	
-	public static StringBuilder sb = new StringBuilder();
+	//public static StringBuilder sb = new StringBuilder();
 	
-	private static ManagerManager mm;
+	private ManagerManager mm;
 	
-	public static DataManager dm;
-	public static GUIManager gm;
+	//public static DataManager dm;
+	//public static GUIManager gm;
+	
+	public Main()
+	{
+		mm = new ManagerManager();
+	}
 	
 	public static void main(String args[])
 	{
-		dm = new DataManager();
+		//dm = new DataManager();
 		
 		/*
 		 * init() and loadPrices() are moved here out of DataManager constructor
@@ -30,16 +32,15 @@ public class Main {
 		 * 
 		 * Result of current fix to loading items, may think up something better
 		 */
-		dm.init();
-		dm.loadPrices();
+		//dm.init();
+		//dm.loadPrices();
 		
-		gm = new GUIManager();
+		//gm = new GUIManager();
 		
 		//System.out.println(dm.getItem("Dumpling"));
 		//System.out.println(dm.getItem("Grilled Pork"));
 		//System.out.println(dm.getItem("Pork").craftsInto.toString());
-
 		
-		//mm = new ManagerManager();
+		new Main();
 	}
 }
