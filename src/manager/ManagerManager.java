@@ -9,6 +9,9 @@ import gui.GUIManager;
 import model.CraftBook;
 import model.DataManager;
 
+/*
+ * 		ManagerManager : link between data and gui managers
+ */
 public class ManagerManager implements ItemChangeListener, ActionListener
 {
 	private DataManager dm;
@@ -17,63 +20,66 @@ public class ManagerManager implements ItemChangeListener, ActionListener
 	public ManagerManager()
 	{
 		dm = new DataManager();
+		
+		/*
+		 * TODO: can this be done without passing DataManager
+		 * in to init everything?
+		 */
 		gm = new GUIManager(this, this, dm);
-	}
-
-	/*
-	 * Information requested from DataManager();
-	 */
+	}	
 	
-	
-	
-	/*
-	 * Events received from gui
-	 */
-	public void itemChangeRecieved(ItemChangeEvent e) {
-		//System.out.print("ManagerManager: ");
-		if (e.getWorthProposal() > 0)
-		{
-			//System.out.println("(Worth Change) "+e.getItemName()+" "+e.getWorthProposal());
-			
-			dm.setItemWorth(e.getItemName(), e.getWorthProposal());
-			
-			dm.refreshItems();
-			if (gm.getCurrentItem() != null)
+	//Events received from gui relating to item displayed (besides craftbook price)
+	public void itemChangeRecieved(ItemChangeEvent e)
+	{
+		if (e.getWorthProposal() != null) //itemChangeEvent requesting price update
+		{	
+			long newWorth = e.getWorthProposal();
+			if (newWorth <= 0)
 			{
+				newWorth = 1; //an Item can at least be auto-sold for 1;
+			}
+			
+			dm.setItemWorth(e.getItemName(), newWorth);	
+			dm.refreshItems();
+			
+			if (gm.getCurrentItem() != null) //TODO: pretty sure this check isn't needed
+			{
+				/*
+				 * keep display on current item in case price
+				 * update relates to one of the crafting components
+				 */
 				gm.showItem(gm.getCurrentItem());
 			}
 		}
-		else
+		else //itemChange event requesting panels to show a different item
 		{
-			//System.out.println("(Item Change) "+e.getItemName());
 			gm.showItem(dm.getItem(e.getItemName()));
 		}
 	}
 
+	//Events from listening in on MenuBar
 	public void actionPerformed(ActionEvent e)
 	{
-		//System.out.println("GUIManager Action Event: "+e.paramString());
 		if (e.getActionCommand().compareTo("Save Item Prices") == 0)
 		{
 			dm.savePrices();
 		}
-		else
+		else //TODO: at the moment this just relates to changing workload, should be better way to do this
 		{
 			if (dm.itemExists(e.getActionCommand()))
 			{
 				DataManager.setCraftBook((CraftBook) dm.getItem(e.getActionCommand()));
-				//System.out.println(DataManager.costPerWorkload);
 				dm.refreshItems();
 				if (gm.getCurrentItem() != null)
 				{
 					gm.showItem(gm.getCurrentItem());
 				}
 			}
-			//System.out.println(e.getActionCommand());
 		}
 	}
 	
-	
-	
-	
+	public static void main(String[] args)
+	{
+		new ManagerManager();
+	}
 }

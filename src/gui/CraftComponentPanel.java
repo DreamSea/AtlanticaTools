@@ -20,47 +20,48 @@ import model.Craftable;
 import model.Item;
 import model.Material;
 
-
 /*
- * 		ItemPanel : Contains main interface for switching
- * 			between crafted items and their components
+ * 		CraftComponentPanel : Contains main interface for switching
+ * 			between crafted items and their components. Package private
  */
-public class CraftComponentPanel extends JPanel implements ActionListener, PropertyChangeListener {
+class CraftComponentPanel extends JPanel implements ActionListener, PropertyChangeListener {
 
-	final int BUTTONWIDTH = 175;
-	final int WORTHWIDTH = 100;
-	final int SPACE = 35; //for each row
-	final int TOPSPACE = 35; //for top
+	/*
+	 *  TODO: Dimensions/relations between gui objects that I don't
+	 *  follow through with very well at the moment...
+	 *  
+	 *  Eventually may want to relate this to an overall value in
+	 *  GUIManager.
+	 */
+	private final int BUTTONWIDTH = 175;
+	private final int WORTHWIDTH = 100;
+	private final int SPACE = 35; //for each row
+	private final int TOPSPACE = 35; //for top
+	private final int ITEMROWS = 10; //guess at max number of components in any craft
+	private final int ROWHEIGHT = 30;
 
-	final int ITEMROWS = 10;
-	final int ROWHEIGHT = 30;
-
-	final String BLANKSTRING = "---";
-
-	//for loop javax.swing items
+	/*
+	 * For looping through gui components so that each one doesn't
+	 * need to be created individually.
+	 */
 	private JButton[] ingredientButton;
 	private JLabel[] ingredientNumber;
 	private JFormattedTextField[] ingredientWorth;
 	private JLabel[] ingredientWorthTotal;
 	private JLabel[] ingredientDateUpdated;
 
-	private Craftable loaded;
-	private Material loadedMat;
-	private CraftBook loadedCraftBook;
+	// Makes large costs/worths display more nicely
+	private NumberFormat numberFormatter;
 
-	private NumberFormat nf;
+	// Passes item change requests back to GUIManager
+	private ItemChangeNotifier craftComponentNotifier;
 
-	//private PropertyChangeListener pcl;
-	
-	private ItemChangeNotifier icn;
-
-	public CraftComponentPanel(ItemChangeNotifier icn)
+	CraftComponentPanel(ItemChangeNotifier icn)
 	{
-		this.icn = icn;
-		//this.pcl = pcl;
+		craftComponentNotifier = icn;
 		
-		nf = NumberFormat.getNumberInstance();
-		nf.setGroupingUsed(true);
+		numberFormatter = NumberFormat.getNumberInstance();
+		numberFormatter.setGroupingUsed(true);
 
 		//for loop javax.swing array
 		ingredientButton = new JButton[ITEMROWS];
@@ -68,7 +69,7 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 		ingredientWorth = new JFormattedTextField[ITEMROWS];
 		ingredientWorthTotal = new JLabel[ITEMROWS];
 		ingredientDateUpdated = new JLabel[ITEMROWS];
-
+		
 		setLayout(null);
 		setPreferredSize(new Dimension(
 				5*SPACE+BUTTONWIDTH+WORTHWIDTH+WORTHWIDTH, 100+SPACE*ITEMROWS));
@@ -81,18 +82,18 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 		 */
 		for (int i = 0; i < ITEMROWS; i++)
 		{
-			ingredientButton[i] = new JButton(BLANKSTRING);
+			ingredientButton[i] = new JButton(GUIManager.BLANKSTRING);
 			ingredientButton[i].addActionListener(this);
 
-			ingredientNumber[i] = new JLabel(BLANKSTRING);
+			ingredientNumber[i] = new JLabel(GUIManager.BLANKSTRING);
 
-			ingredientWorth[i] = new JFormattedTextField(nf);
-			ingredientWorth[i].setText(BLANKSTRING);
+			ingredientWorth[i] = new JFormattedTextField(numberFormatter);
+			ingredientWorth[i].setText(GUIManager.BLANKSTRING);
 			ingredientWorth[i].addPropertyChangeListener("value", this);
 			
 
-			ingredientWorthTotal[i] = new JLabel(BLANKSTRING);
-			ingredientDateUpdated[i] = new JLabel(BLANKSTRING);
+			ingredientWorthTotal[i] = new JLabel(GUIManager.BLANKSTRING);
+			ingredientDateUpdated[i] = new JLabel(GUIManager.BLANKSTRING);
 
 			add(ingredientButton[i]);
 			add(ingredientNumber[i]);
@@ -111,28 +112,23 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 			ingredientDateUpdated[i].setBounds(
 					8*SPACE+BUTTONWIDTH+WORTHWIDTH, TOPSPACE+SPACE*i, WORTHWIDTH, ROWHEIGHT);
 			
+			/*
+			 * init the panel with all rows disabled so that
+			 * no actions are sent without a loaded item
+			 */
 			disableRow(i);
 		}
 	}
 
-
-	/*
-	 * 	Sets panel to show information for item
+	/**
+	 * Sets panel to show component information for Craftables
+	 * @param itemToShow
 	 */
-	public void loadItem(Item i)
+	void loadItem(Item itemToShow)
 	{
-		if (i.getType() == 0) //Material
+		if (itemToShow.getType() == Item.TYPE_CRAFTABLE)
 		{
-			loaded = null;
-			loadedMat = (Material) i;
-			for (int j = 0; j < ITEMROWS; j++)
-			{
-				disableRow(j);
-			}
-		}
-		else if (i.getType() == 1) //Craftable
-		{
-			loaded = (Craftable) i;
+			Craftable loaded = (Craftable) itemToShow;
 			for (int j = 0; j < loaded.getCraftedFromLength(); j++)
 			{
 				setRow(j, loaded.getCraftedFromItems(j), 
@@ -144,54 +140,39 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 				disableRow(j);
 			}
 		}
-		else if (i.getType() == 2)
+		else //Non-Craftable
 		{
-			loadedCraftBook = (CraftBook) i;
 			for (int j = 0; j < ITEMROWS; j++)
 			{
 				disableRow(j);
 			}
 		}
-
-		//TODO: move these into data Manager?
-		//Main.gm.cip.craftTable.setData(i.name);
-		//Main.gm.iip.loadItem(i);
-		
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		//Main.gm.showItem(Main.dm.itemMap.get(e.getActionCommand()));
-		icn.fireItemChangeEvent(new ItemChangeEvent(this, e.getActionCommand()));
+	/*
+	 * Creates ItemChangeEvent when user clicks on component buttons
+	 */
+	public void actionPerformed(ActionEvent e)
+	{
+		craftComponentNotifier.fireItemChangeEvent(
+				new ItemChangeEvent(this, e.getActionCommand()));
 	}
 
-
-	public void propertyChange(PropertyChangeEvent e) {
+	/*
+	 * Creates ItemChangeEvent when user adjusts worth text field
+	 */
+	public void propertyChange(PropertyChangeEvent e)
+	{
 		String tempName = ((JFormattedTextField) e.getSource()).getName();
-		if (tempName.compareTo(BLANKSTRING) != 0) //only fires when user changes value
+		
+		/*
+		 * compareTo(GUIManager.BLANKSTRING) keeps ItemChangeEvent from firing
+		 * when initializing the component worths of an item
+		 */
+		if (tempName.compareTo(GUIManager.BLANKSTRING) != 0)
 		{
-			icn.fireItemChangeEvent(new ItemChangeEvent(this, tempName, (long) e.getNewValue()));
-			
-		/*	//System.out.print(e.getNewValue()+" "+tempName);
-			Item tempItem = Main.dm.itemMap.get(tempName);
-			tempItem.setWorth((long) e.getNewValue());
-
-			refreshItem(tempItem);
-			
-			if (loaded != null)
-			{
-				//Main.gm.cip.craftTable.setData(loaded.name);
-				//Main.gm.iip.loadItem(loaded);
-				Main.gm.showItem(loaded);
-			}
-			else
-			{
-				//Main.gm.cip.craftTable.setData(loadedMat.name);
-				//Main.gm.iip.loadItem(loadedMat);
-				Main.gm.showItem(loadedMat);
-			}
-			//System.out.println(tempItem.cost);
-
-			refreshPanel();*/
+			craftComponentNotifier.fireItemChangeEvent(
+					new ItemChangeEvent(this, tempName, (long) e.getNewValue()));
 		}
 	}
 
@@ -201,15 +182,15 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 	 */
 	private void disableRow(int row)
 	{
-		ingredientButton[row].setText(BLANKSTRING);
+		ingredientButton[row].setText(GUIManager.BLANKSTRING);
 		ingredientButton[row].setEnabled(false);
-		ingredientNumber[row].setText(BLANKSTRING);
+		ingredientNumber[row].setText(GUIManager.BLANKSTRING);
 		ingredientNumber[row].setEnabled(false);
-		ingredientWorth[row].setText(BLANKSTRING);
+		ingredientWorth[row].setText(GUIManager.BLANKSTRING);
 		ingredientWorth[row].setEnabled(false);
-		ingredientWorthTotal[row].setText(BLANKSTRING);
+		ingredientWorthTotal[row].setText(GUIManager.BLANKSTRING);
 		ingredientWorthTotal[row].setEnabled(false);
-		ingredientDateUpdated[row].setText(BLANKSTRING);
+		ingredientDateUpdated[row].setText(GUIManager.BLANKSTRING);
 		ingredientDateUpdated[row].setEnabled(false);
 	}
 
@@ -225,43 +206,20 @@ public class CraftComponentPanel extends JPanel implements ActionListener, Prope
 		ingredientNumber[row].setEnabled(true);
 		ingredientNumber[row].setText(String.valueOf(number));
 
-		//ingredientWorth[row].removePropertyChangeListener("value", pcl);
+		/*
+		 * The setName GUIManager.BLANKSTRING followed by i.getName() keeps
+		 * the propertyChange from firing ItemChangeEvents when
+		 * worth is set
+		 */
 		ingredientWorth[row].setEnabled(true);
-		ingredientWorth[row].setName(BLANKSTRING);
+		ingredientWorth[row].setName(GUIManager.BLANKSTRING);
 		ingredientWorth[row].setValue(worth);
 		ingredientWorth[row].setName(i.getName());
-		//ingredientWorth[row].addPropertyChangeListener("value", pcl);
 
 		ingredientWorthTotal[row].setEnabled(true);
-		ingredientWorthTotal[row].setText(nf.format(number*worth));
+		ingredientWorthTotal[row].setText(numberFormatter.format(number*worth));
 		
 		ingredientDateUpdated[row].setEnabled(true);
-		ingredientDateUpdated[row].setText(String.valueOf(i.getTimeSinceUpdate()));
+		ingredientDateUpdated[row].setText(numberFormatter.format(i.getDaysSinceUpdate()));
 	}
-
-	/*
-	 * 	Update object item fields
-	 */
-	/*private void refreshItem(Item i)
-	{
-		i.updateCost();
-	}*/
-
-	/*
-	 * 	Update shown item fields after a change has occurred
-	 */
-	
-	/*private void refreshPanel()	//TODO clean this up vs original loadItem(Item i)
-	{
-		if (loaded != null)
-		{
-			loaded.updateCost();
-			for (int j = 0; j < loaded.craftedFromItems.length; j++)
-			{
-				setRow(j, loaded.craftedFromItems[j], 
-						loaded.craftedFromNumbers[j], 
-						loaded.craftedFromItems[j].worth);
-			}
-		}
-	}*/
 }

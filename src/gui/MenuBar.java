@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import javax.swing.JMenu;
@@ -10,73 +9,62 @@ import javax.swing.JMenuItem;
 
 import model.CraftBook;
 
-public class MenuBar extends JMenuBar
+/*
+ * 		MenuBar : Contains buttons for saving prices as well as
+ * 			selecting which craft book to base profit calculations off of.
+ * 			Package private.
+ */
+
+class MenuBar extends JMenuBar
 {
-	private NumberFormat nf;
-	private ActionListener al;
-	
+	private NumberFormat workloadFormatter; //at the moment, for formatting workload numbers
+	private ActionListener menuBarListener;
 	
 	JMenu menu;
 	JMenu craftBooksSubMenu;
-	JMenuItem[] craftBooks;
+	JMenuItem[] craftBooksList;
 	
-	JMenuItem save;
+	JMenuItem saveItemPrices; //the item for saving item prices
 	
-	public MenuBar(NumberFormat format, ActionListener al, ArrayList<CraftBook> bookList)
+	MenuBar(NumberFormat nf, ActionListener al, ArrayList<CraftBook> bookList)
 	{
-		nf = format;
-		this.al = al;
+		workloadFormatter = nf;
+		menuBarListener = al;
 		
+		//TODO: stuffs is srs bsns
 		menu = new JMenu("Stuffs.");
 		
 		add(menu);
 		
-		save = new JMenuItem("Save Item Prices");
-		save.setMnemonic(KeyEvent.VK_S);
-		
-		menu.add(save);
-		//save.addActionListener(this);
-		save.setActionCommand("Save Item Prices");
-		save.addActionListener(al);
+		saveItemPrices = new JMenuItem("Save Item Prices");
+		//saveItemPrices.setMnemonic(KeyEvent.VK_S);
+		menu.add(saveItemPrices);
+		saveItemPrices.setActionCommand("Save Item Prices");
+		saveItemPrices.addActionListener(menuBarListener);
 		
 		menu.addSeparator();
 		
+		//craft books for profit calculations
 		craftBooksSubMenu = new JMenu("Select Craft Book");
 		addCraftBooks(bookList);
 		menu.add(craftBooksSubMenu);
 	}
 
+	/*
+	 * populates craft book list in submenu
+	 */
 	private void addCraftBooks(ArrayList<CraftBook> bookList)
 	{
-		craftBooks = new JMenuItem[bookList.size()];
+		craftBooksList = new JMenuItem[bookList.size()];
 				
-		for (int i = 0; i < craftBooks.length; i++)
+		for (int i = 0; i < craftBooksList.length; i++)
 		{
 			CraftBook cb = bookList.get(i);
 			
-			craftBooks[i] = new JMenuItem(cb.getName() +" ("+nf.format(cb.getWorkload())+")");
-			craftBooksSubMenu.add(craftBooks[i]);
-			craftBooks[i].addActionListener(al);
-			craftBooks[i].setActionCommand(cb.getName());
+			craftBooksList[i] = new JMenuItem(cb.getName() +" ("+workloadFormatter.format(cb.getWorkload())+")");
+			craftBooksSubMenu.add(craftBooksList[i]);
+			craftBooksList[i].addActionListener(menuBarListener);
+			craftBooksList[i].setActionCommand(cb.getName()); //action commands in the form of item name
 		}
 	}
-	
-	/*@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		if (e.getSource().equals(save))
-		{
-			Main.dm.savePrices();
-		}
-		else
-		{
-			if (Main.dm.itemMap.containsKey(e.getActionCommand()))
-			{
-				DataManager.setCraftBook((CraftBook) Main.dm.itemMap.get(e.getActionCommand()));
-				//System.out.println(DataManager.costPerWorkload);
-				Main.dm.refreshItems();
-			}
-			//System.out.println(e.getActionCommand());
-		}
-	}*/
 }

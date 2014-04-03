@@ -13,28 +13,32 @@ import javax.swing.tree.TreeSelectionModel;
 
 import events.ItemChangeEvent;
 import events.ItemChangeNotifier;
-import manager.Main;
 import model.CraftBook;
 import model.Craftable;
 import model.Item;
 import model.Material;
 
-public class CraftItemTree extends JPanel implements TreeSelectionListener
+/*
+ * 		CraftItemTree : Tree navigation between craft skills
+ *			and the craftables. Package private.
+ */
+class CraftItemTree extends JPanel implements TreeSelectionListener
 {
 	
 	private JTree tree;
-	private ItemChangeNotifier icn;
+	private ItemChangeNotifier craftTreeNotifier;
 	
-	DefaultMutableTreeNode category = null;
-	DefaultMutableTreeNode book = null;
+	private DefaultMutableTreeNode category = null;
+	private DefaultMutableTreeNode book = null;
 	
-	public CraftItemTree(ItemChangeNotifier icn, 
+	//TODO: there needs to be a better way of passing information in...
+	CraftItemTree(ItemChangeNotifier icn, 
 			ArrayList<CraftBook> craftBooks,
 			ArrayList<Material> materials,
 			ArrayList<ArrayList<Craftable>> skillTree)
 	{	
 		//System.out.println(icn == null);
-		this.icn = icn;
+		this.craftTreeNotifier = icn;
 		
 		DefaultMutableTreeNode top =
 				new DefaultMutableTreeNode("Items");
@@ -48,7 +52,7 @@ public class CraftItemTree extends JPanel implements TreeSelectionListener
 		//Listen for when the selection changes.
 		tree.addTreeSelectionListener(this);
 	
-
+		//make the tree scrollable
 		JScrollPane treeView = new JScrollPane(tree);
 		
 
@@ -62,27 +66,20 @@ public class CraftItemTree extends JPanel implements TreeSelectionListener
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
 				tree.getLastSelectedPathComponent();
 
-		if (node == null || !node.isLeaf()) return;
+		if (node == null || !node.isLeaf()) //no item to load if still navigating
+		{
+			return;
+		}
 	
 		Item selected = (Item) node.getUserObject();
-		//System.out.println(selected.getName());
-		//System.out.println(icn == null);
-		
-		/*System.out.print("Ping: "+ selected.name);
-		if (selected.type == 0)
-		{
-			System.out.println(" (Material)");
-			
-		}
-		else
-		{
-			System.out.println(" (Craftable)");
-		}*/
-		//Main.gm.ccp.loadItem(selected);
-		icn.fireItemChangeEvent(new ItemChangeEvent(e.getSource(), selected.getName()));
-		//Main.gm.showItem(selected);
+	
+		craftTreeNotifier.fireItemChangeEvent(
+				new ItemChangeEvent(e.getSource(), selected.getName()));
+
+		//TODO: reset selection after item is displayed?
 	}
 	
+	//tree creation logic
 	private void createNodes(DefaultMutableTreeNode top, 
 			ArrayList<CraftBook> craftBooks,
 			ArrayList<Material> materials,
@@ -113,6 +110,7 @@ public class CraftItemTree extends JPanel implements TreeSelectionListener
 		craftableNodes("Tool", skillTree.get(5), top);
 	}
 	
+	//populate the subfolder with the craftables
 	private void craftableNodes(String name, ArrayList<Craftable> skill, DefaultMutableTreeNode top)
 	{
 		category = new DefaultMutableTreeNode(name);

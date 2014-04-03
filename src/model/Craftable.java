@@ -2,8 +2,6 @@ package model;
 
 import java.util.HashMap;
 
-import manager.Main;
-
 public class Craftable extends Item
 {
 	private Item[] craftedFromItems;

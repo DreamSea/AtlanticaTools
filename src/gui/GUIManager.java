@@ -1,120 +1,98 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
 
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-
 import events.ItemChangeListener;
 import events.ItemChangeNotifier;
 import model.DataManager;
 import model.Item;
 
+/*
+ * 		GUIManager : The public face of the gui package, holds all the
+ * 			gui components.
+ */
+
 public class GUIManager {
 	
-	final static int WIDTH = 300;
-	final static int HEIGHT = 600;
+	/*
+	 * Strings being immutable or something so figured this is used enough
+	 * to warrant keepin in memory. The default string for when information
+	 * doesn't apply to loaded item
+	 */
+	final static String BLANKSTRING = "---";
 	
-	private MenuBar mb;// = new MenuBar();
-	private CraftItemTree cit;// = new CraftItemTree();
-	public CraftComponentPanel ccp;// = new CraftComponentPanel();
-	public CraftIntoPanel cip;// = new CraftIntoPanel();
-	public ItemInfoPanel iip;// = new ItemInfoPanel();
+	private MenuBar guiMenuBar;
+	private CraftItemTree guiCraftItemTree;
+	private CraftComponentPanel guiCraftComponentPanel;
+	private CraftIntoPanel guiCraftIntoPanel;
+	private ItemInfoPanel guiItemInfoPanel;
 	
-	private Item currentItem;
+	private Item currentItem; //holds info of item currently displayed
 	
 	private NumberFormat nf;
 	
-	private ItemChangeNotifier icn;
-	private ActionListener al;
+	private ItemChangeNotifier mainItemChangeNotifier;
+	private ActionListener guiActionListener;
 	
 	public GUIManager(ItemChangeListener icl, ActionListener al, DataManager dm)
 	{
+		//TODO: one numberformatter for all?
 		nf = NumberFormat.getInstance();
 		
-		this.al = al;
-		icn = new ItemChangeNotifier(icl);
+		guiActionListener = al;
+		mainItemChangeNotifier = new ItemChangeNotifier(icl);
 		
 		createAndShowGUI(dm);
-		//System.out.println(icn == null);
 	}
 	
 	private void createAndShowGUI(DataManager dm)
-	{	
-		mb = new MenuBar(nf, al, dm.getCraftBookList());
-		cit = new CraftItemTree(icn, dm.getCraftBookList(), dm.getMaterialList(), dm.getSkillTree());
-		ccp = new CraftComponentPanel(icn);
-		cip = new CraftIntoPanel(icn);
-		iip = new ItemInfoPanel(icn);
+	{
+		//TODO: create a loader class/helper so that I can make datamanager item arraylists private?
+		guiMenuBar = new MenuBar(nf, guiActionListener, dm.getCraftBookList());
+		guiCraftItemTree = new CraftItemTree(mainItemChangeNotifier, dm.getCraftBookList(), dm.getMaterialList(), dm.getSkillTree());
+		guiCraftComponentPanel = new CraftComponentPanel(mainItemChangeNotifier);
+		guiCraftIntoPanel = new CraftIntoPanel(mainItemChangeNotifier);
+		guiItemInfoPanel = new ItemInfoPanel(mainItemChangeNotifier);
 		
 		JFrame frame = new JFrame("Atlantica");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setLocation(100, 50);
-		//frame.setSize(WIDTH, HEIGHT);
 		
-		frame.setJMenuBar(mb);
+		frame.setJMenuBar(guiMenuBar);
 		
-		frame.add(cit, BorderLayout.WEST);
-		frame.add(iip, BorderLayout.CENTER);
-		frame.add(cip, BorderLayout.EAST);
-		frame.add(ccp, BorderLayout.SOUTH);
+		frame.add(guiCraftItemTree, BorderLayout.WEST);
+		frame.add(guiItemInfoPanel, BorderLayout.CENTER);
+		frame.add(guiCraftIntoPanel, BorderLayout.EAST);
+		frame.add(guiCraftComponentPanel, BorderLayout.SOUTH);
 		
 		frame.pack();
 		frame.setVisible(true);
 	}
 	
-	public void showItem(Item i)
+	/**
+	 * @param item Item to display on GUI
+	 */
+	public void showItem(Item item)
 	{
-		currentItem = i;
-		ccp.loadItem(i);
-		cip.craftTable.setData(i);
-		iip.loadItem(i);
+		currentItem = item;
+		guiCraftComponentPanel.loadItem(item);
+		guiCraftIntoPanel.craftTable.setData(item);
+		guiItemInfoPanel.loadItem(item);
 	}
 	
+	/**
+	 * For updating item property fields for events that come
+	 * from menu bar (such as changing what craftbook is used
+	 * for calculations)
+	 * 
+	 * @return Item currently being displayed
+	 */
 	public Item getCurrentItem()
 	{
 		return currentItem;
 	}
-
-	/*//Listening in on: MenuBar
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		System.out.println("GUIManager Action Event: "+e.paramString());
-		
-	}
-
-	@Override
-	public void valueChanged(TreeSelectionEvent e) {
-		System.out.println("GUIManager Tree Event: "+
-				e.getNewLeadSelectionPath().getLastPathComponent().toString());
-		
-	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent e) {
-		System.out.println("GUIManager Property Event: "+((JFormattedTextField) e.getSource()).getName()+" "+e.getNewValue());
-
-	}
-
-	
-	//List Selection Event will need some work... maybe getTable() from CraftIntoPanel?
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		//table.getValueAt(e.getFirstIndex(), 0)
-		System.out.println("GUIManager List Event: "+((DefaultListSelectionModel)(e.getSource())));
-	}*/
-	
-
-
 }

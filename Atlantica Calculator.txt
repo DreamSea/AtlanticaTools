@@ -1,5 +1,6 @@
 Todo: 
 
+DONE-ish 2014/04/02 (MED+) cleanup/comment/planning: Manager, gui package
 DONE-ish 2014/03/30 (MED-) GRAND REFACTORish. Information passed with listeners. Lots of cleanup to do though.
 DONE 2014/03/21 (MED) add craft books for workload prices, use menu selector to choose which workload to use
 DONE 2014/03/20 (MED) max wl, "updated # seconds ago"
@@ -10,12 +11,15 @@ DONE 2014/03/13 (HIGH) Basic CraftsInto Panel
 DONE 2014/03/11 (HIGH) Sum of Craft costs
 DONE 2014/03/11 (HIGH) Ratio of Profit/WL: currently as total size, redo to individual prices
 
+
+(MED+) GRAND REFACTOR cleanup/comment/planning: cip, events, model
+
+(MED-) title labels in craftcomponentpanel
+(MED-) profit ratio by materials in craftcomponent panel
+(MED-) more information in ItemInfoPanel
 (MED-) add more information in menu bar selector for craft books (WL size? ratio?)
-(MED-) profit ratio by materials in item panel
 
 (MED-) add color to craftTable, light green background for ratio > 1? bold text for ratio > 3?
-
-(MED-) GRAND REFACTOR cleanup
 
 (LOW) return list of best profit ratios of everything
 (LOW) return list of best profit ratio by maxworkload

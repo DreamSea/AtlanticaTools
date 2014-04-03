@@ -5,14 +5,14 @@ import java.util.EventObject;
 public class ItemChangeEvent extends EventObject {
 
 	private String itemName;
-	private long worthProposal;
+	private Long worthProposal;
 	
 	public ItemChangeEvent(Object source, String name)
 	{
-		this(source, name, -1);
+		this(source, name, null);
 	}
 	
-	public ItemChangeEvent(Object source, String name, long worth) {
+	public ItemChangeEvent(Object source, String name, Long worth) {
 		super(source);
 		itemName = name;
 		worthProposal = worth;
@@ -23,7 +23,7 @@ public class ItemChangeEvent extends EventObject {
 		return itemName;
 	}
 	
-	public long getWorthProposal()
+	public Long getWorthProposal()
 	{
 		return worthProposal;
 	}

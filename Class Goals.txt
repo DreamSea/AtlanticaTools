@@ -3,6 +3,8 @@ Breaking all the package conventions.
 Hopeful/ideas for the refactor.
 
 Package gui:
+	Everything package private except GUIManager
+
 	Class CraftComponentPanel: contains recipe component information
 		[on user input] Bumps DataManager refreshItem()
 		Bonus: Listener - fields changed, buttons pushed

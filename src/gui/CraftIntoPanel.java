@@ -1,44 +1,46 @@
 package gui;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import events.ItemChangeEvent;
 import events.ItemChangeNotifier;
-import manager.Main;
 import model.Craftable;
 import model.Item;
 
-public class CraftIntoPanel extends JPanel {
+/*
+ * 		CraftIntoPanel : Displays information on what craftables the
+ * 			currently loaded item is used in. The real power/reason
+ * 			behind craft calculator project. Package private.
+ * 
+ * 		Also contains gui objects that I understand the least... (tables)
+ */
+
+class CraftIntoPanel extends JPanel {
 	
-	public CraftIntoTable craftTable;
+	CraftIntoTable craftTable; //TODO: make this private?
 	
 	private JTable table;
 	private TableListener tl;
-	private ItemChangeNotifier icn;
+	private ItemChangeNotifier craftIntoNotifier;
 	
-	public CraftIntoPanel (ItemChangeNotifier icn)
+	CraftIntoPanel (ItemChangeNotifier icn)
 	{
 		craftTable = new CraftIntoTable();
-		this.icn = icn;
+		craftIntoNotifier = icn;
 		
 		table = new JTable (craftTable);
 		table.setAutoCreateRowSorter(true);
 		table.setFillsViewportHeight(true);
 		tl = new TableListener();
 		
+		//no need for selecting more than one item at a time
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(tl);
 		
@@ -47,7 +49,7 @@ public class CraftIntoPanel extends JPanel {
 		add(jsp);
 	}
 	
-	public class CraftIntoTable extends AbstractTableModel
+	class CraftIntoTable extends AbstractTableModel
 	{
 		private String[] columnNames = {"Item", "Ratio", "Updated (days)"};
 		
@@ -87,20 +89,22 @@ public class CraftIntoPanel extends JPanel {
 			else return null;
 		}
 		
-		/*
-		 * TODO: the set false/true at beginning and end is to prevent
-		 * chaos from happening when switching between items while table
-		 * is defined as sorted.
-		 * 
-		 * All in all this entire setData() looks really ugly... but it
-		 * works for now -_-
-		 */
-		public void setData(Item i)
+		void setData(Item i)
 		{
+			/*
+			 * TODO: the set row sorter false/true at beginning and end is to prevent
+			 * chaos from happening when switching between items while table
+			 * is defined as sorted.
+			 * 
+			 * Listener setActive to keep listener from firing repeatedly as table
+			 * is repopulated with new data
+			 * 
+			 * All in all this entire setData() looks really ugly... but it
+			 * works for now -_-
+			 */
 			table.setAutoCreateRowSorter(false);
 			tl.setActive(false);
 			
-			//System.out.println("CIP setData(): "+tempItem.craftsInto.toString());
 			int length = i.getCraftsIntoLength();
 
 			data = new Object[3][length];
@@ -138,22 +142,11 @@ public class CraftIntoPanel extends JPanel {
 				return;
 			}
 			if (isActive)
-			{
-				//Item selected = Main.dm.itemMap.get(table.getValueAt(e.getFirstIndex(), 0));
-					//Main.gm.ccp.loadItem(selected);
-				
-				//Main.gm.showItem(selected);
-				
-				icn.fireItemChangeEvent(
+			{	
+				craftIntoNotifier.fireItemChangeEvent(
 						new ItemChangeEvent(
 								e.getSource(),
 								String.valueOf(table.getValueAt(e.getFirstIndex(), 0))));
-				
-				//System.out.println(e.getSource());
-				//table.dispatchEvent(new ActionEvent(table, ActionEvent.ACTION_PERFORMED, selected.getName()));
-				
-				//System.out.println(e.getFirstIndex() +" " + e.getLastIndex());
-				//System.out.println(table.getValueAt(e.getFirstIndex(), 0));
 			}
 		}
 		

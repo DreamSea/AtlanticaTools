@@ -18,22 +18,22 @@ import javax.swing.text.StyledDocument;
 
 import events.ItemChangeEvent;
 import events.ItemChangeNotifier;
-import manager.Main;
 import model.CraftBook;
 import model.Craftable;
 import model.DataManager;
 import model.Item;
-import model.Material;
 
-public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
+/*
+ * 		ItemInfoPanel : Displays information hopefully
+ * 			relevant/useful to items. Package private.
+ */
 
-	final String BLANKSTRING = "---";
+class ItemInfoPanel extends JPanel implements PropertyChangeListener{
+
+	String BLANKSTRING = GUIManager.BLANKSTRING;
 	
 	private NumberFormat nf;
 	private Item loaded;
-	private Craftable loadedCraft;
-	private Material loadedMat;
-	private CraftBook loadedCraftBook;
 	
 	// Text Pane
 	private String[] panelStrings;
@@ -45,19 +45,21 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	private JLabel worthLabel;
 	private JFormattedTextField worthField;
 	
-	private PropertyChangeListener pcl;
-	private ItemChangeNotifier icn;
+	private ItemChangeNotifier itemInfoNotifier;
 	
-	public ItemInfoPanel(ItemChangeNotifier icn)
+	ItemInfoPanel(ItemChangeNotifier icn)
 	{
-		this.icn = icn;
-		this.pcl = pcl;
+		this.itemInfoNotifier = icn;
 		
+		//TODO: can grab numberformat from guimanager?
 		nf = NumberFormat.getNumberInstance();
 		setPreferredSize(new Dimension(300,200));
 		
+		//init text display of item information
 		createTextPane();
-		
+
+
+		//part of panel that user can interact with
 		worthLabel = new JLabel("Worth: ");
 		worthField = new JFormattedTextField(nf);
 		worthField.setText(BLANKSTRING);
@@ -73,12 +75,16 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 		add(textPane, BorderLayout.CENTER);
 		add(worthPanel, BorderLayout.SOUTH);
 		
-		loadItem(null);
+		loadItem(null); //init the panel to empty
 	}
 	
-	public void loadItem(Item i)
+	/**
+	 * Sets panel to show different information for different item types
+	 * @param itemToShow
+	 */
+	void loadItem(Item itemToShow)
 	{
-		//TODO Make field addition/deletion more easy
+		//TODO Make field addition/deletion more easy... pretty much redo this entire section
 		panelStrings[0] = "Item Name";
 		panelStrings[1] = "Workload: "+BLANKSTRING+" ("+BLANKSTRING+" Max)";
 		panelStrings[2] = "Size: "+BLANKSTRING;
@@ -87,23 +93,21 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 		panelStrings[5] = "[Updated: "+BLANKSTRING+" days ago]";
 		panelStrings[6] = "Profit Ratio: "+BLANKSTRING;
 		
-		if (i != null)
+		if (itemToShow != null) //for the initial case without an item
 		{	
-			loaded = i;
+			loaded = itemToShow;
 			
-			worthField.removePropertyChangeListener("value", pcl); //reduces listener events during item changes...
 			worthField.setEnabled(true);
-			worthField.setText(nf.format(i.getWorth()));
-			worthField.setName(i.getName());
-			worthField.addPropertyChangeListener("value", pcl); //BUT AT WHAT COST?!!
+			worthField.setText(nf.format(itemToShow.getWorth()));
+			worthField.setName(itemToShow.getName());
 			
-			panelStrings[0] = i.getName();
-			panelStrings[4] = "Worth: "+nf.format(i.getWorth());
-			panelStrings[5] = "[Updated "+nf.format(i.getDaysSinceUpdate())+" days ago]";
+			panelStrings[0] = itemToShow.getName();
+			panelStrings[4] = "Worth: "+nf.format(itemToShow.getWorth());
+			panelStrings[5] = "[Updated "+nf.format(itemToShow.getDaysSinceUpdate())+" days ago]";
 			
-			if (i.getType() == 1)
+			if (itemToShow.getType() == Item.TYPE_CRAFTABLE)
 			{
-				loadedCraft = (Craftable) i;
+				Craftable loadedCraft = (Craftable) itemToShow;
 				
 				panelStrings[1] = "Workload: "+nf.format(loadedCraft.getWorkload())+" ("+nf.format(loadedCraft.maxWorkload())+" Max)";
 				panelStrings[2] = "Size: "+loadedCraft.getCraftSize();
@@ -111,15 +115,11 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 				panelStrings[3] = "Cost w/ Workload: "+nf.format(loaded.getCost()+loadedCraft.getWorkload()*DataManager.getCostPerWorkload()/loadedCraft.getCraftSize());
 				panelStrings[6] = "Profit Ratio: "+nf.format(loadedCraft.getProfitRatio());
 			}
-			else if (i.getType() == 2)
+			else if (itemToShow.getType() == Item.TYPE_CRAFTBOOK)
 			{
-				loadedCraftBook = (CraftBook) i;
+				CraftBook loadedCraftBook = (CraftBook) itemToShow;
 				panelStrings[1] = "Workload provided: "+nf.format(loadedCraftBook.getWorkload());
-				panelStrings[6] = "Book Ratio: "+nf.format(loadedCraftBook.getWorthPerWorkload());
-			}
-			else
-			{
-				loadedMat = (Material) i;
+				panelStrings[6] = "Cost per Workload: "+nf.format(loadedCraftBook.getWorthPerWorkload());
 			}
 		}
 		
@@ -151,7 +151,7 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 		
 	}
 	
-	protected void addStylesToDocument(StyledDocument doc)
+	private void addStylesToDocument(StyledDocument doc)
 	{
 		Style def = StyleContext.getDefaultStyleContext()
 				.getStyle(StyleContext.DEFAULT_STYLE);
@@ -167,34 +167,10 @@ public class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		String tempName = ((JFormattedTextField) e.getSource()).getName();
-		//System.out.println(e);
 		if (tempName.compareTo(BLANKSTRING) != 0) //only fires when user changes value
 		{
-			icn.fireItemChangeEvent(new ItemChangeEvent(e.getSource(), tempName, (long)e.getNewValue()));
-			/*//System.out.print(e.getNewValue()+" "+tempName);
-			Item tempItem = Main.dm.itemMap.get(tempName);
-			tempItem.setWorth((long) e.getNewValue());
-			tempItem.updateCost();
-
-			//refreshItem(tempItem);
-			
-			if (loaded != null)
-			{
-				Main.gm.showItem(loaded);
-				//Main.gm.cip.craftTable.setData(loaded.name);
-				//Main.gm.iip.loadItem(loaded);
-			}
-			else
-			{
-				Main.gm.showItem(loadedMat);
-				//Main.gm.cip.craftTable.setData(loadedMat.name);
-				//Main.gm.iip.loadItem(loadedMat);
-			}
-			//System.out.println(tempItem.cost);
-
-			
-			//refreshPanel();
-			loadItem(loaded);*/
+			itemInfoNotifier.fireItemChangeEvent(
+					new ItemChangeEvent(e.getSource(), tempName, (long)e.getNewValue()));
 		}
 	}
 	

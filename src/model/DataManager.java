@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Set;
 
-import manager.Main;
-
 public class DataManager {
 	
 	private HashMap<String, Item> itemMap = new HashMap<String, Item>();

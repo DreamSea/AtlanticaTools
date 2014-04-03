@@ -2,18 +2,15 @@ package model;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import manager.Main;
 
 public class Item {
 
 	/*
 	 * 	For type casting from item map
 	 */
-	static final byte TYPE_MATERIAL = 0;
-	static final byte TYPE_CRAFTABLE = 1;
-	static final byte TYPE_CRAFTBOOK = 2;
+	public static final byte TYPE_MATERIAL = 0;
+	public static final byte TYPE_CRAFTABLE = 1;
+	public static final byte TYPE_CRAFTBOOK = 2;
 
 	protected String name;
 	
