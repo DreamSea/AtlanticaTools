@@ -40,7 +40,7 @@ public class ManagerManager implements ItemChangeListener, ActionListener
 			}
 			
 			dm.setItemWorth(e.getItemName(), newWorth);	
-			dm.refreshItems();
+			//dm.refreshItems();
 			
 			if (gm.getCurrentItem() != null) //TODO: pretty sure this check isn't needed
 			{

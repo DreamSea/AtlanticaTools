@@ -2,17 +2,25 @@ package model;
 
 import java.util.HashMap;
 
+/*
+ * 		Craftable: Items that can be made by gathering the required
+ * 			types and numbers of components and investing workload.
+ */
+
 public class Craftable extends Item
 {
 	private Item[] craftedFromItems;
 	private int[] craftedFromNumbers;
 	
-	public static Craftable lastCraftable;
-	private static int slotNumber;
+	public static Craftable lastCraftable; 
+	private static int slotNumber; //only used in constructor
 	
 	private int numCrafted;
 	private int workload;
 	
+	private long cost;
+	
+	private static CraftBook selectedCraftBook;
 	private double worthPerWorkload;
 	private double profitRatio;
 	
@@ -30,12 +38,14 @@ public class Craftable extends Item
 		craftedFromItems = new Item[numComponents];
 		craftedFromNumbers = new int[numComponents];
 		
+		cost = 0;
+		
 		slotNumber = 0;
 		lastCraftable = this;
 		
 		
 		worthPerWorkload = (getWorth()*0.99 - getCost())/(workload/numCrafted);
-		profitRatio = worthPerWorkload - DataManager.getCostPerWorkload();
+		profitRatio = worthPerWorkload - selectedCraftBook.getWorthPerWorkload();
 	}
 	
 	/**
@@ -74,6 +84,14 @@ public class Craftable extends Item
 		return Main.sb.toString();
 	}*/
 	
+	/**
+	 * Currently called when a material is converted into craftable.
+	 * This resets the recipe entry with a fresh set of items from itemMap.
+	 * 
+	 * Used by ItemLoader.java
+	 * 
+	 * @param itemMap
+	 */
 	void remapRecipe(HashMap<String, Item> itemMap)
 	{
 		for (int i = 0; i < craftedFromItems.length; i++)
@@ -83,30 +101,49 @@ public class Craftable extends Item
 		}
 	}
 	
+	// updateCost only needs to be called when the worth of one of the
+	// components
 	void updateCost()
 	{
-		long tempCost = 0;
+		cost = 0;
 		for (int i = 0; i < craftedFromItems.length; i++)
 		{
-			tempCost += craftedFromItems[i].getWorth() * craftedFromNumbers[i];
+			cost += craftedFromItems[i].getWorth() * craftedFromNumbers[i];
 		}
-		tempCost /= numCrafted;
+		cost /= numCrafted;
 		
-		worthPerWorkload = (getWorth()*0.99 - tempCost)/(workload/numCrafted);
-		profitRatio = worthPerWorkload - DataManager.getCostPerWorkload();
+		//TODO: currently duplicate of constructor 
+		worthPerWorkload = (getWorth()*0.99 - cost)/(workload/numCrafted);
+		profitRatio = worthPerWorkload - selectedCraftBook.getWorthPerWorkload();
 		
-		setCost(tempCost);
+		//cost = tempCost;
 		
 		/*
 		 * TODO may lead to repeated updates on same item
 		 * Use boolean hasChecked set before each update?
 		 */
-		for (Craftable c : craftsInto)
+		/*for (Craftable c : craftsInto)
 		{
 			c.updateCost();
-		}
+		}*/
 	}
 	
+	void setWorth(long newWorth)
+	{
+		super.setWorth(newWorth);
+		updateCost();
+	}
+	
+	static void setCraftBook(CraftBook cb)
+	{
+		selectedCraftBook = cb;
+	}
+	
+	/**
+	 * 
+	 * @return maximum workload from one crafting batch due to limit of
+	 * 		10,000 items in a single inventory slot/stack
+	 */
 	public long maxWorkload()
 	{
 		int max = 10000/numCrafted;
@@ -148,6 +185,16 @@ public class Craftable extends Item
 	public double getProfitRatio()
 	{
 		return profitRatio;
+	}
+	
+	public long getCost()
+	{
+		return cost;
+	}
+	
+	public double getCostPerWorkload()
+	{
+		return selectedCraftBook.getWorthPerWorkload();
 	}
 	
 }

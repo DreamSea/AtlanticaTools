@@ -112,7 +112,7 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 				panelStrings[1] = "Workload: "+nf.format(loadedCraft.getWorkload())+" ("+nf.format(loadedCraft.maxWorkload())+" Max)";
 				panelStrings[2] = "Size: "+loadedCraft.getCraftSize();
 				//TODO: panelStrings[3] cost w/ workload doing too much work
-				panelStrings[3] = "Cost w/ Workload: "+nf.format(loaded.getCost()+loadedCraft.getWorkload()*DataManager.getCostPerWorkload()/loadedCraft.getCraftSize());
+				panelStrings[3] = "Cost w/ Workload: "+nf.format(loadedCraft.getCost()+loadedCraft.getWorkload()*loadedCraft.getCostPerWorkload()/loadedCraft.getCraftSize());
 				panelStrings[6] = "Profit Ratio: "+nf.format(loadedCraft.getProfitRatio());
 			}
 			else if (itemToShow.getType() == Item.TYPE_CRAFTBOOK)

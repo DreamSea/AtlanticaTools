@@ -1,5 +1,5 @@
 Todo: 
-
+DONE-ish 2014/04/07 (MED+) cleanup/comment/planning: model package, event
 DONE-ish 2014/04/02 (MED+) cleanup/comment/planning: Manager, gui package
 DONE-ish 2014/03/30 (MED-) GRAND REFACTORish. Information passed with listeners. Lots of cleanup to do though.
 DONE 2014/03/21 (MED) add craft books for workload prices, use menu selector to choose which workload to use
@@ -11,10 +11,23 @@ DONE 2014/03/13 (HIGH) Basic CraftsInto Panel
 DONE 2014/03/11 (HIGH) Sum of Craft costs
 DONE 2014/03/11 (HIGH) Ratio of Profit/WL: currently as total size, redo to individual prices
 
+(HIGH) TIMESTAMPS ARE BROKEN?? refreshes dateUpdated for next item selected in tree
+			in addition to original item
+			-Only breaks when changing price in ItemInfoPanel
+			-Doesn't break if select folder in CraftItemTree before selecting another item
+			
 
-(MED+) GRAND REFACTOR cleanup/comment/planning: cip, events, model
+(MED+) craftable boolean costChanged for when components or selected craft book has changed
+		calculate when getProfitRatio called
 
-(MED-) title labels in craftcomponentpanel
+(MED) title labels in craftcomponentpanel
+(MED) Consider DefaultListModel for craftintopanel
+(MED) Consider builder helpers for item construction (.setType().addRecipe().addRecipe()...)
+(MED) patch up tostring()
+
+(MED) figure out how to set up a test class/method
+
+(MED) title labels in craftcomponentpanel
 (MED-) profit ratio by materials in craftcomponent panel
 (MED-) more information in ItemInfoPanel
 (MED-) add more information in menu bar selector for craft books (WL size? ratio?)
@@ -38,6 +51,8 @@ DONE 2014/03/11 (HIGH) Ratio of Profit/WL: currently as total size, redo to indi
 ~~~
 
 Possible problems:
+
+What if there is a craft book that needs to be converted into a craftable?
 
 //How to deal with initial craft load (possible null returns from itemMap)
 	Current version: possible things added to material if unfound

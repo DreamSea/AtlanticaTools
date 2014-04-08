@@ -1,5 +1,10 @@
 package model;
 
+/*
+ * 		CraftBook: Items that can be spent to provide a set amount of workload
+ * 
+ */
+
 public class CraftBook extends Item{
 
 	public CraftBook(String name, int workload)
@@ -18,6 +23,9 @@ public class CraftBook extends Item{
 		return workload;
 	}
 	
+	/**
+	 * @return Worth of craft book divided by workload provided
+	 */
 	public double getWorthPerWorkload()
 	{
 		return getWorth()*1.0/workload;

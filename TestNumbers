@@ -1,0 +1,17 @@
+Dumplings:
+Set Pork Worth to 10
+Set Wheat Worth to 10
+Set Dumpling Worth to 500
+
+Cost without workload = 100
+Cost w/ workload (book of expertise, 0.9 per) = (100 + 450) / 10 = 55
+Worth per Workload = [(500 * .99) - 10] / (50)
+					485 / 50 = 9.7
+Profit Ratio = 8.8
+
+~~~
+
+Normal Crafting Book:
+Set Worth to 1900 (1.9 per)
+
+Dumpling Profit Ratio = 7.8

@@ -32,7 +32,7 @@ public class Item {
 	 * 	Changes: probably every gui setting of something
 	 * in craft tree ancestors
 	 */
-	private long cost; //cost to buy all of the components
+	//private long cost; //cost to buy all of the components
 	private byte type;
 	
 	//TODO: private craftsInto
@@ -47,7 +47,7 @@ public class Item {
 	{
 		this.name = name;
 		worth = 1;
-		cost = 1;
+		//cost = 1;
 		this.type = type; 
 		craftsInto = new ArrayList<Craftable>();
 		timeUpdated = bootTime;
@@ -69,10 +69,10 @@ public class Item {
 		return worth;
 	}
 	
-	public long getCost()
+	/*public long getCost()
 	{
 		return cost;
-	}
+	}*/
 	
 	public byte getType()
 	{
@@ -109,35 +109,36 @@ public class Item {
 		{
 			worth = newWorth;
 			timeUpdated = System.currentTimeMillis();
+			System.out.println("Item.java updating time for: "+name);
+			
+			//updates cost of all the craftables this item crafts into
+			for (Craftable c : craftsInto)
+			{
+				//System.out.println(s);
+				//System.out.println(Main.dm == null);
+				c.updateCost();
+			}
 		}
 	}
 	
-	void setCost(long newCost)
+	/*void setCost(long newCost)
 	{
 		cost = newCost;
-	}
+	}*/
 	
 	void setTimeUpdated(long l)
 	{
 		timeUpdated = l;
 	}
 	
-	void updateCost()
+	/*void updateCost()
 	{
 		/*
 		 * Craftable overrides, but for non-craftables, cost becomes
 		 * the price to buy it off the market
 		 */
-		cost = worth;
-		
-		
-		for (Craftable c : craftsInto)
-		{
-			//System.out.println(s);
-			//System.out.println(Main.dm == null);
-			c.updateCost();
-		}
-	}
+		/*cost = worth;
+	}*/
 	
 	public int getCraftsIntoLength()
 	{

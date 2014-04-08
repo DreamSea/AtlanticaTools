@@ -3,6 +3,11 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/*
+ * 		ItemLoader: helper class to load all the recipes into DataManager.
+ * 			(less clutter for DataManager.java)
+ */
+
 public class ItemLoader {
 
 	private HashMap<String, Item> itemMap;

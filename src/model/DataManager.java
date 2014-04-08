@@ -12,6 +12,11 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Set;
 
+/*
+ * 		DataManager: where all the Items are held. Ideally
+ * 			only the ManagerManager will call methods of this class
+ */
+
 public class DataManager {
 	
 	private HashMap<String, Item> itemMap = new HashMap<String, Item>();
@@ -29,10 +34,8 @@ public class DataManager {
 	
 	private static ArrayList<Craftable> currentList;
 	
-	//public static double costPerWorkload = 1.0;	//TODO temporary, replace with craft book item later
-	
 	private final String DEFAULT_CRAFTBOOK = "Book of Expertise";
-	private static CraftBook loadedCraftBook;
+	//private static CraftBook loadedCraftBook;
 	
 	public DataManager()
 	{
@@ -51,7 +54,8 @@ public class DataManager {
 		
 		ItemLoader loader = new ItemLoader(itemMap, materials);
 		loader.loadCraftBook(craftBooks);
-		loadedCraftBook = (CraftBook) itemMap.get(DEFAULT_CRAFTBOOK);
+		Craftable.setCraftBook((CraftBook) itemMap.get(DEFAULT_CRAFTBOOK));
+		//loadedCraftBook = (CraftBook) itemMap.get(DEFAULT_CRAFTBOOK);
 		
 		//init craftable lists
 		action = new ArrayList<Craftable>();
@@ -61,7 +65,11 @@ public class DataManager {
 		medicine = new ArrayList<Craftable>();
 		tool = new ArrayList<Craftable>();
 		
-		//add craftable lists to skillTree (is this even needed?)
+		/*
+		 *	add Craftable lists to skillTree, which is pretty
+		 *	much just a structure that holds all the Craftables
+		 */
+		
 		skillTree.add(action);
 		skillTree.add(crystal);
 		skillTree.add(food);
@@ -76,12 +84,9 @@ public class DataManager {
 		loader.loadMachine(machine);
 		loader.loadMedicine(medicine);
 		loader.loadTool(tool);
-		
-		//TODO: move/explain costPerWorkload init better
-		//default cost at 1mill workload book
-		//costPerWorkload = craftBooks.get(4).getWorthPerWorkload();
 	}
 	
+	//loads previously saved prices/worth of each Item
 	public void loadPrices()
 	{
 		try
@@ -106,10 +111,10 @@ public class DataManager {
 			
 			input.close();
 			
-			for (Material m : materials)
+			/*for (Material m : materials)
 			{
 				m.updateCost();
-			}
+			}*/
 			
 			for (ArrayList<Craftable> s : skillTree)
 			{
@@ -126,6 +131,7 @@ public class DataManager {
 		}
 	}
 	
+	//saves the prices/worth for use in a future program launch
 	public void savePrices()
 	{
 		//System.out.println("saveme");
@@ -151,14 +157,15 @@ public class DataManager {
 		}
 	}
 	
-	public static double getCostPerWorkload()
+	/*public static double getCostPerWorkload()
 	{
 		return loadedCraftBook.getWorthPerWorkload();
-	}
+	}*/
 	
 	public static void setCraftBook(CraftBook cb)
 	{
-		loadedCraftBook = cb;
+		Craftable.setCraftBook(cb);
+		//loadedCraftBook = cb;
 	}
 	
 	
@@ -167,6 +174,14 @@ public class DataManager {
 		return itemMap.get(name);
 	}
 	
+	/**
+	 * Updates the cost of all craftable items.
+	 * Currently only used by ManagerManager when changing/updating
+	 * craft books.
+	 * 
+	 * TODO: set boolean (cost changed to TRUE), where calculations
+	 * for specific items are only done if(costChanged)
+	 */
 	public void refreshItems()
 	{
 		for (ArrayList<Craftable> al : skillTree)
@@ -176,10 +191,6 @@ public class DataManager {
 				c.updateCost();
 			}
 		}
-		/*if (Main.gm.currentItem != null)
-		{
-			Main.gm.showItem(Main.gm.currentItem);
-		}*/
 	}
 	
 	public void setItemWorth(String itemName, long worth)
