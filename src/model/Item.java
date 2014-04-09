@@ -109,7 +109,6 @@ public class Item {
 		{
 			worth = newWorth;
 			timeUpdated = System.currentTimeMillis();
-			System.out.println("Item.java updating time for: "+name);
 			
 			//updates cost of all the craftables this item crafts into
 			for (Craftable c : craftsInto)

@@ -97,9 +97,11 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 		{	
 			loaded = itemToShow;
 			
-			worthField.setEnabled(true);
-			worthField.setText(nf.format(itemToShow.getWorth()));
+			//temporarily disable worthField to keep from firing when value first set
+			worthField.setEnabled(false);
+			worthField.setValue(itemToShow.getWorth());
 			worthField.setName(itemToShow.getName());
+			worthField.setEnabled(true);
 			
 			panelStrings[0] = itemToShow.getName();
 			panelStrings[4] = "Worth: "+nf.format(itemToShow.getWorth());
@@ -166,11 +168,11 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
-		String tempName = ((JFormattedTextField) e.getSource()).getName();
-		if (tempName.compareTo(BLANKSTRING) != 0) //only fires when user changes value
+		//TODO: consider - if(e.getSource().getClass().equals(JFormattedTextField.class))
+		if (((JFormattedTextField) e.getSource()).isEnabled()) //only fires when component is enabled
 		{
 			itemInfoNotifier.fireItemChangeEvent(
-					new ItemChangeEvent(e.getSource(), tempName, (long)e.getNewValue()));
+					new ItemChangeEvent(e.getSource(), ((JFormattedTextField) e.getSource()).getName(), (long)e.getNewValue()));
 		}
 	}
 	

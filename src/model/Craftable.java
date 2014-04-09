@@ -19,10 +19,12 @@ public class Craftable extends Item
 	private int workload;
 	
 	private long cost;
+	private boolean costChanged;
 	
 	private static CraftBook selectedCraftBook;
 	private double worthPerWorkload;
 	private double profitRatio;
+	private boolean profitRatioChanged;
 	
 	/**
 	 * @param name : Craftable Name
@@ -38,14 +40,11 @@ public class Craftable extends Item
 		craftedFromItems = new Item[numComponents];
 		craftedFromNumbers = new int[numComponents];
 		
-		cost = 0;
+		costChanged = true;
+		profitRatioChanged = true;
 		
 		slotNumber = 0;
 		lastCraftable = this;
-		
-		
-		worthPerWorkload = (getWorth()*0.99 - getCost())/(workload/numCrafted);
-		profitRatio = worthPerWorkload - selectedCraftBook.getWorthPerWorkload();
 	}
 	
 	/**
@@ -101,31 +100,11 @@ public class Craftable extends Item
 		}
 	}
 	
-	// updateCost only needs to be called when the worth of one of the
-	// components
+	// updateCost only called when worth of one of the components or itself changes
 	void updateCost()
 	{
-		cost = 0;
-		for (int i = 0; i < craftedFromItems.length; i++)
-		{
-			cost += craftedFromItems[i].getWorth() * craftedFromNumbers[i];
-		}
-		cost /= numCrafted;
-		
-		//TODO: currently duplicate of constructor 
-		worthPerWorkload = (getWorth()*0.99 - cost)/(workload/numCrafted);
-		profitRatio = worthPerWorkload - selectedCraftBook.getWorthPerWorkload();
-		
-		//cost = tempCost;
-		
-		/*
-		 * TODO may lead to repeated updates on same item
-		 * Use boolean hasChecked set before each update?
-		 */
-		/*for (Craftable c : craftsInto)
-		{
-			c.updateCost();
-		}*/
+		costChanged = true;
+		profitRatioChanged = true;
 	}
 	
 	void setWorth(long newWorth)
@@ -184,11 +163,32 @@ public class Craftable extends Item
 	
 	public double getProfitRatio()
 	{
+		/*
+		 * TODO: analyse when getProfitRatio/Cost() are called
+		 * vs how many times the calculation is run.
+		 */
+		
+		if (profitRatioChanged) //only run calculation when needed
+		{
+			worthPerWorkload = (getWorth()*0.99 - getCost())/(workload/numCrafted);
+			profitRatio = worthPerWorkload - selectedCraftBook.getWorthPerWorkload();
+			profitRatioChanged = false;
+		}
 		return profitRatio;
 	}
 	
 	public long getCost()
 	{
+		if (costChanged) //only run calculation when needed
+		{
+			cost = 0;
+			for (int i = 0; i < craftedFromItems.length; i++)
+			{
+				cost += craftedFromItems[i].getWorth() * craftedFromNumbers[i];
+			}
+			cost /= numCrafted;
+			costChanged = false;
+		}
 		return cost;
 	}
 	

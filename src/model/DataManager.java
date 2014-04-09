@@ -178,9 +178,6 @@ public class DataManager {
 	 * Updates the cost of all craftable items.
 	 * Currently only used by ManagerManager when changing/updating
 	 * craft books.
-	 * 
-	 * TODO: set boolean (cost changed to TRUE), where calculations
-	 * for specific items are only done if(costChanged)
 	 */
 	public void refreshItems()
 	{
