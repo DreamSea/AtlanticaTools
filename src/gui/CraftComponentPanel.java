@@ -2,16 +2,20 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import events.ItemChangeEvent;
 import events.ItemChangeNotifier;
@@ -39,16 +43,23 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 	private final int TOPSPACE = 35; //for top
 	private final int ITEMROWS = 10; //guess at max number of components in any craft
 	private final int ROWHEIGHT = 30;
-
+	
+	/*
+	 * 	Title labels to describe columns
+	 */
+	private ArrayList<JLabel> titleRow;
+	
 	/*
 	 * For looping through gui components so that each one doesn't
 	 * need to be created individually.
 	 */
+	private JLabel[] ingredientProfitRatio;
 	private JButton[] ingredientButton;
 	private JLabel[] ingredientNumber;
 	private JFormattedTextField[] ingredientWorth;
 	private JLabel[] ingredientWorthTotal;
 	private JLabel[] ingredientDateUpdated;
+	private JLabel[] profitRatio;
 
 	// Makes large costs/worths display more nicely
 	private NumberFormat numberFormatter;
@@ -63,18 +74,50 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 		numberFormatter = NumberFormat.getNumberInstance();
 		numberFormatter.setGroupingUsed(true);
 
+		setBackground(Color.lightGray);
+		
+		//init title row
+		titleRow = new ArrayList<JLabel>();
+		titleRow.add(new JLabel("Profit Ratio"));
+		titleRow.add(new JLabel("Ingredient Name"));
+		titleRow.get(titleRow.size()-1).setPreferredSize(new Dimension(200,20));
+		titleRow.add(new JLabel("#"));
+		titleRow.get(titleRow.size()-1).setPreferredSize(new Dimension(50,20));
+		titleRow.add(new JLabel("Worth"));
+		titleRow.get(titleRow.size()-1).setPreferredSize(new Dimension(100,20));
+		titleRow.add(new JLabel("Total Cost"));
+		titleRow.get(titleRow.size()-1).setPreferredSize(new Dimension(150,20));
+		titleRow.add(new JLabel("Last Update (Days)"));
+		
 		//for loop javax.swing array
+		ingredientProfitRatio = new JLabel[ITEMROWS];
 		ingredientButton = new JButton[ITEMROWS];
 		ingredientNumber = new JLabel[ITEMROWS];
 		ingredientWorth = new JFormattedTextField[ITEMROWS];
 		ingredientWorthTotal = new JLabel[ITEMROWS];
 		ingredientDateUpdated = new JLabel[ITEMROWS];
-		
-		setLayout(null);
-		setPreferredSize(new Dimension(
-				5*SPACE+BUTTONWIDTH+WORTHWIDTH+WORTHWIDTH, 100+SPACE*ITEMROWS));
-		setBackground(Color.lightGray);
 
+		/*
+		 * gridbag configs
+		 */
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets.top = 5;
+		c.insets.left = 10;
+		c.insets.bottom = 5;
+		
+		/*
+		 * put title row in gridbag
+		 */
+		c.gridy = 0;
+		for (int col = 0; col < titleRow.size(); col++)
+		{
+			c.gridx = col;
+			add(titleRow.get(col),c);
+			titleRow.get(col).setHorizontalAlignment(SwingConstants.CENTER);
+		}
+		
 		/*
 		 * TODO specific bounds set for now, to variables later
 		 * 
@@ -82,36 +125,39 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 		 */
 		for (int i = 0; i < ITEMROWS; i++)
 		{
+			c.gridy = i + 1; //move past title row
+			
+			ingredientProfitRatio[i] = new JLabel(GUIManager.BLANKSTRING, SwingConstants.CENTER);
+			
 			ingredientButton[i] = new JButton(GUIManager.BLANKSTRING);
 			ingredientButton[i].addActionListener(this);
 
-			ingredientNumber[i] = new JLabel(GUIManager.BLANKSTRING);
+			ingredientNumber[i] = new JLabel(GUIManager.BLANKSTRING, SwingConstants.CENTER);
 
 			ingredientWorth[i] = new JFormattedTextField(numberFormatter);
+			ingredientWorth[i].setHorizontalAlignment(SwingConstants.CENTER);
 			ingredientWorth[i].setText(GUIManager.BLANKSTRING);
-			ingredientWorth[i].addPropertyChangeListener("value", this);
-			
+			ingredientWorth[i].addPropertyChangeListener("value", this);			
 
-			ingredientWorthTotal[i] = new JLabel(GUIManager.BLANKSTRING);
-			ingredientDateUpdated[i] = new JLabel(GUIManager.BLANKSTRING);
+			ingredientWorthTotal[i] = new JLabel(GUIManager.BLANKSTRING, SwingConstants.CENTER);
+			ingredientDateUpdated[i] = new JLabel(GUIManager.BLANKSTRING, SwingConstants.CENTER);
 
-			add(ingredientButton[i]);
-			add(ingredientNumber[i]);
-			add(ingredientWorth[i]);
-			add(ingredientWorthTotal[i]);
-			add(ingredientDateUpdated[i]);
+			/*
+			 * add row to gridbag
+			 */
+			c.gridx = 0;
+			add(ingredientProfitRatio[i], c);
+			c.gridx = 1;
+			add(ingredientButton[i],c);
+			c.gridx = 2;
+			add(ingredientNumber[i],c);
+			c.gridx = 3;
+			add(ingredientWorth[i],c);
+			c.gridx = 4;
+			add(ingredientWorthTotal[i],c);
+			c.gridx = 5;
+			add(ingredientDateUpdated[i],c);
 
-			ingredientButton[i].setBounds(
-					SPACE, TOPSPACE+SPACE*i, BUTTONWIDTH, ROWHEIGHT);
-			ingredientNumber[i].setBounds(
-					2*SPACE+BUTTONWIDTH, TOPSPACE+SPACE*i, 30, ROWHEIGHT);
-			ingredientWorth[i].setBounds(
-					3*SPACE+BUTTONWIDTH, TOPSPACE+SPACE*i, WORTHWIDTH, ROWHEIGHT);
-			ingredientWorthTotal[i].setBounds(
-					4*SPACE+BUTTONWIDTH+WORTHWIDTH, TOPSPACE+SPACE*i, WORTHWIDTH, ROWHEIGHT);
-			ingredientDateUpdated[i].setBounds(
-					8*SPACE+BUTTONWIDTH+WORTHWIDTH, TOPSPACE+SPACE*i, WORTHWIDTH, ROWHEIGHT);
-			
 			/*
 			 * init the panel with all rows disabled so that
 			 * no actions are sent without a loaded item
@@ -182,6 +228,8 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 	 */
 	private void disableRow(int row)
 	{
+		ingredientProfitRatio[row].setEnabled(false);
+		ingredientProfitRatio[row].setText(GUIManager.BLANKSTRING);
 		ingredientButton[row].setText(GUIManager.BLANKSTRING);
 		ingredientButton[row].setEnabled(false);
 		ingredientNumber[row].setText(GUIManager.BLANKSTRING);
@@ -200,6 +248,17 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 	 */
 	private void setRow(int row, Item i, int number, long worth)
 	{
+		if (i.getType() == Item.TYPE_CRAFTABLE)
+		{
+			ingredientProfitRatio[row].setEnabled(true);
+			ingredientProfitRatio[row].setText(numberFormatter.format(((Craftable) i).getProfitRatio()));
+		}
+		else
+		{
+			ingredientProfitRatio[row].setEnabled(false);
+			ingredientProfitRatio[row].setText(GUIManager.BLANKSTRING);
+		}
+		
 		ingredientButton[row].setEnabled(true);
 		ingredientButton[row].setText(i.getName());
 		ingredientButton[row].setActionCommand(i.getName());

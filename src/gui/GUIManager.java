@@ -12,7 +12,7 @@ import model.Item;
 
 /*
  * 		GUIManager : The public face of the gui package, holds all the
- * 			gui components.
+ * 			gui components and creates frame.
  */
 
 public class GUIManager {
@@ -60,7 +60,7 @@ public class GUIManager {
 		JFrame frame = new JFrame("Atlantica");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
-		frame.setLocation(100, 50);
+		frame.setLocation(25, 25);
 		
 		frame.setJMenuBar(guiMenuBar);
 		

@@ -3,11 +3,14 @@ Set Pork Worth to 10
 Set Wheat Worth to 10
 Set Dumpling Worth to 500
 
-Cost without workload = 100
-Cost w/ workload (book of expertise, 0.9 per) = (100 + 450) / 10 = 55
-Worth per Workload = [(500 * .99) - 10] / (50)
-					485 / 50 = 9.7
-Profit Ratio = 8.8
+Worth with interest = 500 * 10 * 0.99 = 4950
+
+Component Cost = 100
+Cost of Workload (book of expertise, 0.9 per) = 450
+
+Profit: 4950 - 100 - 450 = 4400
+
+Profit Ratio = 4400/500 = 8.8
 
 ~~~
 

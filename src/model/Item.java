@@ -14,8 +14,6 @@ public class Item {
 
 	protected String name;
 	
-	
-	
 	/*
 	 * 	For crafting purposes, 2^31 should be enough
 	 * 	Init: from .txt during first load
@@ -69,10 +67,10 @@ public class Item {
 		return worth;
 	}
 	
-	/*public long getCost()
+	public double getWorthWithInterest()
 	{
-		return cost;
-	}*/
+		return getWorth()*0.99;
+	}
 	
 	public byte getType()
 	{
@@ -120,25 +118,11 @@ public class Item {
 		}
 	}
 	
-	/*void setCost(long newCost)
-	{
-		cost = newCost;
-	}*/
-	
 	void setTimeUpdated(long l)
 	{
 		timeUpdated = l;
 	}
-	
-	/*void updateCost()
-	{
-		/*
-		 * Craftable overrides, but for non-craftables, cost becomes
-		 * the price to buy it off the market
-		 */
-		/*cost = worth;
-	}*/
-	
+		
 	public int getCraftsIntoLength()
 	{
 		return craftsInto.size();

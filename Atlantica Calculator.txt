@@ -1,24 +1,18 @@
 Todo:
 
-(MED) better information in ItemInfoPanel
-(MED) title labels in craftcomponentpanel
-(MED) Consider DefaultListModel for craftintopanel
+(MED) more color into craftcomponentpanel.java
+(MED) Consider DefaultListModel for craftintopanel.java
 (MED) Consider builder helpers for item construction (.setType().addRecipe().addRecipe()...)
-(MED) patch up tostring()
-
 (MED) figure out how to set up a test class/method
 
-(MED) title labels in craftcomponentpanel
-(MED-) profit ratio by materials in craftcomponent panel
-
 (MED-) add more information in menu bar selector for craft books (WL size? ratio?)
-
 (MED-) add color to craftTable, light green background for ratio > 1? bold text for ratio > 3?
 
 (LOW) return list of best profit ratios of everything
 (LOW) return list of best profit ratio by maxworkload
 (LOW) object streams for save/load
 (LOW) change gui to be based on window size/variables, change layout from border to something else
+(LOW) better Item.toString()?
 
 (LOW-) log of price changes for items
 
@@ -42,7 +36,26 @@ What if there is a craft book that needs to be converted into a craftable?
 //public/private messups probably due to pass by value/reference shenanigans
 to patch later
 
-~~~
+~~~~~~~~~~~~~~~~~~
+2014/04/11 (MED)	CraftComponentPanel.java: title labels, convert to gridbaglayout, add profit ratios
+2014/04/11 (MED)	ItemInfoPanel.java: easier to modify + more detail
+2014/04/09 (HIGH)	fixed timestamps
+2014/04/09 (MED)	boolean ___changed
+2014/04/07 (MED+)	cleanup/comment/planning: model package, event
+2014/04/02 (MED+)	cleanup/comment/planning: Manager, gui package
+2014/03/30 (MED-)	GRAND REFACTORish. Information passed with listeners. Lots of cleanup to do though.
+2014/03/21 (MED)	add craft books for workload prices, use menu selector to choose which workload to use
+2014/03/20 (MED)	max wl, "updated # seconds ago"
+2014/03/16 (HIGH)	Fix initial item load, added craft tree for Auto-Craft[ii]
+2014/03/15 (MED)	Move worth from CraftComponentPanel into ItemInfoPanel, added Auto-Craft[i]
+2014/03/14 (HIGH)	Split Item panel into craft/material panel and item detail panel
+2014/03/13 (HIGH)	Basic CraftsInto Panel
+2014/03/11 (HIGH)	Sum of Craft costs
+2014/03/11 (HIGH)	Ratio of Profit/WL: currently as total size, redo to individual prices
+
+~~~~~~~~~~~~~~~~~~~~
+
+
 
 Menu: Import/Export Prices, Craft Books Dialog
 	Update all price, then update 

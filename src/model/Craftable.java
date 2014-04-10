@@ -118,24 +118,6 @@ public class Craftable extends Item
 		selectedCraftBook = cb;
 	}
 	
-	/**
-	 * 
-	 * @return maximum workload from one crafting batch due to limit of
-	 * 		10,000 items in a single inventory slot/stack
-	 */
-	public long maxWorkload()
-	{
-		int max = 10000/numCrafted;
-		for (int i = 0; i < craftedFromNumbers.length; i++)
-		{
-			if (10000/craftedFromNumbers[i] < max)
-			{
-				max = 10000/craftedFromNumbers[i];
-			}
-		}
-		return max*workload;
-	}
-	
 	public int getCraftedFromLength()
 	{
 		return craftedFromItems.length;
@@ -156,9 +138,40 @@ public class Craftable extends Item
 		return workload;
 	}
 	
+	/**
+	 * 
+	 * @return maximum workload from one crafting batch due to limit of
+	 * 		10,000 items in a single inventory slot/stack
+	 */
+	public long getWorkloadMax()
+	{
+		int max = 10000/numCrafted;
+		for (int i = 0; i < craftedFromNumbers.length; i++)
+		{
+			if (10000/craftedFromNumbers[i] < max)
+			{
+				max = 10000/craftedFromNumbers[i];
+			}
+		}
+		return max*workload;
+	}
+	
 	public int getCraftSize()
 	{
 		return numCrafted;
+	}
+	
+	public int getCraftSizeMax()
+	{
+		int max = Integer.MAX_VALUE;
+		for (int i = 0; i < craftedFromNumbers.length; i++)
+		{
+			if (10000/craftedFromNumbers[i] < max)
+			{
+				max = 10000/craftedFromNumbers[i];
+			}
+		}
+		return numCrafted * max;
 	}
 	
 	public double getProfitRatio()
@@ -170,14 +183,14 @@ public class Craftable extends Item
 		
 		if (profitRatioChanged) //only run calculation when needed
 		{
-			worthPerWorkload = (getWorth()*0.99 - getCost())/(workload/numCrafted);
+			worthPerWorkload = (getWorthWithInterest() - getCost())/(workload/numCrafted);
 			profitRatio = worthPerWorkload - selectedCraftBook.getWorthPerWorkload();
 			profitRatioChanged = false;
 		}
 		return profitRatio;
 	}
 	
-	public long getCost()
+	public long getCostTotal()
 	{
 		if (costChanged) //only run calculation when needed
 		{
@@ -186,15 +199,39 @@ public class Craftable extends Item
 			{
 				cost += craftedFromItems[i].getWorth() * craftedFromNumbers[i];
 			}
-			cost /= numCrafted;
 			costChanged = false;
 		}
 		return cost;
 	}
 	
+	public long getCost()
+	{
+		return getCostTotal()/numCrafted;
+	}
+	
+	public double getWorthWithInterestTotal()
+	{
+		return getWorthWithInterest()*numCrafted;
+	}
+	
 	public double getCostPerWorkload()
 	{
 		return selectedCraftBook.getWorthPerWorkload();
+	}
+	
+	public double getCostOfWorkloadTotal()
+	{
+		return getCostPerWorkload()*workload;
+	}
+	
+	public double getProfitTotal()
+	{
+		return getWorthWithInterestTotal() - getCostTotal() - getCostOfWorkloadTotal();
+	}
+	
+	public String getSelectedCraftBook()
+	{
+		return selectedCraftBook.getName();
 	}
 	
 }

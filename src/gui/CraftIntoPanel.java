@@ -45,7 +45,7 @@ class CraftIntoPanel extends JPanel {
 		table.getSelectionModel().addListSelectionListener(tl);
 		
 		JScrollPane jsp = new JScrollPane(table);
-		jsp.setPreferredSize(new Dimension(300, 200));
+		jsp.setPreferredSize(new Dimension(300, 280));
 		add(jsp);
 	}
 	
