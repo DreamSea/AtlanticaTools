@@ -1,20 +1,24 @@
 Todo:
 
-(MED) more color into craftcomponentpanel.java
-(MED) Consider DefaultListModel for craftintopanel.java
-(MED) Consider builder helpers for item construction (.setType().addRecipe().addRecipe()...)
-(MED) figure out how to set up a test class/method
+(HIGH) Consider builder helpers for item construction (.setType().addRecipe().addRecipe()...)
 
-(MED-) add more information in menu bar selector for craft books (WL size? ratio?)
-(MED-) add color to craftTable, light green background for ratio > 1? bold text for ratio > 3?
+(MED) figure out way to automate/whatever craftTable colors (pass array of arrays?)
+(MED) deck-type GUIManager frame to set up for different tools
 
-(LOW) return list of best profit ratios of everything
-(LOW) return list of best profit ratio by maxworkload
+(MED-) eldest component update = max(focus'd item + recipe items)
+(MED-) return list of best profit ratios of everything
+(MED-) return list of best profit ratio by maxworkload
+(MED-) Consider DefaultListModel for craftintopanel.java
+(MED-) figure out how to set up a test class/method
+(MED-) setter in GUIManager for all the colors in different gui panels
+
 (LOW) object streams for save/load
+(LOW) gui to allow putting in new items through program
 (LOW) change gui to be based on window size/variables, change layout from border to something else
 (LOW) better Item.toString()?
 
 (LOW-) log of price changes for items
+(LOW-) weird things can happen when messing around with keyboard directional keys
 
 (forever) add recipes
 (forever) make the code less ugly, figure out public/private, less public static
@@ -23,6 +27,11 @@ Todo:
 
 (???) currently entering recipes by hand = many chances to make a mistake...
 		try putting all the recipes into various xmls/database type things outside of java?
+~~~
+
+Probable things slowing down program most:
+ColorRenderer.java for CraftIntopanel.java
+
 ~~~
 
 Possible problems:
@@ -37,6 +46,9 @@ What if there is a craft book that needs to be converted into a craftable?
 to patch later
 
 ~~~~~~~~~~~~~~~~~~
+2014/04/13 (MED)	Colors in CraftComponentPanel.java, ItemInfoPanel.java, CraftIntoPanel.java
+2014/04/13 (Minor)	'Save confirmation' dialog when saving prices
+2014/04/13 (Forever)Recipes: AutoCraft to IV, AutoCraft Dolls to III, Dynamite, Net Trap [III].
 2014/04/11 (MED)	CraftComponentPanel.java: title labels, convert to gridbaglayout, add profit ratios
 2014/04/11 (MED)	ItemInfoPanel.java: easier to modify + more detail
 2014/04/09 (HIGH)	fixed timestamps

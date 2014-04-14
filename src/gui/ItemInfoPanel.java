@@ -57,7 +57,7 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	private final String HM_CRAFT_WORKCOST = "Cost from Workload: ";
 	private final String HM_CRAFT_COMPONENTCOST = "Cost from Components: ";
 	
-	private final String HM_CRAFT_PROFIT = "Profit: ";
+	private final String HM_CRAFT_PROFIT = "Profit per Batch: ";
 	private final String HM_CRAFT_PROFITRATIO = "Profit Ratio: ";
 	
 	private final String HM_BOOK_WORKPROVIDE = "Workload Provided: ";
@@ -71,6 +71,7 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	private final String STYLE_TITLE = "title";
 	private final String STYLE_NORMAL = "normal";
 	private final String STYLE_BAD = "bad";
+	private final String STYLE_GOOD = "good";
 	
 	// Loaded Item Worth
 	private JPanel worthPanel;
@@ -82,6 +83,14 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	private JLabel updateTimeLabel;
 	
 	private ItemChangeNotifier itemInfoNotifier;
+	
+	private static double profitRatioLessBad = 0;	//when profit ratio should be red
+	private static double profitRatioMoreGood = 1; 	//when profit ratio should be green 
+	private static double lastUpdatedMoreBad = 7;	//when last updated should be red
+	
+	private static Color colorGood = Color.blue;
+	private static Color colorBad = Color.red;
+	private static Color colorNeutral = Color.black;//prepare for eventual 'SavedConfigs' file
 	
 	ItemInfoPanel(ItemChangeNotifier icn)
 	{
@@ -117,6 +126,14 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 			worthField.setEnabled(true);
 			
 			updateTimeLabel.setText(nf.format(itemToShow.getDaysSinceUpdate()));
+			if (itemToShow.getDaysSinceUpdate() > lastUpdatedMoreBad)
+			{
+				updateTimeLabel.setForeground(colorBad);
+			}
+			else
+			{
+				updateTimeLabel.setForeground(colorNeutral);
+			}
 			
 			/*
 			 * populate hashmap based on item type
@@ -196,9 +213,13 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 						docPrintln(HM_CRAFT_PROFIT, STYLE_NORMAL);
 						
 						//'bad' if lose money in the process
-						if (Double.parseDouble(panelStrings.get(HM_CRAFT_PROFITRATIO)) < 0)
+						if (Double.parseDouble(panelStrings.get(HM_CRAFT_PROFITRATIO)) < profitRatioLessBad)
 						{
 							docPrintln(HM_CRAFT_PROFITRATIO, STYLE_BAD);
+						}
+						else if (Double.parseDouble(panelStrings.get(HM_CRAFT_PROFITRATIO)) > profitRatioMoreGood)
+						{
+							docPrintln(HM_CRAFT_PROFITRATIO, STYLE_GOOD);
 						}
 						else
 						{
@@ -343,13 +364,17 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 		
 		Style normal = doc.addStyle(STYLE_NORMAL, def);
 		StyleConstants.setFontFamily(def, "SansSerif");
+		StyleConstants.setForeground(normal, colorNeutral);
 		
 		Style title = doc.addStyle(STYLE_TITLE, normal);
 		StyleConstants.setFontSize(title, 20);
 		StyleConstants.setBold(title, true);
 		
 		Style bad = doc.addStyle(STYLE_BAD, normal);
-		StyleConstants.setForeground(bad, Color.RED);
+		StyleConstants.setForeground(bad, colorBad);
+		
+		Style good = doc.addStyle(STYLE_GOOD, normal);
+		StyleConstants.setForeground(good, colorGood);
 	}
 
 	@Override

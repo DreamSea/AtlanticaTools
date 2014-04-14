@@ -31,8 +31,7 @@ class MenuBar extends JMenuBar
 		workloadFormatter = nf;
 		menuBarListener = al;
 		
-		//TODO: stuffs is srs bsns
-		menu = new JMenu("Stuffs.");
+		menu = new JMenu("Crafting");
 		
 		add(menu);
 		

@@ -19,10 +19,8 @@ import javax.swing.SwingConstants;
 
 import events.ItemChangeEvent;
 import events.ItemChangeNotifier;
-import model.CraftBook;
 import model.Craftable;
 import model.Item;
-import model.Material;
 
 /*
  * 		CraftComponentPanel : Contains main interface for switching
@@ -58,9 +56,17 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 	private JLabel[] ingredientNumber;
 	private JFormattedTextField[] ingredientWorth;
 	private JLabel[] ingredientWorthTotal;
-	private JLabel[] ingredientDateUpdated;
+	private JLabel[] ingredientLastUpdated;
 	private JLabel[] profitRatio;
-
+	
+	private static double profitRatioLessBad = 0;	//when profit ratio should be red
+	private static double profitRatioMoreGood = 1; 	//when profit ratio should be green 
+	private static double lastUpdatedMoreBad = 7;	//when last updated should be red
+	
+	private static Color colorGood = Color.blue;
+	private static Color colorBad = Color.red;
+	private static Color colorNeutral = Color.black;//prepare for eventual 'SavedConfigs' file
+	
 	// Makes large costs/worths display more nicely
 	private NumberFormat numberFormatter;
 
@@ -95,7 +101,7 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 		ingredientNumber = new JLabel[ITEMROWS];
 		ingredientWorth = new JFormattedTextField[ITEMROWS];
 		ingredientWorthTotal = new JLabel[ITEMROWS];
-		ingredientDateUpdated = new JLabel[ITEMROWS];
+		ingredientLastUpdated = new JLabel[ITEMROWS];
 
 		/*
 		 * gridbag configs
@@ -128,6 +134,7 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 			c.gridy = i + 1; //move past title row
 			
 			ingredientProfitRatio[i] = new JLabel(GUIManager.BLANKSTRING, SwingConstants.CENTER);
+			ingredientProfitRatio[i].setForeground(colorNeutral);
 			
 			ingredientButton[i] = new JButton(GUIManager.BLANKSTRING);
 			ingredientButton[i].addActionListener(this);
@@ -140,8 +147,9 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 			ingredientWorth[i].addPropertyChangeListener("value", this);			
 
 			ingredientWorthTotal[i] = new JLabel(GUIManager.BLANKSTRING, SwingConstants.CENTER);
-			ingredientDateUpdated[i] = new JLabel(GUIManager.BLANKSTRING, SwingConstants.CENTER);
-
+			ingredientLastUpdated[i] = new JLabel(GUIManager.BLANKSTRING, SwingConstants.CENTER);
+			ingredientLastUpdated[i].setForeground(colorNeutral);
+			
 			/*
 			 * add row to gridbag
 			 */
@@ -156,7 +164,7 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 			c.gridx = 4;
 			add(ingredientWorthTotal[i],c);
 			c.gridx = 5;
-			add(ingredientDateUpdated[i],c);
+			add(ingredientLastUpdated[i],c);
 
 			/*
 			 * init the panel with all rows disabled so that
@@ -230,6 +238,7 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 	{
 		ingredientProfitRatio[row].setEnabled(false);
 		ingredientProfitRatio[row].setText(GUIManager.BLANKSTRING);
+		ingredientProfitRatio[row].setForeground(colorNeutral);	
 		ingredientButton[row].setText(GUIManager.BLANKSTRING);
 		ingredientButton[row].setEnabled(false);
 		ingredientNumber[row].setText(GUIManager.BLANKSTRING);
@@ -238,8 +247,9 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 		ingredientWorth[row].setEnabled(false);
 		ingredientWorthTotal[row].setText(GUIManager.BLANKSTRING);
 		ingredientWorthTotal[row].setEnabled(false);
-		ingredientDateUpdated[row].setText(GUIManager.BLANKSTRING);
-		ingredientDateUpdated[row].setEnabled(false);
+		ingredientLastUpdated[row].setText(GUIManager.BLANKSTRING);
+		ingredientLastUpdated[row].setForeground(colorNeutral);
+		ingredientLastUpdated[row].setEnabled(false);
 	}
 
 
@@ -248,14 +258,29 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 	 */
 	private void setRow(int row, Item i, int number, long worth)
 	{
+		Craftable placeHolder = null;
 		if (i.getType() == Item.TYPE_CRAFTABLE)
 		{
+			placeHolder = (Craftable) i;
 			ingredientProfitRatio[row].setEnabled(true);
-			ingredientProfitRatio[row].setText(numberFormatter.format(((Craftable) i).getProfitRatio()));
+			ingredientProfitRatio[row].setText(numberFormatter.format(placeHolder.getProfitRatio()));
+			if (placeHolder.getProfitRatio() < profitRatioLessBad)
+			{
+				ingredientProfitRatio[row].setForeground(colorBad);
+			}
+			else if (placeHolder.getProfitRatio() > profitRatioMoreGood)
+			{
+				ingredientProfitRatio[row].setForeground(colorGood);
+			}
+			else
+			{
+				ingredientProfitRatio[row].setForeground(colorNeutral);	
+			}
 		}
 		else
 		{
 			ingredientProfitRatio[row].setEnabled(false);
+			ingredientProfitRatio[row].setForeground(colorNeutral);
 			ingredientProfitRatio[row].setText(GUIManager.BLANKSTRING);
 		}
 		
@@ -278,7 +303,15 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 		ingredientWorthTotal[row].setEnabled(true);
 		ingredientWorthTotal[row].setText(numberFormatter.format(number*worth));
 		
-		ingredientDateUpdated[row].setEnabled(true);
-		ingredientDateUpdated[row].setText(numberFormatter.format(i.getDaysSinceUpdate()));
+		ingredientLastUpdated[row].setEnabled(true);
+		ingredientLastUpdated[row].setText(numberFormatter.format(i.getDaysSinceUpdate()));
+		if (i.getDaysSinceUpdate() > lastUpdatedMoreBad)
+		{
+			ingredientLastUpdated[row].setForeground(colorBad);
+		}
+		else
+		{
+			ingredientLastUpdated[row].setForeground(colorNeutral);
+		}
 	}
 }

@@ -57,8 +57,23 @@ public class ItemLoader {
 				addRecipe("Multi-Hued Crystal", 1);
 				addRecipe("Platinum Ingot", 100);
 				addRecipe("Hammer [II]", 50);
-				addRecipe("Enchant Stone[II]", 10);
+				addRecipe("Enchant Stone [II]", 10);
 				addRecipe("Auto-Craft Doll MK-1", 2);
+				
+			addCraftable("Auto-Craft [III]", 530000, 4, 5);
+				addRecipe("Multi-Hued Jewel Shard", 1);
+				addRecipe("Ruby", 50);
+				addRecipe("Hammer [III]", 50);
+				addRecipe("Enchant Stone [III]", 10);
+				addRecipe("Auto-Craft Doll MK-2", 3);
+				
+			addCraftable("Auto-Craft [IV]", 4500000, 4, 6);
+				addRecipe("Multi-Hued Jewel", 5);
+				addRecipe("Ruby", 100);
+				addRecipe("Hammer [III]", 50);
+				addRecipe("Enchant Stone [IV]", 5);
+				addRecipe("Auto-Craft Doll MK-3", 3);
+				addRecipe("Sea Element", 70);
 		}	
 	}
 	
@@ -128,6 +143,35 @@ public class ItemLoader {
 				addRecipe("Pearl", 150);
 				addRecipe("Oil", 15);
 				addRecipe("Small Bolt", 15);
+			
+			addCraftable("Auto-Craft Doll MK-2", 3500000, 5, 8);
+				addRecipe("Small Marionette", 1);
+				addRecipe("Mysterious Vial: Wisdom", 2);
+				addRecipe("Sea Element Shard", 200);
+				addRecipe("Artisan Crafting Secrets", 50);
+				addRecipe("Polish", 10);
+				addRecipe("Platinum Ingot", 5);
+				addRecipe("Oil", 30);
+				addRecipe("Small Bolt", 30);
+				
+			addCraftable("Auto-Craft Doll MK-3", 9800000, 5, 8);
+				addRecipe("Small Marionette", 1);
+				addRecipe("Mysterious Vial: Wisdom", 2);
+				addRecipe("Sea Element", 50);
+				addRecipe("Book of Craftsmanship", 20);
+				addRecipe("Polish", 10);
+				addRecipe("Platinum Ingot", 10);
+				addRecipe("Oil", 30);
+				addRecipe("Small Bolt", 30);
+			
+			addCraftable("Net Trap[III]", 3000000, 10, 7);
+				addRecipe("Oil", 40);
+				addRecipe("Platinum Ingot", 120);
+				addRecipe("Gold Ingot", 50);
+				addRecipe("Tanzanite", 40);
+				addRecipe("Gold Thread", 50);
+				addRecipe("Big Slab of Lumber", 50);
+				addRecipe("Normal Dynamite", 40);
 		}
 	}
 	
@@ -162,6 +206,13 @@ public class ItemLoader {
 				addRecipe("Platinum Ingot", 1);
 				addRecipe("Silver Ingot", 30);
 				addRecipe("Coral", 100);
+			
+			addCraftable("Normal Dynamite", 140000, 10, 5);
+				addRecipe("Pearl", 300);
+				addRecipe("Ruby", 50);
+				addRecipe("Pine", 200);
+				addRecipe("Coral", 500);
+				addRecipe("Common Gunpowder", 50);
 		}
 	}
 	

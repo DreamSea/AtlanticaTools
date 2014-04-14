@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import events.ItemChangeListener;
 import events.ItemChangeNotifier;
 import model.DataManager;
@@ -37,6 +39,8 @@ public class GUIManager {
 	private ItemChangeNotifier mainItemChangeNotifier;
 	private ActionListener guiActionListener;
 	
+	private JFrame frame;
+	
 	public GUIManager(ItemChangeListener icl, ActionListener al, DataManager dm)
 	{
 		//TODO: one numberformatter for all?
@@ -57,7 +61,7 @@ public class GUIManager {
 		guiCraftIntoPanel = new CraftIntoPanel(mainItemChangeNotifier);
 		guiItemInfoPanel = new ItemInfoPanel(mainItemChangeNotifier);
 		
-		JFrame frame = new JFrame("Atlantica");
+		frame = new JFrame("Atlantica");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setLocation(25, 25);
@@ -94,5 +98,10 @@ public class GUIManager {
 	public Item getCurrentItem()
 	{
 		return currentItem;
+	}
+	
+	public void saveDialog()
+	{
+		JOptionPane.showMessageDialog(frame, "Item Prices Saved.");
 	}
 }

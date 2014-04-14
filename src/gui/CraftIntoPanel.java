@@ -38,6 +38,7 @@ class CraftIntoPanel extends JPanel {
 		table = new JTable (craftTable);
 		table.setAutoCreateRowSorter(true);
 		table.setFillsViewportHeight(true);
+		table.setDefaultRenderer(Double.class, new ColorRenderer(craftTable.getColumnNamesAll()));
 		tl = new TableListener();
 		
 		//no need for selecting more than one item at a time
@@ -89,6 +90,11 @@ class CraftIntoPanel extends JPanel {
 			else return null;
 		}
 		
+		String[] getColumnNamesAll()
+		{
+			return columnNames;
+		}
+		
 		void setData(Item i)
 		{
 			/*
@@ -113,7 +119,7 @@ class CraftIntoPanel extends JPanel {
 			{
 				Craftable tempCraft = i.getCraftsInto(j);
 				data[0][j] = tempCraft.getName();
-				data[1][j] = tempCraft.getProfitRatio();
+				data[1][j] = (Double) tempCraft.getProfitRatio();
 				data[2][j] = tempCraft.getDaysSinceUpdate();
 				//System.out.println("CIP setData(): "+tempCraft.name+tempCraft.profitRatio);
 			}

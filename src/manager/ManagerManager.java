@@ -63,6 +63,7 @@ public class ManagerManager implements ItemChangeListener, ActionListener
 		if (e.getActionCommand().compareTo("Save Item Prices") == 0)
 		{
 			dm.savePrices();
+			gm.saveDialog();
 		}
 		else //TODO: at the moment this just relates to changing workload, should be better way to do this
 		{
