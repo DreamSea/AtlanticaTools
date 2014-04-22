@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /*
@@ -12,9 +13,6 @@ public class Craftable extends Item
 	private Item[] craftedFromItems;
 	private int[] craftedFromNumbers;
 	
-	public static Craftable lastCraftable; 
-	private static int slotNumber; //only used in constructor
-	
 	private int numCrafted;
 	private int workload;
 	
@@ -26,37 +24,69 @@ public class Craftable extends Item
 	private double profitRatio;
 	private boolean profitRatioChanged;
 	
-	/**
-	 * @param name : Craftable Name
-	 * @param workload : Craftable Workload
-	 * @param numCrafted : Number crafted per set
-	 * @param numComponents : Number of unique components this is crafted from
-	 */
-	public Craftable(String name, int workload, int numCrafted, int numComponents)
+	private Craftable(String name, int workload, int size, ArrayList<Item> componentList, ArrayList<Integer> componentNumbers)
 	{
-		super(name, Item.TYPE_CRAFTABLE);
+		super (name, Item.TYPE_CRAFTABLE);
 		this.workload = workload;
-		this.numCrafted = numCrafted;
-		craftedFromItems = new Item[numComponents];
-		craftedFromNumbers = new int[numComponents];
+		numCrafted = size;
 		
-		costChanged = true;
-		profitRatioChanged = true;
+		int recipeSize = componentList.size();
 		
-		slotNumber = 0;
-		lastCraftable = this;
+		craftedFromItems = new Item[recipeSize];
+		craftedFromNumbers = new int[recipeSize];
+		
+		for (int i = 0; i < recipeSize; i++)
+		{
+			craftedFromItems[i] = componentList.get(i);
+			craftedFromNumbers[i] = componentNumbers.get(i);
+		}	
 	}
 	
-	/**
-	 * This will need to be done all at once because slotNumber
-	 * @param name
-	 * @param number
-	 */
-	void addRecipe(Item item, int number)
+	static CraftBuilder builder(String name)
 	{
-		craftedFromItems[slotNumber] = item;
-		craftedFromNumbers[slotNumber] = number;
-		slotNumber++;
+		return new CraftBuilder(name);
+	}
+	
+	public static class CraftBuilder
+	{
+		private String nameStorage;
+		private int workloadStorage;
+		private int sizeStorage;
+		private ArrayList<Item> componentNames;
+		private ArrayList<Integer> componentNumbers;
+		
+		
+		private CraftBuilder (String name)
+		{
+			nameStorage = name;
+			componentNames = new ArrayList<Item>();
+			componentNumbers = new ArrayList<Integer>();
+		}
+		
+		CraftBuilder setWorkload(int wl)
+		{
+			workloadStorage = wl;
+			return this;
+		}
+		
+		CraftBuilder setSize(int craftSize)
+		{
+			sizeStorage = craftSize;
+			return this;
+		}
+		
+		CraftBuilder addComponent(Item itemName, int itemNumber)
+		{
+			componentNames.add(itemName);
+			componentNumbers.add(itemNumber);
+			return this;
+		}
+		
+		Craftable build()
+		{
+			return new Craftable(nameStorage, workloadStorage, 
+					sizeStorage, componentNames, componentNumbers);
+		}
 	}
 	
 	/*public String testInfo()

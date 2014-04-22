@@ -118,11 +118,18 @@ public class Item {
 		}
 	}
 	
+	
 	void setTimeUpdated(long l)
 	{
 		timeUpdated = l;
 	}
-		
+	
+	// package private, used by ItemLoader.java
+	void addCraftsInto(Craftable c)
+	{
+		craftsInto.add(c);
+	}
+	
 	public int getCraftsIntoLength()
 	{
 		return craftsInto.size();

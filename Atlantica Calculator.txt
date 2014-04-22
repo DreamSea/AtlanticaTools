@@ -1,15 +1,19 @@
 Todo:
 
-(HIGH) Consider builder helpers for item construction (.setType().addRecipe().addRecipe()...)
+(MED+) eliminate typecasting, use TreeMap<String, Material> and TreeMap<String, Craftable>?
+	make sure to check for workbook that isnt in material
 
+(MED) Am I discarding a bunch of CraftBuilder objects everywhere?
+(MED) ItemInfoPanel currently breaks when trying to parse double of a string containing comma
+			[example - parseDouble(1,000.5)]
 (MED) figure out way to automate/whatever craftTable colors (pass array of arrays?)
 (MED) deck-type GUIManager frame to set up for different tools
+(MED) figure out how to set up a test class/method
 
 (MED-) eldest component update = max(focus'd item + recipe items)
 (MED-) return list of best profit ratios of everything
 (MED-) return list of best profit ratio by maxworkload
 (MED-) Consider DefaultListModel for craftintopanel.java
-(MED-) figure out how to set up a test class/method
 (MED-) setter in GUIManager for all the colors in different gui panels
 
 (LOW) object streams for save/load
@@ -46,6 +50,7 @@ What if there is a craft book that needs to be converted into a craftable?
 to patch later
 
 ~~~~~~~~~~~~~~~~~~
+2014/04/21 (HIGH)	CraftBuilders - Craftable.builder()
 2014/04/13 (MED)	Colors in CraftComponentPanel.java, ItemInfoPanel.java, CraftIntoPanel.java
 2014/04/13 (Minor)	'Save confirmation' dialog when saving prices
 2014/04/13 (Forever)Recipes: AutoCraft to IV, AutoCraft Dolls to III, Dynamite, Net Trap [III].

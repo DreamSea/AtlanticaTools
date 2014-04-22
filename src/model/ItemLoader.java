@@ -12,7 +12,7 @@ public class ItemLoader {
 
 	private HashMap<String, Item> itemMap;
 	private ArrayList<Material> materials; 
-	private ArrayList<Craftable> currentList;
+	private ArrayList<Craftable> currentList; //used in addCraftable()
 	
 	
 	public ItemLoader(HashMap<String, Item> hm, ArrayList<Material> al)
@@ -47,33 +47,45 @@ public class ItemLoader {
 		{
 			currentList = action;
 		
-			addCraftable("Auto-Craft [I]", 50000, 2, 4);
-				addRecipe("Multi-Hued Crystal Shard", 5);
-				addRecipe("Platinum Ingot", 50);
-				addRecipe("Hammer [I]", 100);
-				addRecipe("Enchant Stone [I]", 10);
+			addCraftable(Craftable.builder("Auto-Craft [I]")
+					.setSize(2)
+					.setWorkload(50000)
+					.addComponent(asItem("Multi-Hued Crystal Shard"), 5)
+					.addComponent(asItem("Platinum Ingot"), 50)
+					.addComponent(asItem("Hammer [I]"), 100)
+					.addComponent(asItem("Enchant Stone [I]"), 10)
+					.build());
 			
-			addCraftable("Auto-Craft [II]", 210000, 4, 5);
-				addRecipe("Multi-Hued Crystal", 1);
-				addRecipe("Platinum Ingot", 100);
-				addRecipe("Hammer [II]", 50);
-				addRecipe("Enchant Stone [II]", 10);
-				addRecipe("Auto-Craft Doll MK-1", 2);
+			addCraftable(Craftable.builder("Auto-Craft [II]")
+					.setSize(4)
+					.setWorkload(210000)
+					.addComponent(asItem("Multi-Hued Crystal"), 1)
+					.addComponent(asItem("Platinum Ingot"), 100)
+					.addComponent(asItem("Hammer [II]"), 50)
+					.addComponent(asItem("Enchant Stone [II]"), 10)
+					.addComponent(asItem("Auto-Craft Doll MK-1"), 2)
+					.build());
 				
-			addCraftable("Auto-Craft [III]", 530000, 4, 5);
-				addRecipe("Multi-Hued Jewel Shard", 1);
-				addRecipe("Ruby", 50);
-				addRecipe("Hammer [III]", 50);
-				addRecipe("Enchant Stone [III]", 10);
-				addRecipe("Auto-Craft Doll MK-2", 3);
+			addCraftable(Craftable.builder("Auto-Craft [III]")
+					.setSize(4)
+					.setWorkload(530000)
+					.addComponent(asItem("Multi-Hued Jewel Shard"), 1)
+					.addComponent(asItem("Ruby"), 50)
+					.addComponent(asItem("Hammer [III]"), 50)
+					.addComponent(asItem("Enchant Stone [III]"), 10)
+					.addComponent(asItem("Auto-Craft Doll MK-2"), 3)
+					.build());
 				
-			addCraftable("Auto-Craft [IV]", 4500000, 4, 6);
-				addRecipe("Multi-Hued Jewel", 5);
-				addRecipe("Ruby", 100);
-				addRecipe("Hammer [III]", 50);
-				addRecipe("Enchant Stone [IV]", 5);
-				addRecipe("Auto-Craft Doll MK-3", 3);
-				addRecipe("Sea Element", 70);
+			addCraftable(Craftable.builder("Auto-Craft [IV]")
+					.setSize(4)
+					.setWorkload(4500000)
+					.addComponent(asItem("Multi-Hued Jewel"), 5)
+					.addComponent(asItem("Ruby"), 100)
+					.addComponent(asItem("Hammer [III]"), 50)
+					.addComponent(asItem("Enchant Stone [IV]"), 5)
+					.addComponent(asItem("Auto-Craft Doll MK-3"), 3)
+					.addComponent(asItem("Sea Element"), 70)
+					.build());
 		}	
 	}
 	
@@ -83,19 +95,25 @@ public class ItemLoader {
 		{
 			currentList = crystal;
 		
-			addCraftable("Multi-Hued Crystal Shard", 46000, 5, 5);
-				addRecipe("Phoenix Crystal", 1);
-				addRecipe("Giant Crystal", 1);
-				addRecipe("Redemption Crystal", 1);
-				addRecipe("Dragon Crystal", 1);
-				addRecipe("Ashen Crystal", 1);
+			addCraftable(Craftable.builder("Multi-Hued Crystal Shard")
+					.setSize(5)
+					.setWorkload(46000)
+					.addComponent(asItem("Phoenix Crystal"), 1)
+					.addComponent(asItem("Giant Crystal"), 1)
+					.addComponent(asItem("Redemption Crystal"), 1)
+					.addComponent(asItem("Dragon Crystal"), 1)
+					.addComponent(asItem("Ashen Crystal"), 1)
+					.build());					
 		
-			addCraftable("Multi-Hued Crystal", 200000, 5, 5);
-				addRecipe("Multi-Hued Crystal Shard", 5);
-				addRecipe("Mandragora", 2);
-				addRecipe("Platinum Ingot", 25);
-				addRecipe("Coral", 100);
-				addRecipe("Opal", 3);
+			addCraftable(Craftable.builder("Multi-Hued Crystal")
+					.setSize(5)
+					.setWorkload(200000)
+					.addComponent(asItem("Multi-Hued Crystal Shard"), 5)
+					.addComponent(asItem("Mandragora"), 2)
+					.addComponent(asItem("Platinum Ingot"), 25)
+					.addComponent(asItem("Coral"), 100)
+					.addComponent(asItem("Opal"), 3)
+					.build());
 		}
 	}
 	
@@ -105,26 +123,41 @@ public class ItemLoader {
 		{
 			currentList = food;
 		
-			addCraftable("Dumpling", 500, 10, 2);
-				addRecipe("Pork", 4);
-				addRecipe("Wheat", 6);
+			addCraftable(Craftable.builder("Dumpling")
+					.setSize(10)
+					.setWorkload(500)
+					.addComponent(asItem("Pork"), 4)
+					.addComponent(asItem("Wheat"), 6)
+					.build());
 			
-			addCraftable("Grilled Pork", 600, 10, 2);
-				addRecipe("Pork", 8);
-				addRecipe("Salt", 4);
+			addCraftable(Craftable.builder("Grilled Pork")
+					.setSize(10)
+					.setWorkload(600)
+					.addComponent(asItem("Pork"), 8)
+					.addComponent(asItem("Salt"), 4)
+					.build());
 		
-			addCraftable("Grilled Shrimp", 800, 10, 2);
-				addRecipe("Shrimp", 10);
-				addRecipe("Salt", 5);	
+			addCraftable(Craftable.builder("Grilled Shrimp")
+					.setSize(10)
+					.setWorkload(800)
+					.addComponent(asItem("Shrimp"), 10)
+					.addComponent(asItem("Salt"), 5)
+					.build());
 		
-			addCraftable("Octopus Soup", 960, 10, 2);
-				addRecipe("Octopus", 12);
-				addRecipe("Salt", 6);
+			addCraftable(Craftable.builder("Octopus Soup")
+					.setSize(10)
+					.setWorkload(960)
+					.addComponent(asItem("Octopus"), 12)
+					.addComponent(asItem("Salt"), 6)
+					.build());
 			
-			addCraftable("Barley Bibimbap", 7000, 10, 3);
-				addRecipe("Barley", 60);
-				addRecipe("Salt", 20);
-				addRecipe("Sesame Oil", 5);
+			addCraftable(Craftable.builder("Barley Bibimbap")
+					.setSize(10)
+					.setWorkload(7000)
+					.addComponent(asItem("Barley"), 60)
+					.addComponent(asItem("Salt"), 20)
+					.addComponent(asItem("Sesame Oil"), 5)
+					.build());
 		}
 	}
 	
@@ -134,44 +167,56 @@ public class ItemLoader {
 		{
 			currentList = machine;
 		
-			addCraftable("Auto-Craft Doll MK-1", 1830000, 5, 8);
-				addRecipe("Small Marionette", 1);
-				addRecipe("Mysterious Vial: Wisdom", 1);
-				addRecipe("Earth Element Shard", 300);
-				addRecipe("Normal Crafting Secrets", 100);
-				addRecipe("Polish", 10);
-				addRecipe("Pearl", 150);
-				addRecipe("Oil", 15);
-				addRecipe("Small Bolt", 15);
+			addCraftable(Craftable.builder("Auto-Craft Doll MK-1")
+					.setSize(5)
+					.setWorkload(1830000)
+					.addComponent(asItem("Small Marionette"), 1)
+					.addComponent(asItem("Mysterious Vial: Wisdom"), 1)
+					.addComponent(asItem("Earth Element Shard"), 300)
+					.addComponent(asItem("Normal Crafting Secrets"), 100)
+					.addComponent(asItem("Polish"), 10)
+					.addComponent(asItem("Pearl"), 150)
+					.addComponent(asItem("Oil"), 15)
+					.addComponent(asItem("Small Bolt"), 15)
+					.build());
 			
-			addCraftable("Auto-Craft Doll MK-2", 3500000, 5, 8);
-				addRecipe("Small Marionette", 1);
-				addRecipe("Mysterious Vial: Wisdom", 2);
-				addRecipe("Sea Element Shard", 200);
-				addRecipe("Artisan Crafting Secrets", 50);
-				addRecipe("Polish", 10);
-				addRecipe("Platinum Ingot", 5);
-				addRecipe("Oil", 30);
-				addRecipe("Small Bolt", 30);
+			addCraftable(Craftable.builder("Auto-Craft Doll MK-2")
+					.setSize(5)
+					.setWorkload(3500000)
+					.addComponent(asItem("Small Marionette"), 1)
+					.addComponent(asItem("Mysterious Vial: Wisdom"), 2)
+					.addComponent(asItem("Sea Element Shard"), 200)
+					.addComponent(asItem("Artisan Crafting Secrets"), 50)
+					.addComponent(asItem("Polish"), 10)
+					.addComponent(asItem("Platinum Ingot"), 5)
+					.addComponent(asItem("Oil"), 30)
+					.addComponent(asItem("Small Bolt"), 30)
+					.build());
 				
-			addCraftable("Auto-Craft Doll MK-3", 9800000, 5, 8);
-				addRecipe("Small Marionette", 1);
-				addRecipe("Mysterious Vial: Wisdom", 2);
-				addRecipe("Sea Element", 50);
-				addRecipe("Book of Craftsmanship", 20);
-				addRecipe("Polish", 10);
-				addRecipe("Platinum Ingot", 10);
-				addRecipe("Oil", 30);
-				addRecipe("Small Bolt", 30);
+			addCraftable(Craftable.builder("Auto-Craft Doll MK-3")
+					.setSize(5)
+					.setWorkload(9800000)
+					.addComponent(asItem("Small Marionette"), 1)
+					.addComponent(asItem("Mysterious Vial: Wisdom"), 2)
+					.addComponent(asItem("Sea Element"), 50)
+					.addComponent(asItem("Book of Craftsmanship"), 20)
+					.addComponent(asItem("Polish"), 10)
+					.addComponent(asItem("Platinum Ingot"), 10)
+					.addComponent(asItem("Oil"), 30)
+					.addComponent(asItem("Small Bolt"), 30)
+					.build());
 			
-			addCraftable("Net Trap[III]", 3000000, 10, 7);
-				addRecipe("Oil", 40);
-				addRecipe("Platinum Ingot", 120);
-				addRecipe("Gold Ingot", 50);
-				addRecipe("Tanzanite", 40);
-				addRecipe("Gold Thread", 50);
-				addRecipe("Big Slab of Lumber", 50);
-				addRecipe("Normal Dynamite", 40);
+			addCraftable(Craftable.builder("Net Trap[III]")
+					.setSize(10)
+					.setWorkload(3000000)
+					.addComponent(asItem("Oil"), 40)
+					.addComponent(asItem("Platinum Ingot"), 120)
+					.addComponent(asItem("Gold Ingot"), 50)
+					.addComponent(asItem("Tanzanite"), 40)
+					.addComponent(asItem("Gold Thread"), 50)
+					.addComponent(asItem("Big Slab of Lumber"), 50)
+					.addComponent(asItem("Normal Dynamite"), 40)
+					.build());
 		}
 	}
 	
@@ -181,18 +226,24 @@ public class ItemLoader {
 		{
 			currentList = medicine;
 		
-			addCraftable("Mana Potion [III]", 5700, 10, 3);
-				addRecipe("Chrysanthemum", 15);
-				addRecipe("Jasmine", 15);
-				addRecipe("Cyclamen", 10);
+			addCraftable(Craftable.builder("Mana Potion [III]")
+					.setSize(10)
+					.setWorkload(5700)
+					.addComponent(asItem("Chrysanthemum"), 15)
+					.addComponent(asItem("Jasmine"), 15)
+					.addComponent(asItem("Cyclamen"), 10)
+					.build());
 				
-			addCraftable("Mysterious Vial: Wisdom", 1430000, 10, 6);
-				addRecipe("Mandragora", 4);
-				addRecipe("Multi-Hued Crystal", 5);
-				addRecipe("Growth Vial [II]", 50);
-				addRecipe("Mana Potion [III]", 100);
-				addRecipe("Jasmine", 400);
-				addRecipe("Green Mold", 600);
+			addCraftable(Craftable.builder("Mysterious Vial: Wisdom")
+					.setSize(10)
+					.setWorkload(1430000)
+					.addComponent(asItem("Mandragora"), 4)
+					.addComponent(asItem("Multi-Hued Crystal"), 5)
+					.addComponent(asItem("Growth Vial [II]"), 50)
+					.addComponent(asItem("Mana Potion [III]"), 100)
+					.addComponent(asItem("Jasmine"), 400)
+					.addComponent(asItem("Green Mold"), 600)
+					.build());
 		}
 	}
 	
@@ -202,18 +253,38 @@ public class ItemLoader {
 		{
 			currentList = tool;
 		
-			addCraftable("Small Bolt", 3500, 20, 3);
-				addRecipe("Platinum Ingot", 1);
-				addRecipe("Silver Ingot", 30);
-				addRecipe("Coral", 100);
+			addCraftable(Craftable.builder("Small Bolt")
+					.setSize(20)
+					.setWorkload(3500)
+					.addComponent(asItem("Platinum Ingot"), 1)
+					.addComponent(asItem("Silver Ingot"), 30)
+					.addComponent(asItem("Coral"), 100)
+					.build());
 			
-			addCraftable("Normal Dynamite", 140000, 10, 5);
-				addRecipe("Pearl", 300);
-				addRecipe("Ruby", 50);
-				addRecipe("Pine", 200);
-				addRecipe("Coral", 500);
-				addRecipe("Common Gunpowder", 50);
+			addCraftable(Craftable.builder("Normal Dynamite")
+					.setSize(10)
+					.setWorkload(140000)
+					.addComponent(asItem("Pearl"), 300)
+					.addComponent(asItem("Ruby"), 50)
+					.addComponent(asItem("Pine"), 200)
+					.addComponent(asItem("Coral"), 500)
+					.addComponent(asItem("Common Gunpowder"), 50)
+					.build());
 		}
+	}
+	
+	/**
+	 * Helper to convert from String to Item
+	 * @param name of item
+	 * @return item object matching given name
+	 */
+	private Item asItem(String name)
+	{
+		if (!itemMap.containsKey(name))
+		{
+			addMaterial(name);
+		}
+		return itemMap.get(name);
 	}
 	
 	// Lazy Material Adding
@@ -224,58 +295,35 @@ public class ItemLoader {
 		materials.add((Material) (itemMap.get(material)));
 	}
 	
-	/**
-	 * 
-	 * @param craftable Item Name
-	 * @param workload Workload
-	 * @param numCrafted Size
-	 * @param numComponents Components
-	 */
-	private void addCraftable(String craftable, int workload, int numCrafted, int numComponents)
+	private void addCraftable(Craftable c)
 	{
-		//itemMap should only contain key if previously added as material
-		if (itemMap.containsKey(craftable))
+		if (itemMap.containsKey(c.name)) //it exists as material
 		{
-			//TODO: just in case for now, but this check shouldn't be needed
-			//once other areas of code are cleaned up
-			if (itemMap.get(craftable).getType() == 0)
+			Material oldMaterial = (Material) itemMap.get(c.name); //hold old data
+			
+			itemMap.put(c.name, c); //replace data
+			
+			//update the items the material was used in
+			for (int i = 0; i < oldMaterial.getCraftsIntoLength(); i++)
 			{
-				Material toConvert = (Material) itemMap.get(craftable);
-				
-				materials.remove(toConvert);
-				
-				Craftable converted = toConvert.convert(workload, numCrafted, numComponents);
-				
-				itemMap.remove(craftable);
-				itemMap.put(craftable,  converted);
-				
-				//resets all the components from the previous material into new craftable
-				for (Craftable c : converted.craftsInto)
-				{
-					c.remapRecipe(itemMap);
-				}
-				
-				//System.out.println("duplicate: "+toConvert.name);
+				oldMaterial.getCraftsInto(i).remapRecipe(itemMap);
+				c.addCraftsInto(oldMaterial.getCraftsInto(i));
 			}
+			
+			materials.remove(oldMaterial); //clean up materials array
 		}
-		else
+		else //it doesnt exist as material
 		{
-			itemMap.put(craftable, new Craftable(craftable, workload, numCrafted, numComponents));
+			itemMap.put(c.name, c);
 		}
 		
-		currentList.add((Craftable) itemMap.get(craftable));
-	}
-	
-	private void addRecipe(String name, int number)
-	{
-		//puts item into itemmap as a material if not already existing
-		if (!itemMap.containsKey(name))
+		for (int i = 0; i < c.getCraftedFromLength(); i++)
 		{
-			addMaterial(name);
+			//adds this craftable into the craftsInto
+			//list of the items it is crafted from
+			c.getCraftedFromItems(i).addCraftsInto(c);
 		}
 		
-		Item temp = itemMap.get(name);
-		temp.craftsInto.add(Craftable.lastCraftable);
-		Craftable.lastCraftable.addRecipe(itemMap.get(name), number);
+		currentList.add(c);
 	}
 }

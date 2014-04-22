@@ -25,7 +25,6 @@ import events.ItemChangeEvent;
 import events.ItemChangeNotifier;
 import model.CraftBook;
 import model.Craftable;
-import model.DataManager;
 import model.Item;
 
 /*
@@ -38,7 +37,6 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	String BLANKSTRING = GUIManager.BLANKSTRING;
 	
 	private NumberFormat nf;
-	private Item loaded;
 	
 	// Text Pane final strings
 	private HashMap<String, String> panelStrings;

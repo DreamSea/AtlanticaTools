@@ -32,8 +32,6 @@ public class DataManager {
 	private ArrayList<Craftable> medicine;
 	private ArrayList<Craftable> tool;
 	
-	private static ArrayList<Craftable> currentList;
-	
 	private final String DEFAULT_CRAFTBOOK = "Book of Expertise";
 	//private static CraftBook loadedCraftBook;
 	
