@@ -3,12 +3,12 @@ Todo:
 (MED) Am I discarding a bunch of CraftBuilder objects everywhere?
 (MED) ItemInfoPanel currently breaks when trying to parse double of a string containing comma
 			[example - parseDouble(1,000.5)]
-(MED) Clean up ItemInfoPanel's giant switch/casing method in smaller ones
 (MED) figure out way to automate/whatever craftTable colors (pass array of arrays?)
 (MED) deck-type GUIManager frame to set up for different tools
 (MED) figure out how to set up a test class/method
 (MED) move recipes into seperate file and redo loading method so that it's easier to make changes
 (MED) console log of item loading since its starting to get slower?
+(MED) pass iterables/item[] arrays when building gui/etc?
 
 (MED-) eldest component update = max(focus'd item + recipe items)
 (MED-) return list of best profit ratios of everything
@@ -53,6 +53,7 @@ What if there is a craft book that needs to be converted into a craftable?
 to patch later
 
 ~~~~~~~~~~~~~~~~~~
+2014/04/27 (MED)	Cleaned up ItemInfoPanel - broke up giant method, Enum HashMapKey 
 2014/04/26 (???)	Enum ItemType. Discarded original plan to eliminate type casting due to how craftedFromItems is an array of Items. Maybe in the future.
 2014/04/21 (HIGH)	CraftBuilders - Craftable.builder()
 2014/04/13 (MED)	Colors in CraftComponentPanel.java, ItemInfoPanel.java, CraftIntoPanel.java

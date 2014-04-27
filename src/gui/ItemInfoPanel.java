@@ -27,6 +27,7 @@ import model.CraftBook;
 import model.Craftable;
 import model.Item;
 import model.ItemType;
+import model.Material;
 
 /*
  * 		ItemInfoPanel : Displays information hopefully
@@ -39,28 +40,38 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	
 	private NumberFormat nf;
 	
+	private enum HashMapKey
+	{
+		NAME(""), LASTUPDATE("Last Worth Update (days): "),
+		
+		CRAFT_WORKLOAD("Workload: "), CRAFT_WORKLOADMAX("Max WL: "),
+		CRAFT_SIZE("Size: "), CRAFT_SIZEMAX("Max Size: "),
+		CRAFT_WORTH("Worth w/ Interest: "),
+		CRAFT_CURRENTBOOK("Using - "),
+		CRAFT_WORKCOST("Cost from Workload: "),
+		CRAFT_COMPONENTCOST("Cost from Components: "),
+		
+		CRAFT_PROFIT("Profit per Batch: "),
+		CRAFT_PROFITRATIO("Profit Ratio: "),
+		
+		BOOK_WORKPROVIDE("Workload Provided: "),
+		BOOK_WORKRATIO("Cost per Workload: ");
+		
+		String keyString;
+		
+		HashMapKey(String s)
+		{
+			keyString = s;
+		}
+		
+		private String getString()
+		{
+			return keyString;
+		}
+	}
+	
 	// Text Pane final strings
-	private HashMap<String, String> panelStrings;
-	private final String HM_NAME = "";
-	private final String HM_LASTUPDATE = "Last Worth Update (days): ";
-	
-	private final String HM_CRAFT_WORKLOAD = "Workload: ";
-	private final String HM_CRAFT_WORKLOADMAX = "Max WL: ";
-	
-	private final String HM_CRAFT_SIZE = "Size: ";
-	private final String HM_CRAFT_SIZEMAX = "Max Size: ";
-	
-	private final String HM_CRAFT_WORTH = "Worth w/ Interest: ";
-	
-	private final String HM_CRAFT_CURRENTBOOK = "Using - ";
-	private final String HM_CRAFT_WORKCOST = "Cost from Workload: ";
-	private final String HM_CRAFT_COMPONENTCOST = "Cost from Components: ";
-	
-	private final String HM_CRAFT_PROFIT = "Profit per Batch: ";
-	private final String HM_CRAFT_PROFITRATIO = "Profit Ratio: ";
-	
-	private final String HM_BOOK_WORKPROVIDE = "Workload Provided: ";
-	private final String HM_BOOK_WORKRATIO = "Cost per Workload: ";
+	private HashMap<HashMapKey, String> panelStrings;
 	
 	private final String NEWLINE = "\n";
 	
@@ -108,15 +119,15 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 		add(worthPanel, BorderLayout.SOUTH);
 	}
 	
-	/**
-	 * TODO: break this up into smaller parts.
+	/* 
+	 * Sets up worth information in panel for Item. 
 	 * 
-	 * Sets panel to show different information for different item types
-	 * @param itemToShow
+	 * This method is called first in the other more specific versions to
+	 * put HashMap content common to all items.
 	 */
-	void loadItem(Item itemToShow)
+	private void loadItem(Item itemToShow)
 	{
-		panelStrings.clear(); //reset hashmap for new item
+		//panelStrings.clear(); //reset hashmap for new item
 		
 		if (itemToShow != null) //for the initial case without an item
 		{	
@@ -136,114 +147,122 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 				updateTimeLabel.setForeground(colorNeutral);
 			}
 			
-			/*
-			 * populate hashmap based on item type
-			 */
-			panelStrings.put(HM_NAME, itemToShow.getName());
-			panelStrings.put(HM_LASTUPDATE, nf.format(itemToShow.getDaysSinceUpdate()));
-					
-			
-			switch (itemToShow.getType())
-			{
-				case CRAFTABLE:
-				{
-					Craftable loadedCraft = (Craftable) itemToShow;
-					panelStrings.put(HM_CRAFT_WORKLOAD, nf.format(loadedCraft.getWorkload()));
-					panelStrings.put(HM_CRAFT_WORKLOADMAX, nf.format(loadedCraft.getWorkloadMax()));
-					panelStrings.put(HM_CRAFT_SIZE, nf.format(loadedCraft.getCraftSize()));
-					panelStrings.put(HM_CRAFT_SIZEMAX, nf.format(loadedCraft.getCraftSizeMax()));
-					
-					panelStrings.put(HM_CRAFT_WORTH, nf.format(loadedCraft.getWorthWithInterestTotal()));
-					
-					panelStrings.put(HM_CRAFT_WORKCOST, nf.format(loadedCraft.getCostOfWorkloadTotal()));
-					panelStrings.put(HM_CRAFT_COMPONENTCOST, nf.format(loadedCraft.getCostTotal()));
-					panelStrings.put(HM_CRAFT_CURRENTBOOK, loadedCraft.getSelectedCraftBook()+": "+nf.format(loadedCraft.getCostPerWorkload()));
-					
-					panelStrings.put(HM_CRAFT_PROFIT, nf.format(loadedCraft.getProfitTotal()));
-					panelStrings.put(HM_CRAFT_PROFITRATIO, nf.format(loadedCraft.getProfitRatio()));
-					break;
-				}
-				case CRAFTBOOK:
-				{
-					CraftBook loadedCraftBook = (CraftBook) itemToShow;
-					panelStrings.put(HM_BOOK_WORKPROVIDE, nf.format(loadedCraftBook.getWorkload()));
-					panelStrings.put(HM_BOOK_WORKRATIO, nf.format(loadedCraftBook.getWorthPerWorkload()));
-					break;
-				}
-			}
+			//HashMap field common to all items
+			panelStrings.put(HashMapKey.NAME, itemToShow.getName());
+			panelStrings.put(HashMapKey.LASTUPDATE, nf.format(itemToShow.getDaysSinceUpdate()));			
 		}
+	}
+	
+	void loadMaterial(Material m)
+	{
+		loadItem(m);
 		
-		//move information from hashmap to styled doc
+		displayMaterial(m);
+	}
+	
+	void loadCraftable(Craftable c)
+	{
+		loadItem(c);
+		
+		panelStrings.put(HashMapKey.CRAFT_WORKLOAD, nf.format(c.getWorkload()));
+		panelStrings.put(HashMapKey.CRAFT_WORKLOADMAX, nf.format(c.getWorkloadMax()));
+		panelStrings.put(HashMapKey.CRAFT_SIZE, nf.format(c.getCraftSize()));
+		panelStrings.put(HashMapKey.CRAFT_SIZEMAX, nf.format(c.getCraftSizeMax()));
+		
+		panelStrings.put(HashMapKey.CRAFT_WORTH, nf.format(c.getWorthWithInterestTotal()));
+		
+		panelStrings.put(HashMapKey.CRAFT_WORKCOST, nf.format(c.getCostOfWorkloadTotal()));
+		panelStrings.put(HashMapKey.CRAFT_COMPONENTCOST, nf.format(c.getCostTotal()));
+		panelStrings.put(HashMapKey.CRAFT_CURRENTBOOK, c.getSelectedCraftBook()+": "+nf.format(c.getCostPerWorkload()));
+		
+		panelStrings.put(HashMapKey.CRAFT_PROFIT, nf.format(c.getProfitTotal()));
+		panelStrings.put(HashMapKey.CRAFT_PROFITRATIO, nf.format(c.getProfitRatio()));
+		
+		displayCraftable(c);
+	}
+	
+	void loadCraftBook(CraftBook cb)
+	{
+		loadItem(cb);
+		
+		panelStrings.put(HashMapKey.BOOK_WORKPROVIDE, nf.format(cb.getWorkload()));
+		panelStrings.put(HashMapKey.BOOK_WORKRATIO, nf.format(cb.getWorthPerWorkload()));
+		
+		displayCraftBook(cb);
+	}
+	
+	/*
+	 * Displays information common to all items. Called first from more specific
+	 * versions of display____.
+	 */
+	private void displayItem(Item itemToShow)
+	{
 		try
 		{
 			doc.remove(0, doc.getLength());
-			
-			if (itemToShow != null)
+
+			docPrintln(HashMapKey.NAME, STYLE_TITLE);
+			if (itemToShow.getDaysSinceUpdate() > 7) //'bad' if last update over a week ago
 			{
-				docPrintln(HM_NAME, STYLE_TITLE);
-				if (itemToShow.getDaysSinceUpdate() > 7) //'bad' if last update over a week ago
-				{
-					docPrintln(HM_LASTUPDATE, STYLE_BAD);
-				}
-				else
-				{
-					docPrintln(HM_LASTUPDATE, STYLE_NORMAL);
-				}
-				docNewline();
-				
-				switch (itemToShow.getType())
-				{
-					case MATERIAL: //one day this might be useful
-					{
-						break;
-					}
-					case CRAFTABLE:
-					{
-						docPrint(HM_CRAFT_WORKLOAD, STYLE_NORMAL);
-						docPrintParen(HM_CRAFT_WORKLOADMAX, STYLE_NORMAL);
-						docNewline();
-						docPrint(HM_CRAFT_SIZE, STYLE_NORMAL);
-						docPrintParen(HM_CRAFT_SIZEMAX, STYLE_NORMAL);
-						docNewline();
-						docNewline();
-						docPrintln(HM_CRAFT_WORTH, STYLE_NORMAL);
-						docPrintln(HM_CRAFT_COMPONENTCOST, STYLE_NORMAL);
-						docPrintln(HM_CRAFT_WORKCOST, STYLE_NORMAL);
-						docPrintParen(HM_CRAFT_CURRENTBOOK, STYLE_NORMAL);
-						docNewline();
-						docNewline();
-						docPrintln(HM_CRAFT_PROFIT, STYLE_NORMAL);
-						
-						//'bad' if lose money in the process
-						if (Double.parseDouble(panelStrings.get(HM_CRAFT_PROFITRATIO)) < profitRatioLessBad)
-						{
-							docPrintln(HM_CRAFT_PROFITRATIO, STYLE_BAD);
-						}
-						else if (Double.parseDouble(panelStrings.get(HM_CRAFT_PROFITRATIO)) > profitRatioMoreGood)
-						{
-							docPrintln(HM_CRAFT_PROFITRATIO, STYLE_GOOD);
-						}
-						else
-						{
-							docPrintln(HM_CRAFT_PROFITRATIO, STYLE_NORMAL);
-						}
-						break;
-					}
-					case CRAFTBOOK:
-					{
-						docPrintln(HM_BOOK_WORKPROVIDE, STYLE_NORMAL);
-						docPrintln(HM_BOOK_WORKRATIO, STYLE_NORMAL);
-						break;
-					}
-					default:
-						break;
-				}
+				docPrintln(HashMapKey.LASTUPDATE, STYLE_BAD);
 			}
+			else
+			{
+				docPrintln(HashMapKey.LASTUPDATE, STYLE_NORMAL);
+			}
+			docNewline();
 		} 
-		catch (BadLocationException e)
+		catch (BadLocationException e) //from doc.remove()
 		{
 			System.err.println("ItemInfoPanel: loadItem()");
 		}
+	}
+	
+	private void displayMaterial(Material m)
+	{
+		displayItem(m);
+	}
+	
+	private void displayCraftable(Craftable c)
+	{
+		displayItem(c);
+		
+		docPrint(HashMapKey.CRAFT_WORKLOAD, STYLE_NORMAL);
+		docPrintParen(HashMapKey.CRAFT_WORKLOADMAX, STYLE_NORMAL);
+		docNewline();
+		docPrint(HashMapKey.CRAFT_SIZE, STYLE_NORMAL);
+		docPrintParen(HashMapKey.CRAFT_SIZEMAX, STYLE_NORMAL);
+		docNewline();
+		docNewline();
+		docPrintln(HashMapKey.CRAFT_WORTH, STYLE_NORMAL);
+		docPrintln(HashMapKey.CRAFT_COMPONENTCOST, STYLE_NORMAL);
+		docPrintln(HashMapKey.CRAFT_WORKCOST, STYLE_NORMAL);
+		docPrintParen(HashMapKey.CRAFT_CURRENTBOOK, STYLE_NORMAL);
+		docNewline();
+		docNewline();
+		docPrintln(HashMapKey.CRAFT_PROFIT, STYLE_NORMAL);
+
+		//'bad' if lose money in the process
+		if (Double.parseDouble(panelStrings.get(HashMapKey.CRAFT_PROFITRATIO)) < profitRatioLessBad)
+		{
+			docPrintln(HashMapKey.CRAFT_PROFITRATIO, STYLE_BAD);
+		}
+		else if (Double.parseDouble(panelStrings.get(HashMapKey.CRAFT_PROFITRATIO)) > profitRatioMoreGood)
+		{
+			docPrintln(HashMapKey.CRAFT_PROFITRATIO, STYLE_GOOD);
+		}
+		else
+		{
+			docPrintln(HashMapKey.CRAFT_PROFITRATIO, STYLE_NORMAL);
+		}
+	}
+	
+	private void displayCraftBook(CraftBook cb)
+	{
+		displayItem(cb);
+		
+		docPrintln(HashMapKey.BOOK_WORKPROVIDE, STYLE_NORMAL);
+		docPrintln(HashMapKey.BOOK_WORKRATIO, STYLE_NORMAL);
 	}
 	
 	/**
@@ -267,9 +286,9 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	 * @param keyString HashMap key
 	 * @param style how to display the string
 	 */
-	private void docPrintln(String keyString, String style)
+	private void docPrintln(HashMapKey key, String style)
 	{
-		docPrint(keyString, style);
+		docPrint(key, style);
 		docNewline();
 	}
 	
@@ -278,12 +297,12 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	 * @param keyString HashMap key
 	 * @param style how to display the string
 	 */
-	private void docPrint(String keyString, String style)
+	private void docPrint(HashMapKey key, String style)
 	{
 		try
 		{
-			doc.insertString(doc.getLength(), keyString, doc.getStyle(style));
-			doc.insertString(doc.getLength(), panelStrings.get(keyString), doc.getStyle(style));
+			doc.insertString(doc.getLength(), key.getString(), doc.getStyle(style));
+			doc.insertString(doc.getLength(), panelStrings.get(key), doc.getStyle(style));
 		}
 		catch (BadLocationException e)
 		{
@@ -297,14 +316,14 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	 * @param keyString HashMap key
 	 * @param style how to display the string
 	 */
-	private void docPrintParen(String keyString, String style)
+	private void docPrintParen(HashMapKey key, String style)
 	{
 		try
 		{
 			doc.insertString(doc.getLength(), " (", doc.getStyle(style));
-			doc.insertString(doc.getLength(), keyString, doc.getStyle(style));
+			doc.insertString(doc.getLength(), key.getString(), doc.getStyle(style));
 			//System.out.println(keyString+": "+panelStrings.get(keyString));
-			doc.insertString(doc.getLength(), panelStrings.get(keyString), doc.getStyle(style));
+			doc.insertString(doc.getLength(), panelStrings.get(key), doc.getStyle(style));
 			doc.insertString(doc.getLength(), ")", doc.getStyle(style));
 		}
 		catch (BadLocationException e)
@@ -316,7 +335,7 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	
 	private void createTextPane()
 	{
-		panelStrings = new HashMap<String, String>();
+		panelStrings = new HashMap<HashMapKey, String>();
 		
 		textPane = new JTextPane();
 		doc = textPane.getStyledDocument();

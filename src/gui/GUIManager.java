@@ -89,6 +89,12 @@ public class GUIManager {
 	 */
 	public void showItem(Item item)
 	{
+		//when messing with craft book selector w/o item first loaded
+		if (item == null)
+		{
+			return;
+		}
+		
 		currentItem = item;
 
 		//CraftIntoPanel treats all Items equally.
@@ -111,7 +117,6 @@ public class GUIManager {
 				throw new Exception();
 			} catch (Exception e) {
 				System.err.println("Unknown item type.");
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
@@ -124,19 +129,19 @@ public class GUIManager {
 	private void showMaterial(Material toShow)
 	{
 		guiCraftComponentPanel.loadItem(toShow);
-		guiItemInfoPanel.loadItem(toShow);
+		guiItemInfoPanel.loadMaterial(toShow);
 	}
 	
 	private void showCraftable(Craftable toShow)
 	{
 		guiCraftComponentPanel.loadItem(toShow);
-		guiItemInfoPanel.loadItem(toShow);
+		guiItemInfoPanel.loadCraftable(toShow);
 	}
 	
 	private void showCraftBook(CraftBook toShow)
 	{
 		guiCraftComponentPanel.loadItem(toShow);
-		guiItemInfoPanel.loadItem(toShow);
+		guiItemInfoPanel.loadCraftBook(toShow);
 	}
 	
 	/**

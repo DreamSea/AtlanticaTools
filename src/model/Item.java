@@ -3,7 +3,7 @@ package model;
 import java.text.DateFormat;
 import java.util.ArrayList;
 
-public class Item {
+public abstract class Item {
 
 	protected String name;
 	
@@ -127,18 +127,8 @@ public class Item {
 	}
 	
 	/**
-	 * Used for typecasting. All subclasses should override.
+	 * Used for typecasting.
 	 * @return ItemType of this class
-	 * @throws Exception 
 	 */
-	public ItemType getType()
-	{
-		try {
-			throw new Exception("One of the subclasses didn't override this.");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return ItemType.UNDECLARED;
-	}
+	abstract public ItemType getType();
 }
