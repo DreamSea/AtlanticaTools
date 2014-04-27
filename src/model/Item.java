@@ -5,13 +5,6 @@ import java.util.ArrayList;
 
 public class Item {
 
-	/*
-	 * 	For type casting from item map
-	 */
-	public static final byte TYPE_MATERIAL = 0;
-	public static final byte TYPE_CRAFTABLE = 1;
-	public static final byte TYPE_CRAFTBOOK = 2;
-
 	protected String name;
 	
 	/*
@@ -31,7 +24,6 @@ public class Item {
 	 * in craft tree ancestors
 	 */
 	//private long cost; //cost to buy all of the components
-	private byte type;
 	
 	//TODO: private craftsInto
 	ArrayList<Craftable> craftsInto;
@@ -41,12 +33,11 @@ public class Item {
 	 * @param name : Item name
 	 * @param type : 0 = Material, 1 = Craftable
 	 */
-	public Item (String name, byte type)
+	public Item (String name)
 	{
 		this.name = name;
 		worth = 1;
 		//cost = 1;
-		this.type = type; 
 		craftsInto = new ArrayList<Craftable>();
 		timeUpdated = bootTime;
 	}
@@ -70,11 +61,6 @@ public class Item {
 	public double getWorthWithInterest()
 	{
 		return getWorth()*0.99;
-	}
-	
-	public byte getType()
-	{
-		return type;
 	}
 	
 	public long getTimeUpdated()
@@ -138,5 +124,21 @@ public class Item {
 	public Craftable getCraftsInto(int i)
 	{
 		return craftsInto.get(i);
+	}
+	
+	/**
+	 * Used for typecasting. All subclasses should override.
+	 * @return ItemType of this class
+	 * @throws Exception 
+	 */
+	public ItemType getType()
+	{
+		try {
+			throw new Exception("One of the subclasses didn't override this.");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ItemType.UNDECLARED;
 	}
 }

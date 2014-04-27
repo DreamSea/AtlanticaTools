@@ -9,8 +9,11 @@ import javax.swing.JOptionPane;
 
 import events.ItemChangeListener;
 import events.ItemChangeNotifier;
+import model.CraftBook;
+import model.Craftable;
 import model.DataManager;
 import model.Item;
+import model.Material;
 
 /*
  * 		GUIManager : The public face of the gui package, holds all the
@@ -78,14 +81,62 @@ public class GUIManager {
 	}
 	
 	/**
+	 * Trying to get most of the type casting done here, though
+	 * there may still be some casting in the gui classes (currently
+	 * CraftComponentPanel for deciding how to render rows).
+	 * 
 	 * @param item Item to display on GUI
 	 */
 	public void showItem(Item item)
 	{
 		currentItem = item;
-		guiCraftComponentPanel.loadItem(item);
+
+		//CraftIntoPanel treats all Items equally.
 		guiCraftIntoPanel.craftTable.setData(item);
-		guiItemInfoPanel.loadItem(item);
+		
+		//Casting for CraftComponentPanel and ItemInfoPanel.
+		switch(item.getType())
+		{
+		case MATERIAL:
+			showMaterial((Material) item);
+			break;
+		case CRAFTABLE:
+			showCraftable((Craftable) item);
+			break;
+		case CRAFTBOOK:
+			showCraftBook((CraftBook) item);
+			break;
+		default:
+			try {
+				throw new Exception();
+			} catch (Exception e) {
+				System.err.println("Unknown item type.");
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
+		}
+	}
+	
+	/*
+	 * Casted versions of showItem();
+	 */
+	private void showMaterial(Material toShow)
+	{
+		guiCraftComponentPanel.loadItem(toShow);
+		guiItemInfoPanel.loadItem(toShow);
+	}
+	
+	private void showCraftable(Craftable toShow)
+	{
+		guiCraftComponentPanel.loadItem(toShow);
+		guiItemInfoPanel.loadItem(toShow);
+	}
+	
+	private void showCraftBook(CraftBook toShow)
+	{
+		guiCraftComponentPanel.loadItem(toShow);
+		guiItemInfoPanel.loadItem(toShow);
 	}
 	
 	/**

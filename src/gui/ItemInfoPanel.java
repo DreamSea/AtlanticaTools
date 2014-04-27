@@ -26,6 +26,7 @@ import events.ItemChangeNotifier;
 import model.CraftBook;
 import model.Craftable;
 import model.Item;
+import model.ItemType;
 
 /*
  * 		ItemInfoPanel : Displays information hopefully
@@ -108,6 +109,8 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 	}
 	
 	/**
+	 * TODO: break this up into smaller parts.
+	 * 
 	 * Sets panel to show different information for different item types
 	 * @param itemToShow
 	 */
@@ -139,9 +142,10 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 			panelStrings.put(HM_NAME, itemToShow.getName());
 			panelStrings.put(HM_LASTUPDATE, nf.format(itemToShow.getDaysSinceUpdate()));
 					
+			
 			switch (itemToShow.getType())
 			{
-				case Item.TYPE_CRAFTABLE:
+				case CRAFTABLE:
 				{
 					Craftable loadedCraft = (Craftable) itemToShow;
 					panelStrings.put(HM_CRAFT_WORKLOAD, nf.format(loadedCraft.getWorkload()));
@@ -159,7 +163,7 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 					panelStrings.put(HM_CRAFT_PROFITRATIO, nf.format(loadedCraft.getProfitRatio()));
 					break;
 				}
-				case Item.TYPE_CRAFTBOOK:
+				case CRAFTBOOK:
 				{
 					CraftBook loadedCraftBook = (CraftBook) itemToShow;
 					panelStrings.put(HM_BOOK_WORKPROVIDE, nf.format(loadedCraftBook.getWorkload()));
@@ -189,11 +193,11 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 				
 				switch (itemToShow.getType())
 				{
-					case Item.TYPE_MATERIAL: //one day this might be useful
+					case MATERIAL: //one day this might be useful
 					{
 						break;
 					}
-					case Item.TYPE_CRAFTABLE:
+					case CRAFTABLE:
 					{
 						docPrint(HM_CRAFT_WORKLOAD, STYLE_NORMAL);
 						docPrintParen(HM_CRAFT_WORKLOADMAX, STYLE_NORMAL);
@@ -225,12 +229,14 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 						}
 						break;
 					}
-					case Item.TYPE_CRAFTBOOK:
+					case CRAFTBOOK:
 					{
 						docPrintln(HM_BOOK_WORKPROVIDE, STYLE_NORMAL);
 						docPrintln(HM_BOOK_WORKRATIO, STYLE_NORMAL);
 						break;
 					}
+					default:
+						break;
 				}
 			}
 		} 

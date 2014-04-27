@@ -9,7 +9,7 @@ public class CraftBook extends Item{
 
 	public CraftBook(String name, int workload)
 	{
-		super(name, Item.TYPE_CRAFTBOOK);
+		super(name);
 		
 		this.workload = workload;
 	}
@@ -29,5 +29,10 @@ public class CraftBook extends Item{
 	public double getWorthPerWorkload()
 	{
 		return getWorth()*1.0/workload;
+	}
+	
+	public ItemType getType()
+	{
+		return ItemType.CRAFTBOOK;
 	}
 }

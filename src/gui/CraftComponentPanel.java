@@ -21,6 +21,7 @@ import events.ItemChangeEvent;
 import events.ItemChangeNotifier;
 import model.Craftable;
 import model.Item;
+import model.ItemType;
 
 /*
  * 		CraftComponentPanel : Contains main interface for switching
@@ -178,28 +179,26 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 	 * Sets panel to show component information for Craftables
 	 * @param itemToShow
 	 */
-	void loadItem(Item itemToShow)
+	
+	void loadItem(Craftable c)
 	{
-		if (itemToShow.getType() == Item.TYPE_CRAFTABLE)
+		for (int j = 0; j < c.getCraftedFromLength(); j++)
 		{
-			Craftable loaded = (Craftable) itemToShow;
-			for (int j = 0; j < loaded.getCraftedFromLength(); j++)
-			{
-				setRow(j, loaded.getCraftedFromItems(j), 
-						loaded.getCraftedFromNumbers(j), 
-						loaded.getCraftedFromItems(j).getWorth());
-			}
-			for (int j = loaded.getCraftedFromLength(); j < ITEMROWS; j++)
-			{
-				disableRow(j);
-			}
+			setRow(j, c.getCraftedFromItems(j), 
+					c.getCraftedFromNumbers(j), 
+					c.getCraftedFromItems(j).getWorth());
 		}
-		else //Non-Craftable
+		for (int j = c.getCraftedFromLength(); j < ITEMROWS; j++)
 		{
-			for (int j = 0; j < ITEMROWS; j++)
-			{
-				disableRow(j);
-			}
+			disableRow(j);
+		}
+	}
+	
+	void loadItem(Item itemToShow) //non-craftables
+	{
+		for (int j = 0; j < ITEMROWS; j++)
+		{
+			disableRow(j);
 		}
 	}
 
@@ -259,7 +258,7 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 	private void setRow(int row, Item i, int number, long worth)
 	{
 		Craftable placeHolder = null;
-		if (i.getType() == Item.TYPE_CRAFTABLE)
+		if (i.getType() == ItemType.CRAFTABLE)
 		{
 			placeHolder = (Craftable) i;
 			ingredientProfitRatio[row].setEnabled(true);

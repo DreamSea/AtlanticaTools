@@ -7,6 +7,12 @@ package model;
 public class Material extends Item {
 	
 	public Material(String name) {
-		super(name, Item.TYPE_MATERIAL);
+		super(name);
 	}
+	
+	public ItemType getType()
+	{
+		return ItemType.MATERIAL;
+	}
+	
 }

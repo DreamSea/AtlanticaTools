@@ -26,7 +26,7 @@ public class Craftable extends Item
 	
 	private Craftable(String name, int workload, int size, ArrayList<Item> componentList, ArrayList<Integer> componentNumbers)
 	{
-		super (name, Item.TYPE_CRAFTABLE);
+		super (name);
 		this.workload = workload;
 		numCrafted = size;
 		
@@ -264,4 +264,8 @@ public class Craftable extends Item
 		return selectedCraftBook.getName();
 	}
 	
+	public ItemType getType()
+	{
+		return ItemType.CRAFTABLE;
+	}
 }
