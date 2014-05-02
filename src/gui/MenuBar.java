@@ -3,6 +3,8 @@ package gui;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -26,7 +28,7 @@ class MenuBar extends JMenuBar
 	
 	JMenuItem saveItemPrices; //the item for saving item prices
 	
-	MenuBar(NumberFormat nf, ActionListener al, ArrayList<CraftBook> bookList)
+	MenuBar(NumberFormat nf, ActionListener al, Iterator<CraftBook> bookList)
 	{
 		workloadFormatter = nf;
 		menuBarListener = al;
@@ -52,18 +54,24 @@ class MenuBar extends JMenuBar
 	/*
 	 * populates craft book list in submenu
 	 */
-	private void addCraftBooks(ArrayList<CraftBook> bookList)
+	private void addCraftBooks(Iterator<CraftBook> i)
 	{
-		craftBooksList = new JMenuItem[bookList.size()];
-				
-		for (int i = 0; i < craftBooksList.length; i++)
+		ArrayList<CraftBook> bookList = new ArrayList<CraftBook>();
+		while (i.hasNext())
 		{
-			CraftBook cb = bookList.get(i);
+			bookList.add(i.next());
+		}
+		
+		craftBooksList = new JMenuItem[bookList.size()];
+		
+		for (int slot = 0; slot < bookList.size(); slot++)
+		{
+			CraftBook cb = bookList.get(slot);
 			
-			craftBooksList[i] = new JMenuItem(cb.getName() +" ("+workloadFormatter.format(cb.getWorkload())+")");
-			craftBooksSubMenu.add(craftBooksList[i]);
-			craftBooksList[i].addActionListener(menuBarListener);
-			craftBooksList[i].setActionCommand(cb.getName()); //action commands in the form of item name
+			craftBooksList[slot] = new JMenuItem(cb.getName() +" ("+workloadFormatter.format(cb.getWorkload())+")");
+			craftBooksSubMenu.add(craftBooksList[slot]);
+			craftBooksList[slot].addActionListener(menuBarListener);
+			craftBooksList[slot].setActionCommand(cb.getName()); //action commands in the form of item name
 		}
 	}
 }

@@ -20,6 +20,7 @@ import javax.swing.SwingConstants;
 import events.ItemChangeEvent;
 import events.ItemChangeNotifier;
 import model.Craftable;
+import model.Craftable.RecipeIterator;
 import model.Item;
 import model.ItemType;
 
@@ -30,18 +31,10 @@ import model.ItemType;
 class CraftComponentPanel extends JPanel implements ActionListener, PropertyChangeListener {
 
 	/*
-	 *  TODO: Dimensions/relations between gui objects that I don't
-	 *  follow through with very well at the moment...
-	 *  
-	 *  Eventually may want to relate this to an overall value in
-	 *  GUIManager.
+	 *  TODO: Make GUI size adjustable
 	 */
-	private final int BUTTONWIDTH = 175;
-	private final int WORTHWIDTH = 100;
-	private final int SPACE = 35; //for each row
-	private final int TOPSPACE = 35; //for top
+	
 	private final int ITEMROWS = 10; //guess at max number of components in any craft
-	private final int ROWHEIGHT = 30;
 	
 	/*
 	 * 	Title labels to describe columns
@@ -58,7 +51,6 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 	private JFormattedTextField[] ingredientWorth;
 	private JLabel[] ingredientWorthTotal;
 	private JLabel[] ingredientLastUpdated;
-	private JLabel[] profitRatio;
 	
 	private static double profitRatioLessBad = 0;	//when profit ratio should be red
 	private static double profitRatioMoreGood = 1; 	//when profit ratio should be green 
@@ -182,13 +174,17 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 	
 	void loadItem(Craftable c)
 	{
-		for (int j = 0; j < c.getCraftedFromLength(); j++)
+		int rowCounter = 0;
+		
+		RecipeIterator ri = c.getRecipeIterator();
+		
+		while (ri.hasNextItem())
 		{
-			setRow(j, c.getCraftedFromItems(j), 
-					c.getCraftedFromNumbers(j), 
-					c.getCraftedFromItems(j).getWorth());
+			Item i = ri.nextItem();
+			setRow(rowCounter, i, ri.nextNumber(), i.getWorth());
+			rowCounter++;
 		}
-		for (int j = c.getCraftedFromLength(); j < ITEMROWS; j++)
+		for (int j = rowCounter; j < ITEMROWS; j++)
 		{
 			disableRow(j);
 		}

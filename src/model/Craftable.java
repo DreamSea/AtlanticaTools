@@ -148,19 +148,49 @@ public class Craftable extends Item
 		selectedCraftBook = cb;
 	}
 	
-	public int getCraftedFromLength()
+	/**
+	 * Don't think there's worry with items being deleted between
+	 * hasNext___() and next___() calls because there are no recipe
+	 * deleting methods...
+	 * @return iterator that steps through all the recipes
+	 */
+	public RecipeIterator getRecipeIterator()
 	{
-		return craftedFromItems.length;
+		return new RecipeIterator();
 	}
 	
-	public Item getCraftedFromItems(int i)
+	public class RecipeIterator
 	{
-		return craftedFromItems[i];
-	}
-	
-	public int getCraftedFromNumbers(int i)
-	{
-		return craftedFromNumbers[i];
+		private int currentItemSlot;
+		private int currentNumberSlot;
+		
+		private RecipeIterator()
+		{
+			currentItemSlot = 0;
+			currentNumberSlot = 0;
+		}
+		
+		public boolean hasNextItem()
+		{
+			return currentItemSlot < craftedFromItems.length;
+		}
+		
+		public boolean hasNextNumber()
+		{
+			return currentNumberSlot < craftedFromNumbers.length;
+		}
+		
+		public Item nextItem()
+		{
+			currentItemSlot++;
+			return craftedFromItems[currentItemSlot-1];
+		}
+		
+		public int nextNumber()
+		{
+			currentNumberSlot++;
+			return craftedFromNumbers[currentNumberSlot-1];
+		}
 	}
 
 	public int getWorkload()

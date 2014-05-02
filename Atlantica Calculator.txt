@@ -1,14 +1,11 @@
 Todo:
 
+(MED+) figure out how to set up a test class/method
+(MED+) move recipes into separate file and redo loading method so that it's easier to make changes
+
 (MED) Am I discarding a bunch of CraftBuilder objects everywhere?
-(MED) ItemInfoPanel currently breaks when trying to parse double of a string containing comma
-			[example - parseDouble(1,000.5)]
 (MED) figure out way to automate/whatever craftTable colors (pass array of arrays?)
 (MED) deck-type GUIManager frame to set up for different tools
-(MED) figure out how to set up a test class/method
-(MED) move recipes into seperate file and redo loading method so that it's easier to make changes
-(MED) console log of item loading since its starting to get slower?
-(MED) pass iterables/item[] arrays when building gui/etc?
 
 (MED-) eldest component update = max(focus'd item + recipe items)
 (MED-) return list of best profit ratios of everything
@@ -39,6 +36,11 @@ Todo:
 Probable things slowing down program most:
 ColorRenderer.java for CraftIntopanel.java
 
+Not sure if there is any point in using a RecipeIterator over a set of
+getStuff() methods. Also currently not making any copies for the
+Iterators, but pretty sure there shouldn't be any changes to the lists
+while iterating.
+
 ~~~
 
 Possible problems:
@@ -53,6 +55,10 @@ What if there is a craft book that needs to be converted into a craftable?
 to patch later
 
 ~~~~~~~~~~~~~~~~~~
+2014/05/01 (MED)	Starting console logging option to help look for what operations take the longest. Currently only logging through first constructor calls. 
+2014/05/01 (Minor)	Ninja fixed profit ratios not updating properly when changing CraftBook worth
+2014/05/01 (MED)	Iterables everywhere (DataManager ArrayLists and Craftable recipes ArrayLists). Now DataManager ArrayLists really are private. Hurray.
+2014/05/01 (MED)	Fixed ItemInfoPanel breaking on profit ratios >= 1,000 (was trying to parseDouble a comma)
 2014/04/27 (MED)	Cleaned up ItemInfoPanel - broke up giant method, Enum HashMapKey 
 2014/04/26 (???)	Enum ItemType. Discarded original plan to eliminate type casting due to how craftedFromItems is an array of Items. Maybe in the future.
 2014/04/21 (HIGH)	CraftBuilders - Craftable.builder()

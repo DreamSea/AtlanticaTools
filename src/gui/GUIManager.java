@@ -3,12 +3,15 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import events.ItemChangeListener;
 import events.ItemChangeNotifier;
+import manager.DebugLogger;
 import model.CraftBook;
 import model.Craftable;
 import model.DataManager;
@@ -44,8 +47,11 @@ public class GUIManager {
 	
 	private JFrame frame;
 	
-	public GUIManager(ItemChangeListener icl, ActionListener al, DataManager dm)
+	private boolean logging;
+	
+	public GUIManager(ItemChangeListener icl, ActionListener al, DataManager dm, boolean logging)
 	{
+		this.logging = logging;
 		//TODO: one numberformatter for all?
 		nf = NumberFormat.getInstance();
 		
@@ -57,13 +63,22 @@ public class GUIManager {
 	
 	private void createAndShowGUI(DataManager dm)
 	{
-		//TODO: create a loader class/helper so that I can make datamanager item arraylists private?
-		guiMenuBar = new MenuBar(nf, guiActionListener, dm.getCraftBookList());
-		guiCraftItemTree = new CraftItemTree(mainItemChangeNotifier, dm.getCraftBookList(), dm.getMaterialList(), dm.getSkillTree());
+		DebugLogger.log("Building MenuBar", logging);
+		guiMenuBar = new MenuBar(nf, guiActionListener, dm.getCraftBookListIterator());
+		
+		DebugLogger.log("Building CraftItemTree", logging);
+		guiCraftItemTree = new CraftItemTree(mainItemChangeNotifier, dm.getCraftBookListIterator(), dm.getMaterialListIterator(), dm.getSkillTreeIterators());
+		
+		DebugLogger.log("Building CraftComponentPanel", logging);
 		guiCraftComponentPanel = new CraftComponentPanel(mainItemChangeNotifier);
+		
+		DebugLogger.log("Building CraftIntoPanel", logging);
 		guiCraftIntoPanel = new CraftIntoPanel(mainItemChangeNotifier);
+		
+		DebugLogger.log("Building ItemInfoPanel", logging);
 		guiItemInfoPanel = new ItemInfoPanel(mainItemChangeNotifier);
 		
+		DebugLogger.log("Packing and showing GUI", logging);
 		frame = new JFrame("Atlantica");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);

@@ -26,7 +26,6 @@ import events.ItemChangeNotifier;
 import model.CraftBook;
 import model.Craftable;
 import model.Item;
-import model.ItemType;
 import model.Material;
 
 /*
@@ -243,11 +242,11 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 		docPrintln(HashMapKey.CRAFT_PROFIT, STYLE_NORMAL);
 
 		//'bad' if lose money in the process
-		if (Double.parseDouble(panelStrings.get(HashMapKey.CRAFT_PROFITRATIO)) < profitRatioLessBad)
+		if (c.getProfitRatio() < profitRatioLessBad)
 		{
 			docPrintln(HashMapKey.CRAFT_PROFITRATIO, STYLE_BAD);
 		}
-		else if (Double.parseDouble(panelStrings.get(HashMapKey.CRAFT_PROFITRATIO)) > profitRatioMoreGood)
+		else if (c.getProfitRatio() > profitRatioMoreGood)
 		{
 			docPrintln(HashMapKey.CRAFT_PROFITRATIO, STYLE_GOOD);
 		}

@@ -2,6 +2,8 @@ package manager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import events.ItemChangeEvent;
 import events.ItemChangeListener;
@@ -17,15 +19,21 @@ public class ManagerManager implements ItemChangeListener, ActionListener
 	private DataManager dm;
 	private GUIManager gm;
 	
-	public ManagerManager()
+	private boolean logging;
+	
+	public ManagerManager(boolean logging)
 	{
-		dm = new DataManager();
+		this.logging = logging;
 		
+		DebugLogger.log("Constructing DataManager", logging);
+		dm = new DataManager(logging);
+		
+		DebugLogger.log("Constructing GUIManager", logging);
 		/*
 		 * TODO: can this be done without passing DataManager
 		 * in to init everything?
 		 */
-		gm = new GUIManager(this, this, dm);
+		gm = new GUIManager(this, this, dm, logging);
 	}	
 	
 	//Events received from gui relating to item displayed (besides craftbook price)
@@ -81,6 +89,17 @@ public class ManagerManager implements ItemChangeListener, ActionListener
 	
 	public static void main(String[] args)
 	{
-		new ManagerManager();
+		if (args.length == 0)
+		{
+			new ManagerManager(false);
+		}
+		else if (args[0].compareToIgnoreCase("-log") == 0)
+		{
+			new ManagerManager(true);
+		}
+		else
+		{
+			new ManagerManager(false);
+		}
 	}
 }

@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -32,11 +33,14 @@ public class DataManager {
 	private ArrayList<Craftable> medicine;
 	private ArrayList<Craftable> tool;
 	
+	private boolean debug;
+	
 	private final String DEFAULT_CRAFTBOOK = "Book of Expertise";
 	//private static CraftBook loadedCraftBook;
 	
-	public DataManager()
+	public DataManager(boolean debug)
 	{
+		this.debug = debug;
 		//itemMap = new HashMap<String, Item>();
 		skillTree = new ArrayList<ArrayList<Craftable>>();
 		
@@ -50,7 +54,7 @@ public class DataManager {
 		
 		craftBooks = new ArrayList<CraftBook>();
 		
-		ItemLoader loader = new ItemLoader(itemMap, materials);
+		ItemLoader loader = new ItemLoader(itemMap, materials, debug);
 		loader.loadCraftBook(craftBooks);
 		Craftable.setCraftBook((CraftBook) itemMap.get(DEFAULT_CRAFTBOOK));
 		//loadedCraftBook = (CraftBook) itemMap.get(DEFAULT_CRAFTBOOK);
@@ -190,7 +194,14 @@ public class DataManager {
 	
 	public void setItemWorth(String itemName, long worth)
 	{
-		itemMap.get(itemName).setWorth(worth);
+		Item i = itemMap.get(itemName);
+		i.setWorth(worth);
+		
+		//changing craft book price changes all the profit ratios
+		if (i.getType() == ItemType.CRAFTBOOK)
+		{
+			refreshItems();
+		}
 	}
 	
 	public boolean itemExists(String itemName)
@@ -198,23 +209,23 @@ public class DataManager {
 		return itemMap.containsKey(itemName);
 	}
 	
-	
-	/*
-	 * Feels like having these ArrayList returns defeats the purpose
-	 * of having them be private in the first place.
-	 */
-	public ArrayList<CraftBook> getCraftBookList()
+	public Iterator<CraftBook> getCraftBookListIterator()
 	{
-		return craftBooks;
+		return craftBooks.iterator();
 	}
 	
-	public ArrayList<Material> getMaterialList()
+	public Iterator<Material> getMaterialListIterator()
 	{
-		return materials;
+		return materials.iterator();
 	}
 	
-	public ArrayList<ArrayList<Craftable>> getSkillTree()
+	public ArrayList<Iterator<Craftable>> getSkillTreeIterators()
 	{
-		return skillTree;
+		ArrayList<Iterator<Craftable>> iteratorList = new ArrayList<Iterator<Craftable>>();
+		for (ArrayList<Craftable> al : skillTree)
+		{
+			iteratorList.add(al.iterator());
+		}
+		return iteratorList;
 	}
 }

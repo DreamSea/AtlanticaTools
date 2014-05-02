@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -33,9 +34,9 @@ class CraftItemTree extends JPanel implements TreeSelectionListener
 	
 	//TODO: there needs to be a better way of passing information in...
 	CraftItemTree(ItemChangeNotifier icn, 
-			ArrayList<CraftBook> craftBooks,
-			ArrayList<Material> materials,
-			ArrayList<ArrayList<Craftable>> skillTree)
+			Iterator<CraftBook> craftBooks,
+			Iterator<Material> materials,
+			ArrayList<Iterator<Craftable>> skillTree)
 	{	
 		//System.out.println(icn == null);
 		this.craftTreeNotifier = icn;
@@ -81,23 +82,23 @@ class CraftItemTree extends JPanel implements TreeSelectionListener
 	
 	//tree creation logic
 	private void createNodes(DefaultMutableTreeNode top, 
-			ArrayList<CraftBook> craftBooks,
-			ArrayList<Material> materials,
-			ArrayList<ArrayList<Craftable>> skillTree)
+			Iterator<CraftBook> craftBooks,
+			Iterator<Material> materials,
+			ArrayList<Iterator<Craftable>> skillTree)
 	{	
 		category = new DefaultMutableTreeNode("Craft Book");
 		top.add(category);
-		for (CraftBook cb : craftBooks)
+		while (craftBooks.hasNext())
 		{
-			book = new DefaultMutableTreeNode(cb);
+			book = new DefaultMutableTreeNode(craftBooks.next());
 			category.add(book);
 		}
 		
 		category = new DefaultMutableTreeNode("Material");
 		top.add(category);
-		for (Material m : materials)
+		while (materials.hasNext())
 		{
-			book = new DefaultMutableTreeNode(m);
+			book = new DefaultMutableTreeNode(materials.next());
 			category.add(book);
 		}
 
@@ -111,14 +112,14 @@ class CraftItemTree extends JPanel implements TreeSelectionListener
 	}
 	
 	//populate the subfolder with the craftables
-	private void craftableNodes(String name, ArrayList<Craftable> skill, DefaultMutableTreeNode top)
+	private void craftableNodes(String name, Iterator<Craftable> skill, DefaultMutableTreeNode top)
 	{
 		category = new DefaultMutableTreeNode(name);
 		top.add(category);
 		
-		for (Craftable c : skill)
+		while (skill.hasNext())
 		{
-			book = new DefaultMutableTreeNode(c);
+			book = new DefaultMutableTreeNode(skill.next());
 			category.add(book);
 		}
 	}

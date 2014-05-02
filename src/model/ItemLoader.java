@@ -1,7 +1,12 @@
 package model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import manager.DebugLogger;
+import model.Craftable.RecipeIterator;
 
 /*
  * 		ItemLoader: helper class to load all the recipes into DataManager.
@@ -14,9 +19,11 @@ public class ItemLoader {
 	private ArrayList<Material> materials; 
 	private ArrayList<Craftable> currentList; //used in addCraftable()
 	
+	private boolean logging;
 	
-	public ItemLoader(HashMap<String, Item> hm, ArrayList<Material> al)
+	public ItemLoader(HashMap<String, Item> hm, ArrayList<Material> al, boolean logging)
 	{
+		this.logging = logging;
 		itemMap = hm;
 		materials = al;
 	}
@@ -290,6 +297,8 @@ public class ItemLoader {
 	// Lazy Material Adding
 	private void addMaterial(String material)
 	{
+		DebugLogger.log("Adding Material: "+material, logging);
+		
 		itemMap.put(material, new Material(material));
 		//System.out.println(material+" "+itemMap.get(material));
 		materials.add((Material) (itemMap.get(material)));
@@ -297,6 +306,8 @@ public class ItemLoader {
 	
 	private void addCraftable(Craftable c)
 	{
+		DebugLogger.log("Adding Craftable: "+c.getName(), logging);
+		
 		if (itemMap.containsKey(c.name)) //it exists as material
 		{
 			Material oldMaterial = (Material) itemMap.get(c.name); //hold old data
@@ -317,11 +328,13 @@ public class ItemLoader {
 			itemMap.put(c.name, c);
 		}
 		
-		for (int i = 0; i < c.getCraftedFromLength(); i++)
+		RecipeIterator ri = c.getRecipeIterator();
+		
+		while (ri.hasNextItem())
 		{
 			//adds this craftable into the craftsInto
 			//list of the items it is crafted from
-			c.getCraftedFromItems(i).addCraftsInto(c);
+			ri.nextItem().addCraftsInto(c);
 		}
 		
 		currentList.add(c);
