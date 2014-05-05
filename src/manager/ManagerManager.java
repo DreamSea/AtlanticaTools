@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import events.ItemChangeEvent;
 import events.ItemChangeListener;
 import gui.GUIManager;
+import gui.GUIManagerCrafting;
 import model.CraftBook;
 import model.DataManager;
 
@@ -18,6 +19,7 @@ public class ManagerManager implements ItemChangeListener, ActionListener
 {
 	private DataManager dm;
 	private GUIManager gm;
+	private GUIManagerCrafting gmc;
 	
 	private boolean logging;
 	
@@ -33,7 +35,10 @@ public class ManagerManager implements ItemChangeListener, ActionListener
 		 * TODO: can this be done without passing DataManager
 		 * in to init everything?
 		 */
+		
 		gm = new GUIManager(this, this, dm, logging);
+		
+		gmc = gm.getGUIManagerCrafting();
 	}	
 	
 	//Events received from gui relating to item displayed (besides craftbook price)
@@ -50,18 +55,18 @@ public class ManagerManager implements ItemChangeListener, ActionListener
 			dm.setItemWorth(e.getItemName(), newWorth);	
 			//dm.refreshItems();
 			
-			if (gm.getCurrentItem() != null) //TODO: pretty sure this check isn't needed
+			if (gmc.getCurrentItem() != null) //TODO: pretty sure this check isn't needed
 			{
 				/*
 				 * keep display on current item in case price
 				 * update relates to one of the crafting components
 				 */
-				gm.showItem(gm.getCurrentItem());
+				gmc.showItem(gmc.getCurrentItem());
 			}
 		}
 		else //itemChange event requesting panels to show a different item
 		{
-			gm.showItem(dm.getItem(e.getItemName()));
+			gmc.showItem(dm.getItem(e.getItemName()));
 		}
 	}
 
@@ -71,7 +76,7 @@ public class ManagerManager implements ItemChangeListener, ActionListener
 		if (e.getActionCommand().compareTo("Save Item Prices") == 0)
 		{
 			dm.savePrices();
-			gm.saveDialog();
+			gmc.saveDialog();
 		}
 		else //TODO: at the moment this just relates to changing workload, should be better way to do this
 		{
@@ -79,9 +84,9 @@ public class ManagerManager implements ItemChangeListener, ActionListener
 			{
 				DataManager.setCraftBook((CraftBook) dm.getItem(e.getActionCommand()));
 				dm.refreshItems();
-				if (gm.getCurrentItem() != null)
+				if (gmc.getCurrentItem() != null)
 				{
-					gm.showItem(gm.getCurrentItem());
+					gmc.showItem(gmc.getCurrentItem());
 				}
 			}
 		}

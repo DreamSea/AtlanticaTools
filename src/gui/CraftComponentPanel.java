@@ -126,21 +126,21 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 		{
 			c.gridy = i + 1; //move past title row
 			
-			ingredientProfitRatio[i] = new JLabel(GUIManager.BLANKSTRING, SwingConstants.CENTER);
+			ingredientProfitRatio[i] = new JLabel(GUIManagerCrafting.BLANKSTRING, SwingConstants.CENTER);
 			ingredientProfitRatio[i].setForeground(colorNeutral);
 			
-			ingredientButton[i] = new JButton(GUIManager.BLANKSTRING);
+			ingredientButton[i] = new JButton(GUIManagerCrafting.BLANKSTRING);
 			ingredientButton[i].addActionListener(this);
 
-			ingredientNumber[i] = new JLabel(GUIManager.BLANKSTRING, SwingConstants.CENTER);
+			ingredientNumber[i] = new JLabel(GUIManagerCrafting.BLANKSTRING, SwingConstants.CENTER);
 
 			ingredientWorth[i] = new JFormattedTextField(numberFormatter);
 			ingredientWorth[i].setHorizontalAlignment(SwingConstants.CENTER);
-			ingredientWorth[i].setText(GUIManager.BLANKSTRING);
+			ingredientWorth[i].setText(GUIManagerCrafting.BLANKSTRING);
 			ingredientWorth[i].addPropertyChangeListener("value", this);			
 
-			ingredientWorthTotal[i] = new JLabel(GUIManager.BLANKSTRING, SwingConstants.CENTER);
-			ingredientLastUpdated[i] = new JLabel(GUIManager.BLANKSTRING, SwingConstants.CENTER);
+			ingredientWorthTotal[i] = new JLabel(GUIManagerCrafting.BLANKSTRING, SwingConstants.CENTER);
+			ingredientLastUpdated[i] = new JLabel(GUIManagerCrafting.BLANKSTRING, SwingConstants.CENTER);
 			ingredientLastUpdated[i].setForeground(colorNeutral);
 			
 			/*
@@ -218,7 +218,7 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 		 * compareTo(GUIManager.BLANKSTRING) keeps ItemChangeEvent from firing
 		 * when initializing the component worths of an item
 		 */
-		if (tempName.compareTo(GUIManager.BLANKSTRING) != 0)
+		if (tempName.compareTo(GUIManagerCrafting.BLANKSTRING) != 0)
 		{
 			craftComponentNotifier.fireItemChangeEvent(
 					new ItemChangeEvent(this, tempName, (long) e.getNewValue()));
@@ -232,17 +232,17 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 	private void disableRow(int row)
 	{
 		ingredientProfitRatio[row].setEnabled(false);
-		ingredientProfitRatio[row].setText(GUIManager.BLANKSTRING);
+		ingredientProfitRatio[row].setText(GUIManagerCrafting.BLANKSTRING);
 		ingredientProfitRatio[row].setForeground(colorNeutral);	
-		ingredientButton[row].setText(GUIManager.BLANKSTRING);
+		ingredientButton[row].setText(GUIManagerCrafting.BLANKSTRING);
 		ingredientButton[row].setEnabled(false);
-		ingredientNumber[row].setText(GUIManager.BLANKSTRING);
+		ingredientNumber[row].setText(GUIManagerCrafting.BLANKSTRING);
 		ingredientNumber[row].setEnabled(false);
-		ingredientWorth[row].setText(GUIManager.BLANKSTRING);
+		ingredientWorth[row].setText(GUIManagerCrafting.BLANKSTRING);
 		ingredientWorth[row].setEnabled(false);
-		ingredientWorthTotal[row].setText(GUIManager.BLANKSTRING);
+		ingredientWorthTotal[row].setText(GUIManagerCrafting.BLANKSTRING);
 		ingredientWorthTotal[row].setEnabled(false);
-		ingredientLastUpdated[row].setText(GUIManager.BLANKSTRING);
+		ingredientLastUpdated[row].setText(GUIManagerCrafting.BLANKSTRING);
 		ingredientLastUpdated[row].setForeground(colorNeutral);
 		ingredientLastUpdated[row].setEnabled(false);
 	}
@@ -276,7 +276,7 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 		{
 			ingredientProfitRatio[row].setEnabled(false);
 			ingredientProfitRatio[row].setForeground(colorNeutral);
-			ingredientProfitRatio[row].setText(GUIManager.BLANKSTRING);
+			ingredientProfitRatio[row].setText(GUIManagerCrafting.BLANKSTRING);
 		}
 		
 		ingredientButton[row].setEnabled(true);
@@ -291,7 +291,7 @@ class CraftComponentPanel extends JPanel implements ActionListener, PropertyChan
 		 * worth is set
 		 */
 		ingredientWorth[row].setEnabled(true);
-		ingredientWorth[row].setName(GUIManager.BLANKSTRING);
+		ingredientWorth[row].setName(GUIManagerCrafting.BLANKSTRING);
 		ingredientWorth[row].setValue(worth);
 		ingredientWorth[row].setName(i.getName());
 

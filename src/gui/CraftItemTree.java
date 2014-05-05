@@ -57,7 +57,7 @@ class CraftItemTree extends JPanel implements TreeSelectionListener
 		JScrollPane treeView = new JScrollPane(tree);
 		
 
-		treeView.setPreferredSize(new Dimension(200, 280));
+		treeView.setPreferredSize(new Dimension(200, 270));
 	
 		add(treeView);
 	}

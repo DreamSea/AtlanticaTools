@@ -1,77 +1,81 @@
 package gui;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import model.CraftBook;
-
-/*
- * 		MenuBar : Contains buttons for saving prices as well as
- * 			selecting which craft book to base profit calculations off of.
- * 			Package private.
- */
-
-class MenuBar extends JMenuBar
-{
-	private NumberFormat workloadFormatter; //at the moment, for formatting workload numbers
+public class MenuBar extends JMenuBar implements ActionListener {
+	
+	private JMenu baseMenu;
+	
+	private JMenuItem infoCard;
+	private JMenuItem craftCard;
+	
 	private ActionListener menuBarListener;
-	
-	JMenu menu;
-	JMenu craftBooksSubMenu;
-	JMenuItem[] craftBooksList;
-	
-	JMenuItem saveItemPrices; //the item for saving item prices
-	
-	MenuBar(NumberFormat nf, ActionListener al, Iterator<CraftBook> bookList)
+
+	public MenuBar(ActionListener al, JMenu... jm)
 	{
-		workloadFormatter = nf;
 		menuBarListener = al;
 		
-		menu = new JMenu("Crafting");
+		baseMenu = new JMenu("Tools");
 		
-		add(menu);
+		/*
+		 * Adding default menu items that appear no matter what tool is loaded
+		 */
+		infoCard = new JMenuItem("Program Info");
+		infoCard.setActionCommand("CardLayout Info");
+		infoCard.addActionListener(menuBarListener);
+		infoCard.addActionListener(this);
+		baseMenu.add(infoCard);
 		
-		saveItemPrices = new JMenuItem("Save Item Prices");
-		//saveItemPrices.setMnemonic(KeyEvent.VK_S);
-		menu.add(saveItemPrices);
-		saveItemPrices.setActionCommand("Save Item Prices");
-		saveItemPrices.addActionListener(menuBarListener);
+		craftCard = new JMenuItem("Crafting Calculator");
+		craftCard.setActionCommand("CardLayout Crafting");
+		craftCard.addActionListener(menuBarListener);
+		craftCard.addActionListener(this);
+		baseMenu.add(craftCard);
 		
-		menu.addSeparator();
+		add(baseMenu);
 		
-		//craft books for profit calculations
-		craftBooksSubMenu = new JMenu("Select Craft Book");
-		addCraftBooks(bookList);
-		menu.add(craftBooksSubMenu);
+		/*
+		 * adds data for specific menu bars that coincide with tools and
+		 * hides them until needed
+		 */
+		for (JMenu hmm : jm)
+		{
+			add(hmm);
+			hmm.setVisible(false);
+			hmm.setEnabled(false);
+		}
+		
+		//TODO: temporary fix to autoshow menu bar for crafting w/ initial guimanager card load
+		getMenu(1).setEnabled(true);
+		getMenu(1).setVisible(true);
 	}
 
-	/*
-	 * populates craft book list in submenu
-	 */
-	private void addCraftBooks(Iterator<CraftBook> i)
-	{
-		ArrayList<CraftBook> bookList = new ArrayList<CraftBook>();
-		while (i.hasNext())
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String s = (e.getActionCommand().split(" "))[1];
+		
+		/*
+		 * shows specific menu item depending on which card/action is being called out
+		 * and hides the rest
+		 */
+		for (int i = 1; i < getMenuCount(); i++)
 		{
-			bookList.add(i.next());
+			if (getMenu(i).getName().compareTo(s) == 0)
+			{
+				getMenu(i).setEnabled(true);
+				getMenu(i).setVisible(true);
+			}
+			else
+			{
+				getMenu(i).setEnabled(false);
+				getMenu(i).setVisible(false);
+			}
 		}
 		
-		craftBooksList = new JMenuItem[bookList.size()];
-		
-		for (int slot = 0; slot < bookList.size(); slot++)
-		{
-			CraftBook cb = bookList.get(slot);
-			
-			craftBooksList[slot] = new JMenuItem(cb.getName() +" ("+workloadFormatter.format(cb.getWorkload())+")");
-			craftBooksSubMenu.add(craftBooksList[slot]);
-			craftBooksList[slot].addActionListener(menuBarListener);
-			craftBooksList[slot].setActionCommand(cb.getName()); //action commands in the form of item name
-		}
 	}
+	
 }

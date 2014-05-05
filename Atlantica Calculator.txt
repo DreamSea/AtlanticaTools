@@ -1,30 +1,29 @@
 Todo:
 
-(MED+) figure out how to set up a test class/method
-(MED+) move recipes into separate file and redo loading method so that it's easier to make changes
+(Internal  MED+) figure out how to set up a test class/method
+(Misc.     MED+) move recipes into separate file and redo loading method so that it's easier to make changes
 
-(MED) Am I discarding a bunch of CraftBuilder objects everywhere?
-(MED) figure out way to automate/whatever craftTable colors (pass array of arrays?)
-(MED) deck-type GUIManager frame to set up for different tools
+(Internal  MED) Am I discarding a bunch of CraftBuilder objects everywhere?
+(Internal  MED) figure out way to automate/whatever craftTable colors (pass array of arrays?)
 
-(MED-) eldest component update = max(focus'd item + recipe items)
-(MED-) return list of best profit ratios of everything
-(MED-) return list of best profit ratio by maxworkload
-(MED-) Consider DefaultListModel for craftintopanel.java
-(MED-) setter in GUIManager for all the colors in different gui panels
+(Ext.Front MED-) eldest component update = max(focus'd item + recipe items)
+(Ext.Front MED-) return list of best profit ratios of everything
+(Ext.Front MED-) return list of best profit ratio by maxworkload
+(Internal  MED-) Consider DefaultListModel for craftintopanel.java
+(Misc.     MED-) setter in GUIManager for all the colors in different gui panels
 
-(LOW) object streams for save/load
-(LOW) gui to allow putting in new items through program
-(LOW) change gui to be based on window size/variables, change layout from border to something else
-(LOW) better Item.toString()?
+(Internal  LOW) object streams for save/load
+(Ext.Front LOW) gui to allow putting in new items through program
+(Misc.     LOW) change gui to be based on window size/variables, change layout from border to something else
+(Ext.Back  LOW) better Item.toString()?
 
-(LOW-) log of price changes for items
-(LOW-) weird things can happen when messing around with keyboard directional keys
+(Ext.Front LOW-) log of price changes for items
+(Ext.Front LOW-) weird things can happen when messing around with keyboard directional keys
 
-(forever) add recipes
-(forever) make the code less ugly, figure out public/private, less public static
-(forever) comment more.
-(forever) probably needless number of strings/objects created and garbage collected at the moment
+(Misc.) add recipes
+(Misc.) make the code less ugly, figure out public/private, less public static
+(Misc.) comment more.
+(Misc.) probably needless number of strings/objects created and garbage collected at the moment
 
 (???) currently entering recipes by hand = many chances to make a mistake...
 		try putting all the recipes into various xmls/database type things outside of java?
@@ -55,31 +54,32 @@ What if there is a craft book that needs to be converted into a craftable?
 to patch later
 
 ~~~~~~~~~~~~~~~~~~
-2014/05/01 (MED)	Starting console logging option to help look for what operations take the longest. Currently only logging through first constructor calls. 
-2014/05/01 (Minor)	Ninja fixed profit ratios not updating properly when changing CraftBook worth
-2014/05/01 (MED)	Iterables everywhere (DataManager ArrayLists and Craftable recipes ArrayLists). Now DataManager ArrayLists really are private. Hurray.
-2014/05/01 (MED)	Fixed ItemInfoPanel breaking on profit ratios >= 1,000 (was trying to parseDouble a comma)
-2014/04/27 (MED)	Cleaned up ItemInfoPanel - broke up giant method, Enum HashMapKey 
-2014/04/26 (???)	Enum ItemType. Discarded original plan to eliminate type casting due to how craftedFromItems is an array of Items. Maybe in the future.
-2014/04/21 (HIGH)	CraftBuilders - Craftable.builder()
-2014/04/13 (MED)	Colors in CraftComponentPanel.java, ItemInfoPanel.java, CraftIntoPanel.java
-2014/04/13 (Minor)	'Save confirmation' dialog when saving prices
-2014/04/13 (Forever)Recipes: AutoCraft to IV, AutoCraft Dolls to III, Dynamite, Net Trap [III].
-2014/04/11 (MED)	CraftComponentPanel.java: title labels, convert to gridbaglayout, add profit ratios
-2014/04/11 (MED)	ItemInfoPanel.java: easier to modify + more detail
-2014/04/09 (HIGH)	fixed timestamps
-2014/04/09 (MED)	boolean ___changed
-2014/04/07 (MED+)	cleanup/comment/planning: model package, event
-2014/04/02 (MED+)	cleanup/comment/planning: Manager, gui package
-2014/03/30 (MED-)	GRAND REFACTORish. Information passed with listeners. Lots of cleanup to do though.
-2014/03/21 (MED)	add craft books for workload prices, use menu selector to choose which workload to use
-2014/03/20 (MED)	max wl, "updated # seconds ago"
-2014/03/16 (HIGH)	Fix initial item load, added craft tree for Auto-Craft[ii]
-2014/03/15 (MED)	Move worth from CraftComponentPanel into ItemInfoPanel, added Auto-Craft[i]
-2014/03/14 (HIGH)	Split Item panel into craft/material panel and item detail panel
-2014/03/13 (HIGH)	Basic CraftsInto Panel
-2014/03/11 (HIGH)	Sum of Craft costs
-2014/03/11 (HIGH)	Ratio of Profit/WL: currently as total size, redo to individual prices
+2014/05/04 (Ext.Front MED)	Basic deck layout to allow for future switching between tools
+2014/05/01 (Ext.Back  MED)	Starting console logging option to help look for what operations take the longest. Currently only logging through first constructor calls. 
+2014/05/01 (Bug Fix   LOW)	Ninja fixed profit ratios not updating properly when changing CraftBook worth
+2014/05/01 (Internal  MED)	Iterables everywhere (DataManager ArrayLists and Craftable recipes ArrayLists). Now DataManager ArrayLists really are private. Hurray.
+2014/05/01 (Bug Fix   LOW)	Fixed ItemInfoPanel breaking on profit ratios >= 1,000 (was trying to parseDouble a comma)
+2014/04/27 (Internal  MED)	Cleaned up ItemInfoPanel - broke up giant method, Enum HashMapKey 
+2014/04/26 (Internal  ???)	Enum ItemType. Discarded original plan to eliminate type casting due to how craftedFromItems is an array of Items. Maybe in the future.
+2014/04/21 (Internal  HIGH)	CraftBuilders - Craftable.builder()
+2014/04/13 (Ext.Front MED)	Colors in CraftComponentPanel.java, ItemInfoPanel.java, CraftIntoPanel.java
+2014/04/13 (Ext.Front LOW)	'Save confirmation' dialog when saving prices
+2014/04/13 (Misc.	  ???)	Recipes: AutoCraft to IV, AutoCraft Dolls to III, Dynamite, Net Trap [III].
+2014/04/11 (Ext.Front MED)	CraftComponentPanel.java: title labels, convert to gridbaglayout, add profit ratios
+2014/04/11 (Ext.Front MED)	ItemInfoPanel.java: easier to modify + more detail
+2014/04/09 (Bug Fix	  LOW)	fixed timestamps
+2014/04/09 (Internal  MED)	boolean ___changed
+2014/04/07 (Internal  MED+)	cleanup/comment/planning: model package, event
+2014/04/02 (Internal  MED+)	cleanup/comment/planning: Manager, gui package
+2014/03/30 (Internal  MED-)	GRAND REFACTORish. Information passed with listeners. Lots of cleanup to do though.
+2014/03/21 (Ext.Front MED)	add craft books for workload prices, use menu selector to choose which workload to use
+2014/03/20 (Ext.Front MED)	max wl, "updated # seconds ago"
+2014/03/16 (Misc.     HIGH)	Fix initial item load, added craft tree for Auto-Craft[ii]
+2014/03/15 (Misc.     MED)	Move worth from CraftComponentPanel into ItemInfoPanel, added Auto-Craft[i]
+2014/03/14 (Ext.Front HIGH)	Split Item panel into craft/material panel and item detail panel
+2014/03/13 (Ext.Front HIGH)	Basic CraftsInto Panel
+2014/03/11 (Ext.Front HIGH)	Sum of Craft costs
+2014/03/11 (Ext.Front HIGH)	Ratio of Profit/WL: currently as total size, redo to individual prices
 
 ~~~~~~~~~~~~~~~~~~~~
 

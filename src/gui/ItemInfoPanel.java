@@ -35,7 +35,7 @@ import model.Material;
 
 class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 
-	String BLANKSTRING = GUIManager.BLANKSTRING;
+	String BLANKSTRING = GUIManagerCrafting.BLANKSTRING;
 	
 	private NumberFormat nf;
 	
@@ -108,7 +108,7 @@ class ItemInfoPanel extends JPanel implements PropertyChangeListener{
 		//TODO: can grab numberformat from guimanager?
 		nf = NumberFormat.getNumberInstance();
 		
-		setPreferredSize(new Dimension(300,280));
+		setPreferredSize(new Dimension(300,300));
 		
 		createTextPane(); //pane showing item details
 		createWorthPanel(); //panel containing last update and editable worth
